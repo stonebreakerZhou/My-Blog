@@ -1,13 +1,66 @@
 ---
+import '../styles/global.css';
 import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
 import Layout from '../layouts/BlogPost.astro';
+
+const pageTitle = "关于我";
+
+const identity = {
+	firstName: "Sean",
+	country: "China",
+	occupation: "A freshman in BIT aiming at AI development",
+	hobbies: ["basketball", "history", "AI mathematic analysis"],
+};
+
+const skills = ["Python", "深度学习", "机器学习"];
+
+const happy = true;
+const finished = false;
+const goal = 3;
+
+const skillColor = "crimson";
+const fontWeight = "bold";
+const textCase = "uppercase";
+
+const goalText = goal === 3 ? "My goal is to finish in 3 days." : "My goal is not 3 days.";
 ---
 
 <Layout
 	title="About Me"
 	description="A stonebreaker, a stonebaker."
-	pubDate={new Date('August 08 2021')}
+	pubDate={new Date("August 08 2021")}
 	heroImage={AboutHeroImage}
 >
 	<p>A stonebreaker, a stonebaker.</p>
+	<hr />
+	<p>Few introductions:</p>
+	<ul>
+		<li>{identity.firstName}</li>
+		<li>
+			Homeland: {identity.country}; Current Circumstance: {identity.occupation}
+		</li>
+		<li>Hobbies: {identity.hobbies.join(", ")}</li>
+	</ul>
+	<p>Tech Stack:</p>
+	<ul>
+		{skills.map((skill) => <li class="skill">{skill}</li>)}
+	</ul>
+
+	{happy && <p>I am happy to learning Astro!</p>}
+
+	{finished && <p>I finished this lesson!</p>}
+
+	<p>{goalText}</p>
 </Layout>
+
+<style define:vars={{skillColor, fontWeight, textCase}}>
+	h1 {
+		color: purple;
+		font-size: 4rem;
+	}
+	.skill {
+		color: var(--skillColor);
+		font-weight: var(--fontWeight);
+		text-transform: var(--textCase);
+	}
+</style>

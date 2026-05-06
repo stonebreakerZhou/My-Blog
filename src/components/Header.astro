@@ -1,12 +1,14 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+import Menu from './Menu.astro';
 ---
 
 <header>
 	<nav>
 		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
+		<Menu />
+		<div id="main-menu" class="nav-links">
 			<HeaderLink href="/">首页</HeaderLink>
 			<HeaderLink href="/blog">博客</HeaderLink>
 			<HeaderLink href="/about">关于</HeaderLink>
@@ -54,19 +56,55 @@ import HeaderLink from './HeaderLink.astro';
 		align-items: center;
 		justify-content: space-between;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
-		text-decoration: none;
+	.menu {
+		background-color: #0d0950;
+		border: none;
+		color: #fff;
+		font-size: 1.2rem;
+		font-weight: bold;
+		padding: 5px 10px;
+		border-radius: 4px;
 	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
+	.nav-links {
+		width: 100%;
+		display: none;
+		margin: 0;
 	}
-	.social-links,
-	.social-links a {
-		display: flex;
+	.nav-links a {
+		display: block;
+		text-align: center;
+		padding: 10px 0;
+		text-decoration: none;
+		font-size: 1.2rem;
+		font-weight: bold;
+		text-transform: uppercase;
+		color: #0d0950;
+	}
+	.nav-links a:hover,
+	.nav-links a:focus {
+		background-color: #ff9776;
+	}
+	:global(:has(.menu[aria-expanded="true"])) .nav-links {
+		display: unset;
+	}
+	@media screen and (min-width: 720px) {
+		.nav-links {
+			margin-left: 5em;
+			display: block;
+			position: static;
+			width: auto;
+			background: none;
+		}
+		.nav-links a {
+			display: inline-block;
+			padding: 15px 20px;
+		}
+		.menu {
+			display: none;
+		}
+		.social-links {
+			display: flex;
+		}
 	}
 	@media (max-width: 720px) {
 		.social-links {
