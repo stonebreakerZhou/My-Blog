@@ -12,20 +12,34 @@ const { posts } = Astro.props;
 <section class="post-list-section">
 	<ul class="post-list">
 		{
-			posts.map((post, i) => {
+			posts.map((post) => {
 				const stats = readingStats(post.body ?? '');
 				return (
-					<li class:list={[{ 'is-first': i === 0 }]}>
-						<a href={`${import.meta.env.BASE_URL}blog/${post.id}/`}>
+					<li class="post-item">
+						<a href={`${import.meta.env.BASE_URL}blog/${post.id}/`} class="post-link">
+							<div class="body">
+								<p class="date">
+									<FormattedDate date={post.data.pubDate} />
+									<span class="dot" aria-hidden="true">·</span>
+									<span>{formatReadingTime(stats)}</span>
+								</p>
+								<h3 class="title">{post.data.title}</h3>
+								{post.data.categories && post.data.categories.length > 0 && (
+									<p class="tags">
+										{post.data.categories.map((cat) => (
+											<span class="tag">{cat}</span>
+										))}
+									</p>
+								)}
+								{post.data.description && (
+									<p class="summary">{post.data.description}</p>
+								)}
+							</div>
 							{post.data.heroImage && (
-								<Image width={720} height={360} src={post.data.heroImage} alt="" />
+								<div class="thumb">
+									<Image width={360} height={180} src={post.data.heroImage} alt="" />
+								</div>
 							)}
-							<h4 class="title">{post.data.title}</h4>
-							<p class="date">
-								<FormattedDate date={post.data.pubDate} />
-								<span class="dot" aria-hidden="true"> · </span>
-								<span>{formatReadingTime(stats)}</span>
-							</p>
 						</a>
 					</li>
 				);
@@ -37,67 +51,103 @@ const { posts } = Astro.props;
 <style>
 	.post-list {
 		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-8);
+		flex-direction: column;
+		gap: var(--space-12);
 		list-style: none;
 		margin: 0;
 		padding: 0;
 	}
-	.post-list li {
-		width: calc(50% - var(--space-4));
-	}
-	.post-list li * {
-		text-decoration: none;
-		transition: color 0.2s ease, box-shadow 0.2s ease;
-	}
-	.post-list li.is-first {
-		width: 100%;
-		margin-bottom: var(--space-6);
-		text-align: center;
-	}
-	.post-list li.is-first img {
-		width: 100%;
-	}
-	.post-list li.is-first .title {
-		font-size: var(--text-3xl);
-	}
-	.post-list li img {
-		margin-bottom: var(--space-3);
-		border-radius: var(--radius-lg);
-	}
-	.post-list li a {
+	.post-item {
 		display: block;
 	}
-	.post-list .title {
+	.post-link {
+		display: grid;
+		grid-template-columns: 1fr 220px;
+		gap: var(--space-8);
+		align-items: start;
+		text-decoration: none;
+	}
+	.body {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		min-width: 0;
+	}
+	.date {
 		margin: 0;
-		color: var(--color-text);
-		line-height: var(--leading-snug);
-	}
-	.post-list .date {
-		margin: var(--space-2) 0 0;
+		font-size: var(--text-xs);
+		font-weight: 500;
 		color: var(--color-text-muted);
-		font-size: var(--text-sm);
+		letter-spacing: 0.02em;
+		display: flex;
+		gap: var(--space-2);
+		align-items: center;
 	}
-	.post-list a:hover .title,
-	.post-list a:hover .date {
-		color: var(--color-accent);
+	.date .dot {
+		opacity: 0.5;
 	}
-	.post-list a:hover img {
-		box-shadow: var(--shadow-lg);
+	.title {
+		margin: 0;
+		font-size: var(--text-lg);
+		font-weight: 600;
+		line-height: var(--leading-snug);
+		letter-spacing: -0.01em;
+		color: var(--color-text);
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 4px;
+		transition: text-decoration-color 0.15s ease;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
+	.post-link:hover .title {
+		text-decoration-color: var(--color-accent);
+	}
+	.tags {
+		margin: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+	}
+	.tag {
+		font-size: var(--text-xs);
+		font-weight: 500;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+	.summary {
+		margin: 0;
+		font-size: var(--text-base);
+		line-height: var(--leading-relaxed, 1.7);
+		color: var(--color-text-soft);
+	}
+	.thumb {
+		overflow: hidden;
+		border-radius: var(--radius-sm);
+		background: var(--color-bg-soft);
+	}
+	.thumb :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 2 / 1;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+	.post-link:hover .thumb :global(img) {
+		transform: scale(1.03);
+	}
+
 	@media (max-width: 720px) {
-		.post-list {
-			gap: var(--space-6);
+		.post-link {
+			grid-template-columns: 1fr;
+			gap: var(--space-3);
 		}
-		.post-list li {
-			width: 100%;
-			text-align: center;
-		}
-		.post-list li.is-first {
-			margin-bottom: var(--space-3);
-		}
-		.post-list li.is-first .title {
-			font-size: var(--text-2xl);
+		.title {
+			white-space: normal;
 		}
 	}
 </style>

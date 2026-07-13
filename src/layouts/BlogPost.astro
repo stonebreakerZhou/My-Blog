@@ -34,6 +34,7 @@ function postHref(post: CollectionEntry<'blog'>): string {
 }
 ---
 <BaseLayout title={title} description={description}>
+	<div class="reading-progress" aria-hidden="true"></div>
 	<article class="article">
 		{
 			heroImage && (
@@ -95,10 +96,16 @@ function postHref(post: CollectionEntry<'blog'>): string {
 <script>
 	import { initCodeCopy } from '../scripts/code-copy.js';
 	import { initTocActive } from '../scripts/toc-active.js';
+	import { initReadingProgress } from '../scripts/reading-progress.js';
+	import { initHeadingAnchors } from '../scripts/heading-anchors.js';
+	import { initTocToggle } from '../scripts/toc-toggle.js';
 
 	document.addEventListener('astro:page-load', () => {
 		initCodeCopy();
 		initTocActive();
+		initReadingProgress();
+		initHeadingAnchors();
+		initTocToggle();
 	});
 </script>
 
@@ -120,6 +127,9 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		max-width: calc(100% - var(--space-8));
 		margin: 0 auto;
 		color: var(--color-text);
+	}
+	.prose :global(:is(h1, h2, h3, h4)) {
+		scroll-margin-top: var(--space-24);
 	}
 	.post-shell {
 		display: block;
@@ -204,6 +214,20 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		}
 	}
 
+	.reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 3px;
+		transform: scaleX(0);
+		transform-origin: left;
+		background: var(--color-accent);
+		z-index: 200;
+		will-change: transform;
+		pointer-events: none;
+	}
+
 	.prose :global(.code-block) {
 		position: relative;
 	}
@@ -240,24 +264,58 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		border-color: var(--color-accent);
 	}
 
+	.prose :global(.heading-anchor) {
+		display: inline-block;
+		margin-left: var(--space-2);
+		color: var(--color-text-muted);
+		font-weight: 400;
+		text-decoration: none;
+		opacity: 0;
+		transition:
+			opacity 0.15s ease,
+			color 0.15s ease;
+	}
+	.prose :global(h2:hover) .heading-anchor,
+	.prose :global(h3:hover) .heading-anchor,
+	.prose :global(h4:hover) .heading-anchor,
+	.prose :global(.heading-anchor:focus-visible) {
+		opacity: 1;
+	}
+	.prose :global(.heading-anchor:hover),
+	.prose :global(.heading-anchor.is-copied) {
+		color: var(--color-accent);
+		opacity: 1;
+	}
+
 	@media (min-width: 1200px) {
 		:global(main#main-content:has(.post-shell)) {
-			max-width: 1140px;
+			max-width: var(--container-base);
 		}
 		.post-shell {
-			display: grid;
-			grid-template-columns: 1fr minmax(0, var(--container-base)) 1fr;
-			gap: var(--space-12);
-			align-items: start;
+			display: block;
 		}
 		.prose {
-			grid-column: 2;
 			width: 100%;
 			max-width: none;
 			margin: 0;
 		}
+		/* TOC floats over the right edge — never affects the article's centering. */
 		.post-shell > :global(.toc-area) {
-			grid-column: 3;
+			position: fixed;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			width: 260px;
+			padding: var(--space-24) var(--space-6) var(--space-8);
+		}
+		/* The TOC panel slides out, but the toggle tab stays clickable. */
+		.post-shell > :global(.toc-area) :global(.toc) {
+			transition: opacity 0.2s ease, transform 0.25s ease;
+		}
+		:global(html[data-toc='closed']) .post-shell > :global(.toc-area) :global(.toc) {
+			opacity: 0;
+			transform: translateX(20px);
+			pointer-events: none;
 		}
 	}
 </style>

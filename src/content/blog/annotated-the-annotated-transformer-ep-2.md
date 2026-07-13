@@ -18,6 +18,8 @@ Self-Attention
 
 全文阅读时间较长，主要借助网络经典材料加以个人思考解读，如有误欢迎斧正
 
+## 深度学习任务的完整流程
+
 书接上回，我们在构建好Transformer整体模型之后要将其投入使用，然而一个最基本的深度学习任务，一般需要以下这些环节：
 
 Data → Model → Criterion → Loop → Optimizer (Update ↺)
@@ -27,6 +29,8 @@ Data → Model → Criterion → Loop → Optimizer (Update ↺)
 Notice：Ep.1末尾我们提到，《The Annotated Transformer》原文后续实现的各种工具对于本人初学阶段有些浪费时间/必要性不大，所以以下我们着重于实现原文中所述的"一个简单任务"（**Copy Task**），即复制任务：让机器学会复制我们提供的数字序列，下文即围绕这个任务进行相应的全步骤分析处理准备
 
 5%
+
+## Data：数据生成与封装
 
 我们先来看**Data这个大块**，这一步处理十分重要，而且还可以划分成几个小版块：
 
@@ -66,6 +70,8 @@ Batch Class
 
 知道了Data版块中各个小板块的功能作用，我们现在对其依次代码实现：
 
+### data_generator：随机序列生成
+
 - **data\_generator模块：**
 
 ```
@@ -90,6 +96,8 @@ def data_generator(V, batch_size, nbatches):     #V实质是vocab_size即词汇�
 于是，用循环遍历的时相当于生成数据是一个Batch一个Batch地生成，所以一共循环nbatches次；由于一个Batch由若干条句子序列组成，所以一个Batch的数据就可以看作是一个数字矩阵，而且是"类独热编码"之后得到的数字矩阵，所以里面的数字取值范围应当为1~(V-1)（注意：Copy Task中每条生成的数据都等长所以不会有PAD = 0编码）；第一个编码设置成1（因为是BOS起始符）
 
 使用yield而非return可节省内存，流水线吐出数据，**最后data\_generator吐出的数据是source和target打包形成的Batch对象**
+
+### batch_size_fn：动态批处理
 
 - 结束了data\_generator，现在我们来快速过一下**第2个Dynamic Batching版块**（在接下来的简单Copy Task中使用不到），即一个**batch\_size\_fn类**：
 
@@ -121,6 +129,8 @@ def batch_size_fn(new, count, sofar):
 主要的3个参数分别为：**new:准备加入batch的下一个样本对象；count：如果这一条加入，batch里的总句数（正在更新中的batch\_size）；sofar：截至目前已经累计的batch尺寸**（类似于内存）。  
   
 我们是把样本数据一个一个扔进去考虑，所以每一波batch的开头会有清零操作：如果是当前batch里面的第1条样本，就把两个全局变量进行重置为0（清空上一个batch留下的'最长纪录'），之后不断更新最大值，**最后返回Encoder与Decoder所用数据占用内存的最大值**。**如果我们预先设置一个内存上限，那么这样能够保证不超越上限又能充分压榨显存**。这样操作之后，**每一个批次的batch\_size都会不同，但是总内存量却保持在一个接近的水平**！
+
+### Batch 类：封装与掩码
 
 - **Batch版块**
 
@@ -191,6 +201,8 @@ Data ✓ → Model ✓ → Criterion → Loop → Optimizer (Update ↺)
 
 下面进入损失函数（criterion/loss function）阶段
 
+## Criterion：标签平滑与 KL 散度
+
 - 给出在我们任务中Criterion的计算标准：
 
 ```
@@ -240,6 +252,8 @@ DKL(P∥Q)\=∑P(x)log⁡P(x)Q(x)\=∑P(x)(log⁡P(x)−log⁡Q(x))D_{KL}(P \par
 40%
 
 上述给出了在我们任务中的损失值计算标准，我们知道，**Loop循环阶段肯定是要把当前训练轮次内要做的所有事情全部打包，那么肯定会涉及数据先打包，然后传送给model，model向前传播进行此刻的损失计算和参数更新，最后会有一个类似于日志打印的结果。**
+
+## Optimizer：Noam 学习率调度
 
 - 既然是几个离散的过程拼接在一起，那么我们不妨先来实现里面的一个小步骤：构建一个优化器，其主要作用就是计算梯度、更新权重参数
 
@@ -350,7 +364,11 @@ plt.show()
 
 50%
 
+## Loop：串联训练流程
+
 在我们编写Loop之前，我们先思考一下，**我们一般执行的循环Loop一般来讲跟Optimizer不应该是两个呈先后顺序的步骤**，相反，我们通常希望在Loop里面把模型训练一个Epoch中的所有操作全部囊括，所以，**我们之前虽然独立地解决了Criterion（LabelSmoothing + KL散度） 和 Optimizer（Noam + Adam），我们希望****有一个步骤能够直接调用这两个类，并实现从 "计算Loss ——> 参数更新" 的一个连贯操作**。
+
+### SimpleLossCompute：损失与更新
 
 - **SimpleLossCompute抽象类进行上述这个连贯的操作**
 
@@ -442,6 +460,8 @@ model_opt = NoamOpt(model.source_embed[0].d_model, 1, 400, \ torch.optim.Adam(mo
 
 Data ✓ → Model ✓ → Criterion ✓ → Loop ... → Optimizer ✓ (Update ↺)
 
+### run_epoch：单轮训练循环
+
 前面说到，Loop阶段的主要工作是首先将封装好的Batch类型数据分发给Encoder与Decoder，然后在创建好的model中向前传播得到预测分布，将预测分布输入criterion算出损失值，最后在optimizer中进行反向传播与参数更新
 
 综上所述，**Loop的主要作用是串联各个打包好的步骤，并组装成一套完整的操作流程**
@@ -483,6 +503,8 @@ def run_epoch(data_iterator, model, loss_compute):
 
 65%
 
+## 训练模型
+
 讲了这么久，进度拉满！
 
 Data ✓ → Model ✓ → Criterion ✓ → Loop ✓ → Optimizer ✓ (Update ↺)
@@ -523,6 +545,8 @@ Epoch Step: 1 Loss: 1.903459 Tokens per Second: 11235.077148
 tensor(1.8871, device='cuda:0')
 ......
 ```
+
+## 贪心解码与推理
 
 大概30s跑完模型训练之后，我们期望用我们训练的模型做一个交互式程序，看看能否正确完成Copy Task。现在的情形是：我们手上有完整的Transformer模型架构，也有一套它训练了30个Epoch后得到的一套权重参数，而我们的期望是我们自己设定一个seq\_Len = 10 （因为我们之前训练时设置的V = 11，里面还包含\<PAD\> = 0）的数字序列为输入，让模型能够完成这个Copy Task
 
@@ -647,7 +671,11 @@ plt.show()
 
 85%
 
+## 注意力可视化
+
 最后我们来实现注意力可视化：
+
+### 交叉注意力可视化
 
 - **交叉注意力可视化**
 
@@ -723,6 +751,8 @@ data = attention_data[h][:len(output_labels), :len(input_labels)]
 
 92%
 
+### Encoder 自注意力可视化
+
 - **Encoder中的自注意力可视化**：
 
 ```
@@ -784,6 +814,8 @@ visualize_encoder_self_attention(model, test_sent)
 - 自注意力图：**纵轴（Input Sequence）**：代表序列中的**每一个词**（作为查询者 Query），横轴（Input Sequence）代表序列中的**每一个词**（作为被查询者 Key），**由于是自注意力**，纵轴和横轴的标签完全一样。纵轴（Query）在观察横轴（Key），所以可以先锁定一个y坐标，表示"正站在y的视角进行观察"
 
 99.9%
+
+## 结语
 
 到此为止，基础的Transformer模型架构及一个简单的Copy Task实现已经完全结束！
 

@@ -28,6 +28,14 @@ const { title, description, image = FallbackImage } = Astro.props;
 			document.documentElement.setAttribute('data-theme', theme);
 		} catch {}
 	})();
+	(() => {
+		try {
+			const toc = localStorage.getItem('toc');
+			if (toc === 'closed') {
+				document.documentElement.setAttribute('data-toc', 'closed');
+			}
+		} catch {}
+	})();
 </script>
 
 <!-- Global Metadata -->
@@ -49,11 +57,12 @@ const { title, description, image = FallbackImage } = Astro.props;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
 	rel="stylesheet"
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap"
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Sacramento&display=swap"
 />
 
 <!-- View Transitions (Astro 6 client router) -->
 <ClientRouter />
+
 
 <!-- Menu Script -->
 <script>

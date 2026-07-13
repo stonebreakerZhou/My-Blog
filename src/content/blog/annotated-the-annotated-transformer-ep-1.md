@@ -20,6 +20,8 @@ Notice: 本文系列分为2篇，核心为本文Ep.1，另有Ep.2处于本文同
 
 近来浅尝一下Transformer，由于原论文《Attention Is All You Need》[https://arxiv.org/abs/1706.03762](https://arxiv.org/abs/1706.03762) 入手较难，加上PyTorch Doc中Transformer API源代码也不易直接上手（对于我这种小白而言），故找到Harvard NLP的一份注释+上手导读《The Annotated Transformer》[https://nlp.seas.harvard.edu/2018/04/03/attention.html](https://nlp.seas.harvard.edu/2018/04/03/attention.html) 其中代码以PyTorch较为基本的语法思路基本上从0实现Transformer模型整体架构，但对于我这种初学者仍然不甚友好。于是我进行更为详细注解斟酌，供诸位茶余饭后以怡情。
 
+## 整体架构概览
+
 首先，我们找到原论文中对于Transformer模型架构的整体描述与绘图：
 
 ![](images/屏幕截图-2026-02-27-163029-1024x934.png)
@@ -39,6 +41,8 @@ Target (右移) → Embed + PE → Masked Self-Attention → 上下文表示 →
 2%
 
 下面以《The Annotated Transformer》代码为基础进行模型讲解阐释，为内容简要之需，模型内部涉及的各个小板块的详尽讨论将会放至各篇文章中。
+
+## Encoder–Decoder 整体框架
 
 - **整体Encoder-Decoder构架**
 
@@ -67,6 +71,8 @@ class EncoderDecoder(nn.Module):
 ② encode是encoder使用的功能函数，描述encoder工作的全过程，得到的是memory；  
 ③ decode是decoder使用的功能函数，描述decoder工作的基本全过程，得到的是最终的上下文表示（仅剩最后的线性变换得到logits再进一步将其转换为概率值输出）。
 
+## Generator：线性变换与 Softmax
+
 - 上述架构可以看到少了**最后的两个步骤：线性变换(Linear)得到logits + logits转变为概率值输出(SoftMax)**
 
 ![](images/屏幕截图-2026-02-27-173742-1024x249.png)
@@ -87,6 +93,8 @@ class Generator(nn.Module):
 注：由于在起始点所有的source/target都经过嵌入层的维度变换，从起始维度（vocab\_size，即词汇表大小，词汇表中有多少个词独热向量的维度就是多少）变为我们人为设置的超参数维度（d\_model，即在模型内部一直运行的隐层维度），然而最后我们需要得到每个词的概率值，因而最终维度 = vocab\_size，所以需要进行一次**人为线性维度变换d\_model——>vocab\_size**  
 最后调用log\_softmax函数对于每一个词的原始得分(logits)处理得到每一个位置处词汇表中**每个单词的概率值大小**，也即是forward函数的返回值  
 注：最后一步取log：普通的softmax概率分布通常比较平缓，而log之后，概率小的词会变成绝对值很大的负数，概率大的词接近0（使梯度下降更快，模型更敏感）
+
+## 编码器与层堆叠
 
 随后，将正式分别建构Encoder与Decoder，注原论文中所阐述是："_composed of a stack of N = 6 identical layers_"，即**Encoder与Decoder都分别由6个相同层堆叠而成**。
 
@@ -135,6 +143,8 @@ Output\=x+SubLayer(LayerNorm(x))Output = x + \text{SubLayer}(\text{LayerNorm}(x)
 
 目前**主流使用pre-norm**，因为在每一层输入之前都预做一次层归一化可以使模型学习更加平稳，梯度不会爆炸。
 
+### 残差连接与层归一化（Pre-Norm）
+
 - 现在我们先把本文中所使用的**pre-norm这个"加工操作"封装成一个类SublayerConnection**：
 
 ```
@@ -172,6 +182,8 @@ x就是在隐层中传递的数据，形状一般就是（batch\_size, seq\_Len,
 
 15%
 
+## 多头缩放点积注意力机制
+
 - 有了单独的"加工操作"类SublayerConnection ，我们进入**最核心的多头缩放点积注意力机制（Multi-Head Scaled Dot-Product Attention）的实现**。
 
 - **多头**缩放点积注意力机制不好直接实现，我们先解决**单头**的，其中**核心的就是负责数学计算的attention函数**
@@ -201,6 +213,8 @@ x就是在隐层中传递的数据，形状一般就是（batch\_size, seq\_Len,
 
 所谓"**缩放**"，在向量点积之后除以（根号下维度），一方面是为了缩小向量点积之后结果的方差；另一方面由于我们在计算"权重"时候是对所有点积结果进行SoftMax，而SoftMax函数对大数值极其不友好，如果输入值很大则会输出几乎为1和0的极端概率，此时SoftMax导数趋近于0，在反向传播时，这会导致梯度消失，模型几乎无法继续学习......
 
+### attention 函数实现
+
 - 当然，以上说法自然是粗糙的，下面给出**缩放点积注意力机制的具体函数实现过程**：
 
 ```
@@ -229,6 +243,8 @@ attention函数的第一个返回值就是**注意力机制的核心产物：Con
 整个过程可以简洁地使用一个注意力机制公式来表示：（之后可加入dropout）
 
 Attention(Q,K,V)\=softmax(QKTdk)V\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+
+### 多头注意力 MultiHeadedAttention
 
 - 有了attention函数（单头），我们进一步便可进入**多头缩放点积注意力机制大类MultiHeadedAttention**的构建：
 
@@ -269,6 +285,8 @@ class MultiHeadedAttention(nn.Module):
         #返回值形状：(batch_size, seq_len, d_model)
 ```
 
+### 单层编码器 EncoderLayer
+
 - 有了多头缩放点积注意力机制类的构建完成，结合之前的SubLayerConnection类的构建成功，EncoderLayer（单层）里面的所有子层已被全部实现，现在我们试着**构建完整的单层Encoder**：
 
 ```
@@ -302,6 +320,8 @@ Encoder部分搭建完毕，现在进行Decoder部分的搭建
 Decoder基本搭建过程大同小异，底层思路与Encoder差别不大，但观下图，我们发现内部涉及的子层一个是**掩码多头自注意力**，另一个则是**多头交叉注意力**，那么这两个我们需借助刚才定义好的MultiHeadedAttention这个抽象大类进行构建：
 
 ![](images/屏幕截图-2026-02-28-094107.png)
+
+## 掩码机制（Mask）
 
 - **MASK**：
 
@@ -405,6 +425,8 @@ if mask is not None:
 ①**如果不加 Mask**：`\<PAD\>` 对应的 Embedding 虽然是 0 或随机数，但它依然会参与点积运算，产生一个注意力得分。在 Softmax 之后，这些无效位置会分走真实词汇的权重，导致语义表示被"稀释"。  
 ②**Mask 的作用**：它在 3D 张量的每一层（Head）和每一个 Query 位置上，精准地定位到那些 `\<PAD\>` 所在的列。通过填充 `-1e9`，它在物理上阻断了信息流向这些无效区域
 
+### 掩码防偷看（Subsequent Mask）
+
 - **进入"掩码"多头自注意力机制中的"掩码"**：
 
 首先我们要明确，Encoder的任务和Decoder是不一样的：  
@@ -474,6 +496,8 @@ plt.show()
 
 ![](images/屏幕截图-2026-02-28-094107-1.png)
 
+## 交叉注意力与解码器
+
 - 现在应该向上进入**交叉注意力层**：
 
 所谓交叉注意力，其实如图可以看出来，这是一条Encoder与Decoder融汇的线路，具体来讲就是Decoder在上一层掩码自注意力之后把手上拿到的考题处理了一遍，现在要开始翻阅"参考资料"了，"参考资料"就是Encoder的核心输出，即Memory: （以下来自Encoder大类代码）
@@ -492,6 +516,8 @@ Attention(Q,K,V)\=softmax(QKTdk)V\text{Attention}(Q, K, V) = \text{softmax}\left
 但不止于此，**该公式中的K矩阵也必须换为Memory矩阵，因为K包含索引标签**，依靠K才能在Memory中找到相应的语义内容值V（也可理解成"键值对"的关系），**Q只负责查询，查询是由Decoder一方发起的**，因而交叉注意力机制可用以下公式表示：
 
 Cross-Attention(Q,M,M)\=softmax(QMMdk)M\text{Cross-Attention}(Q, M, M) = \text{softmax}\left(\frac{QM^M}{\sqrt{d_k}}\right)M
+
+### 构建 DecoderLayer 与 Decoder
 
 - 由于之前已有现成的attention函数和相应的MultiHeadAttention大类，我们直接借用以**构建DecoderLayer即一个单层的Decoder架构：**
 
@@ -546,6 +572,8 @@ target\_mask用于Decoder的自注意力层，防止在训练时解码器偷看�
 
 ![](images/屏幕截图-2026-02-28-160552-1024x564.png)
 
+## 收尾组件：Embedding、位置编码与 FFN
+
 - 先实现**最开始的嵌入操作（Embedding）**：
 
 ```
@@ -564,6 +592,8 @@ lut（Look-Up Table）是一个二维矩阵（Tensor），形状是（vocab\_siz
 **我们会建立单词表（单词对应各个索引值），此时x就是输入的一连串索引，执行forward时就将索引转换为对应嵌入后的特征向量**  
 
 封装独特的Embeddings类最大的原因是：由于词向量嵌入之后会立即被位置编码（加上位置编码值，在0，1之间），所以**在forward函数中对特征向量各维度数值通过放大一定倍数（根号下d\_model）以保护语义**
+
+### 位置编码 Positional Encoding
 
 - 实现Positional Encoding（PE）位置编码：
 
@@ -612,7 +642,7 @@ class PositionalEncoding(nn.Module):
 
 笔者之前做过一份关于位置编码的例子如下阐释
 
-## Position Encoding
+#### 位置编码示例（Demo）
 
 ① 使用 sin/cos 以固定表征（位置编码始终固定）
 
@@ -633,6 +663,8 @@ PE =
 0,     1,     0,     1  
 0.841, 0.540, 0.100, 0.995  
 0.909, -0.416, 0.199, 0.980
+
+### 前馈网络 FFN
 
 - 最后我们还得来**实现FFN**：
 
@@ -658,6 +690,8 @@ class PositionWiseFFN(nn.Module):
 **先线性变换w\_1，再ReLU激活，再dropout，最后一次线性变换w\_2**
 
 截止目前，我们已经完成了Transformer模型结构的完整构建！！！
+
+## 组装完整模型
 
 - **最后一步：使用我们之前的那些抽象类生成完整模型**（自己还要设置模型中的超参数）
 
@@ -695,6 +729,8 @@ class EncoderDecoder(nn.Module):
 **在这里我们传入source\_embed和target\_embed时实际上是把要做的两种操作：embed + PE 用nn.Sequential打了个包做成一个容器，这样当调用这个容器时，输入数据会先进入第一个模块（`Embeddings`），其输出会自动变成第二个模块（`位置编码`）的输入。**
 
 99.9%
+
+## 结语
 
 大功告成了吗？并没有.......
 

@@ -9,9 +9,27 @@ export function initTocActive() {
 	const links = document.querySelectorAll('[data-toc-link]');
 	if (links.length === 0) return;
 
+	// If the user has the TOC folded, skip observer setup entirely.
+	if (document.documentElement.getAttribute('data-toc') === 'closed') {
+		for (const link of links) link.classList.remove('is-active');
+		return;
+	}
+
 	const linkFor = new Map();
 	for (const link of links) {
-		linkFor.set(link.getAttribute('data-toc-link'), link);
+		const id = link.getAttribute('data-toc-link');
+		linkFor.set(id, link);
+
+		if (!link.dataset.tocBound) {
+			link.dataset.tocBound = '1';
+			link.addEventListener('click', (event) => {
+				const target = document.getElementById(id);
+				if (!target) return;
+				event.preventDefault();
+				target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				history.replaceState(null, '', `#${id}`);
+			});
+		}
 	}
 
 	const headings = document.querySelectorAll('.prose :is(h2, h3)[id]');

@@ -25,6 +25,7 @@
 		'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo,
 		Consolas, monospace;
+	--font-script: 'Sacramento', 'Brush Script MT', cursive;
 
 	/* Type scale (modular ~1.25) */
 	--text-xs: 0.75rem;
@@ -257,6 +258,156 @@
 
 	td {
 		color: var(--color-text-soft);
+	}
+
+	/* ============================================
+     Prose — article body tuning
+     ============================================ */
+	.prose {
+		font-size: var(--text-md);
+		color: var(--color-text);
+		line-height: 1.85;
+		text-spacing-trim: space-all;
+		text-autospace: normal;
+	}
+
+	.prose p {
+		margin: 0 0 1.1em;
+		color: var(--color-text);
+	}
+
+	.prose h2,
+	.prose h3,
+	.prose h4 {
+		color: var(--color-text);
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+
+	.prose h2 {
+		font-size: var(--text-2xl);
+		margin: 2.2em 0 0.8em;
+		letter-spacing: -0.025em;
+	}
+
+	.prose h3 {
+		font-size: var(--text-xl);
+		margin: 1.8em 0 0.6em;
+	}
+
+	.prose h4 {
+		font-size: var(--text-lg);
+		margin: 1.5em 0 0.5em;
+	}
+
+	.prose h2 + p,
+	.prose h3 + p,
+	.prose h4 + p {
+		margin-top: 0;
+	}
+
+	.prose a {
+		color: var(--color-accent);
+		text-decoration: underline;
+		text-decoration-color: color-mix(in srgb, var(--color-accent) 40%, transparent);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition:
+			text-decoration-color 0.18s ease,
+			color 0.18s ease;
+	}
+	.prose a:hover {
+		color: var(--color-accent-hover);
+		text-decoration-color: var(--color-accent);
+	}
+
+	.prose strong,
+	.prose b {
+		font-weight: 600;
+		color: var(--color-text);
+	}
+
+	.prose em {
+		font-style: italic;
+		color: var(--color-text);
+	}
+
+	.prose ul,
+	.prose ol {
+		margin: 1.1em 0;
+		padding-left: 1.6em;
+		list-style: revert;
+	}
+	.prose ul {
+		list-style-type: disc;
+	}
+	.prose ol {
+		list-style-type: decimal;
+	}
+	.prose li {
+		margin: 0.45em 0;
+		color: var(--color-text);
+	}
+	.prose li::marker {
+		color: var(--color-text-muted);
+	}
+	.prose li > p {
+		margin: 0.4em 0;
+	}
+
+	.prose blockquote {
+		margin: 1.6em 0;
+		padding: 0.4em 0 0.4em 1.2em;
+		border-left: 2px solid var(--color-accent);
+		color: var(--color-text-soft);
+		font-style: italic;
+		background: linear-gradient(90deg, var(--color-accent-soft) 0%, transparent 60%);
+		border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+	}
+	.prose blockquote p {
+		margin: 0.4em 0;
+		color: inherit;
+	}
+
+	.prose hr {
+		margin: 2.5em auto;
+		width: 60%;
+		border-top: 1px solid var(--color-border-soft);
+	}
+
+	.prose img {
+		margin: 1.8em auto;
+		border-radius: var(--radius-md);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.prose pre {
+		margin: 1.6em 0;
+		padding: var(--space-5) var(--space-6);
+		background: var(--color-bg-soft);
+		border: 1px solid var(--color-border-soft);
+		border-radius: var(--radius-md);
+		line-height: 1.7;
+		font-size: 0.9em;
+	}
+
+	.prose :not(pre) > code {
+		font-size: 0.88em;
+		padding: 0.12em 0.42em;
+		background: var(--color-accent-soft);
+		color: var(--color-accent-text);
+		border: none;
+	}
+
+	.prose table {
+		margin: 1.6em 0;
+		font-size: var(--text-sm);
+	}
+
+	/* Selection — themed */
+	.prose ::selection {
+		background: var(--color-accent-soft);
+		color: var(--color-text);
 	}
 
 	/* ============================================

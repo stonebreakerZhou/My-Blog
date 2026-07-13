@@ -1,40 +1,48 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 const now = {
-	based: 'Beijing, China',
-	role: 'CS freshman @ Beijing Institute of Technology',
-	focus: 'Building AI intuition from first principles',
+	based: "Beijing, China",
+	role: "CS freshman @ BIT",
+	focus: "Building AI intuition from first principles",
 };
 
-const techStack = [
-	'Python', 'PyTorch', 'Git', 'Linux',
-	'Deep Learning', 'Machine Learning',
-	'C/C++', 'Markdown',
-];
+const techStack = ["PyTorch", "DL", "ML", "Typst"];
 
 const learning = [
-	'Transformer architecture internals',
-	'Math behind deep learning',
-	'How modern PyTorch actually works',
+	{ name: "CS336", href: "https://github.com/stonebreakerZhou/Stanford_CS336_26spring" },
+	{ name: "RL", href: "https://github.com/stonebreakerZhou/RL_note_WestLakeU" },
+	{ name: "LM alignment" },
+	{ name: "DL math" },
 ];
 
-const offDesk = ['Basketball', 'History', 'Bad math jokes'];
+const offDesk = ["Basketball", "History", "Bad math jokes"];
 
 const links = [
-	{ name: 'GitHub', href: 'https://github.com/HelloMyWorld419', external: true },
-	{ name: 'Zhihu', href: 'https://www.zhihu.com/people/laughable-young', external: true },
-	{ name: 'RSS', href: '/rss.xml', external: false },
+	{
+		name: "GitHub",
+		href: "https://github.com/stonebreakerZhou",
+		external: true,
+	},
+	{
+		name: "Zhihu",
+		href: "https://www.zhihu.com/people/laughyoung",
+		external: true,
+	},
+	{
+		name: "Email",
+		href: "mailto:stonebreaker365@163.com",
+		external: true,
+	},
 ];
 ---
-<BaseLayout title="About" description="Sean / Stonebreaker — CS freshman at Beijing Institute of Technology.">
-	<article class="about">
 
+<BaseLayout title="About" description="Stonebreaker — CS freshman at BIT.">
+	<article class="about">
 		<header class="hero">
-			<div class="avatar" aria-hidden="true">S</div>
-			<h1>Sean</h1>
+			<img class="avatar" src={`${import.meta.env.BASE_URL}head_portrait.jpg`} alt="Stonebreaker's portrait" />
 			<p class="alias">Stonebreaker</p>
-			<p class="tagline">CS freshman. Trying to understand AI deeply, not just use the APIs.</p>
+			<p class="tagline">CS freshman. Trying to understand AI deeply.</p>
 		</header>
 
 		<section class="facts">
@@ -55,14 +63,14 @@ const links = [
 		<section class="prose-section">
 			<h2>About me</h2>
 			<p>
-				I'm Sean, a freshman at Beijing Institute of Technology. Most of what I do is study
-				machine learning and try to understand <em>why</em> things work the way they do —
-				not just call the API and ship.
+				I'm StoneBreaker, a freshman at BIT, Beijing. Most of what I do
+				is study DL and try to understand <em>why</em> things work the way
+				they do — not just call the API and ship.
 			</p>
 			<p>
-				I started this blog to write notes on what I'm learning: transformer architectures,
-				attention mechanisms, and the math behind them. If you're reading this, hi — pull up
-				a chair.
+				I started this blog to write notes on what I'm learning: ML, DL,
+				RL, AI safety and math behind them. If you're reading this, hi —
+				pull up a chair.
 			</p>
 		</section>
 
@@ -75,8 +83,12 @@ const links = [
 
 		<section class="chips-section">
 			<h2>Currently learning</h2>
-			<ul class="list">
-				{learning.map((l) => <li>{l}</li>)}
+			<ul class="chips">
+				{learning.map((item) => (
+					<li class="chip">
+						{item.href ? <a href={item.href} target="_blank" rel="noopener noreferrer">{item.name}</a> : item.name}
+					</li>
+				))}
 			</ul>
 		</section>
 
@@ -95,8 +107,12 @@ const links = [
 						<li>
 							<a
 								href={link.href}
-								target={link.external ? '_blank' : undefined}
-								rel={link.external ? 'noopener noreferrer' : undefined}
+								target={link.external ? "_blank" : undefined}
+								rel={
+									link.external
+										? "noopener noreferrer"
+										: undefined
+								}
 							>
 								{link.name}
 							</a>
@@ -105,7 +121,6 @@ const links = [
 				}
 			</ul>
 		</section>
-
 	</article>
 </BaseLayout>
 
@@ -118,31 +133,24 @@ const links = [
 
 	.hero {
 		text-align: center;
-		padding: var(--space-12) 0 var(--space-8);
+		padding: var(--space-12) 0 var(--space-12);
 	}
 	.avatar {
 		width: 96px;
 		height: 96px;
 		border-radius: 50%;
-		background: linear-gradient(135deg, var(--color-accent), var(--color-accent-text));
-		color: white;
-		font-size: var(--text-4xl);
-		font-weight: 700;
-		line-height: 96px;
-		margin: 0 auto var(--space-4);
-		letter-spacing: -0.03em;
+		border: 3px solid var(--color-bg);
 		box-shadow: var(--shadow-md);
-	}
-	.hero h1 {
-		margin: 0;
-		font-size: var(--text-4xl);
-		letter-spacing: -0.03em;
+		object-fit: cover;
+		display: block;
+		margin: 0 auto var(--space-5);
 	}
 	.alias {
-		margin: var(--space-1) 0 0;
-		color: var(--color-text-muted);
-		font-size: var(--text-md);
-		font-weight: 500;
+		margin: 0;
+		color: var(--color-text);
+		font-size: var(--text-2xl);
+		font-weight: 600;
+		letter-spacing: -0.02em;
 	}
 	.tagline {
 		margin: var(--space-6) auto 0;
@@ -187,6 +195,13 @@ const links = [
 	.prose-section,
 	.chips-section {
 		margin-bottom: var(--space-10);
+		padding-bottom: var(--space-6);
+		border-bottom: 1px solid var(--color-border-soft);
+	}
+	.prose-section:last-of-type,
+	.chips-section:last-of-type {
+		border-bottom: 0;
+		margin-bottom: 0;
 	}
 	.prose-section h2,
 	.chips-section h2 {
@@ -194,7 +209,7 @@ const links = [
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
 		color: var(--color-text-muted);
-		margin-bottom: var(--space-4);
+		margin-bottom: var(--space-5);
 		font-weight: 600;
 	}
 	.prose-section p {
@@ -218,6 +233,13 @@ const links = [
 	.chips.soft .chip {
 		background: var(--color-bg-soft);
 		color: var(--color-text-soft);
+	}
+	.chip a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.chip a:hover {
+		color: var(--color-accent);
 	}
 
 	.list {
@@ -247,7 +269,9 @@ const links = [
 		font-weight: 500;
 		border-bottom: 1px solid var(--color-border);
 		padding-bottom: 2px;
-		transition: color 0.2s ease, border-color 0.2s ease;
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease;
 	}
 	.links a:hover {
 		color: var(--color-accent);
