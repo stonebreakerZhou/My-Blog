@@ -1,0 +1,81 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+const { headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+{
+	toc.length > 0 && (
+		<aside class="toc-area" aria-label="Table of contents">
+			<nav class="toc">
+				<p class="toc-label">On this page</p>
+				<ul class="toc-list">
+					{toc.map((h) => (
+						<li class:list={['toc-item', `depth-${h.depth}`]}>
+							<a href={`#${h.slug}`} data-toc-link={h.slug}>
+								{h.text}
+							</a>
+						</li>
+					))}
+				</ul>
+			</nav>
+		</aside>
+	)
+}
+
+<style>
+	.toc-area {
+		display: none;
+	}
+	.toc {
+		position: sticky;
+		top: var(--space-24);
+	}
+	.toc-label {
+		margin: 0 0 var(--space-3);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--color-text-muted);
+	}
+	.toc-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border-left: 1px solid var(--color-border-soft);
+	}
+	.toc-item a {
+		display: block;
+		padding: var(--space-1) var(--space-3);
+		margin-left: -1px;
+		border-left: 2px solid transparent;
+		font-size: var(--text-sm);
+		line-height: var(--leading-snug);
+		color: var(--color-text-muted);
+		text-decoration: none;
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease;
+	}
+	.toc-item.depth-3 a {
+		padding-left: var(--space-6);
+		font-size: var(--text-xs);
+	}
+	.toc-item a:hover {
+		color: var(--color-text-soft);
+	}
+	.toc-item a.is-active {
+		color: var(--color-accent);
+		border-left-color: var(--color-accent);
+		font-weight: 500;
+	}
+	@media (min-width: 1200px) {
+		.toc-area {
+			display: block;
+		}
+	}
+</style>

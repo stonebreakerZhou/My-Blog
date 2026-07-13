@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 		params: { slug: post.id },
 		props: {
 			post,
-			stats: readingStats(post.body),
+			stats: readingStats(post.body ?? ''),
 			newer: sorted[i - 1] ?? null,
 			older: sorted[i + 1] ?? null,
 		},
@@ -26,13 +26,14 @@ type Props = {
 };
 
 const { post, stats, newer, older } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 <BlogPost
 	{...post.data}
 	readingStats={stats}
 	newer={newer}
 	older={older}
+	headings={headings}
 >
 	<Content />
 </BlogPost>

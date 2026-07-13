@@ -1,18 +1,21 @@
 ---
 import { Image } from 'astro:assets';
+import type { MarkdownHeading } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import {
-	readingStats,
 	formatReadingTime,
 	formatWordCount,
+	type ReadingStats,
 } from '../utils/reading-time';
 
 type Props = CollectionEntry<'blog'>['data'] & {
-	readingStats: ReturnType<typeof readingStats>;
+	readingStats: ReadingStats;
 	newer: CollectionEntry<'blog'> | null;
 	older: CollectionEntry<'blog'> | null;
+	headings: MarkdownHeading[];
 };
 const {
 	title,
@@ -23,6 +26,7 @@ const {
 	readingStats,
 	newer,
 	older,
+	headings,
 } = Astro.props;
 
 function postHref(post: CollectionEntry<'blog'>): string {
@@ -38,52 +42,65 @@ function postHref(post: CollectionEntry<'blog'>): string {
 				</div>
 			)
 		}
-		<div class="prose">
-			<header class="post-header">
-				<div class="date">
-					<FormattedDate date={pubDate} />
-					{
-						updatedDate && (
-							<div class="last-updated-on">
-								Last updated on <FormattedDate date={updatedDate} />
-							</div>
-						)
-					}
-				</div>
-				<h1>{title}</h1>
-				<hr />
-				<p class="meta">
-					<span>{formatReadingTime(readingStats)}</span>
-					<span class="dot" aria-hidden="true">·</span>
-					<span>{formatWordCount(readingStats)}</span>
-				</p>
-			</header>
-			<slot />
-			{
-				(newer || older) && (
-					<nav class="post-nav" aria-label="Post navigation">
-						{older ? (
-							<a class="post-nav-link prev" href={postHref(older)}>
-								<span class="dir">← Older post</span>
-								<span class="nav-title">{older.data.title}</span>
-							</a>
-						) : (
-							<span />
-						)}
-						{newer ? (
-							<a class="post-nav-link next" href={postHref(newer)}>
-								<span class="dir">Newer post →</span>
-								<span class="nav-title">{newer.data.title}</span>
-							</a>
-						) : (
-							<span />
-						)}
-					</nav>
-				)
-			}
+		<div class="post-shell">
+			<div class="prose">
+				<header class="post-header">
+					<div class="date">
+						<FormattedDate date={pubDate} />
+						{
+							updatedDate && (
+								<div class="last-updated-on">
+									Last updated on <FormattedDate date={updatedDate} />
+								</div>
+							)
+						}
+					</div>
+					<h1>{title}</h1>
+					<hr />
+					<p class="meta">
+						<span>{formatReadingTime(readingStats)}</span>
+						<span class="dot" aria-hidden="true">·</span>
+						<span>{formatWordCount(readingStats)}</span>
+					</p>
+				</header>
+				<slot />
+				{
+					(newer || older) && (
+						<nav class="post-nav" aria-label="Post navigation">
+							{older ? (
+								<a class="post-nav-link prev" href={postHref(older)}>
+									<span class="dir">← Older post</span>
+									<span class="nav-title">{older.data.title}</span>
+								</a>
+							) : (
+								<span />
+							)}
+							{newer ? (
+								<a class="post-nav-link next" href={postHref(newer)}>
+									<span class="dir">Newer post →</span>
+									<span class="nav-title">{newer.data.title}</span>
+								</a>
+							) : (
+								<span />
+							)}
+						</nav>
+					)
+				}
+			</div>
+			<TableOfContents headings={headings} />
 		</div>
 	</article>
 </BaseLayout>
+
+<script>
+	import { initCodeCopy } from '../scripts/code-copy.js';
+	import { initTocActive } from '../scripts/toc-active.js';
+
+	document.addEventListener('astro:page-load', () => {
+		initCodeCopy();
+		initTocActive();
+	});
+</script>
 
 <style>
 	.article {
@@ -103,6 +120,9 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		max-width: calc(100% - var(--space-8));
 		margin: 0 auto;
 		color: var(--color-text);
+	}
+	.post-shell {
+		display: block;
 	}
 	.post-header {
 		text-align: center;
@@ -181,6 +201,63 @@ function postHref(post: CollectionEntry<'blog'>): string {
 	@media (max-width: 600px) {
 		.post-nav {
 			flex-direction: column;
+		}
+	}
+
+	.prose :global(.code-block) {
+		position: relative;
+	}
+	.prose :global(.code-copy) {
+		position: absolute;
+		top: var(--space-2);
+		right: var(--space-2);
+		padding: var(--space-1) var(--space-2);
+		font-size: var(--text-xs);
+		font-family: inherit;
+		line-height: 1;
+		color: var(--color-text-soft);
+		background: var(--color-bg-elev);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		cursor: pointer;
+		opacity: 0;
+		transition:
+			opacity 0.2s ease,
+			color 0.2s ease,
+			border-color 0.2s ease;
+	}
+	.prose :global(.code-block:hover .code-copy),
+	.prose :global(.code-copy:focus-visible) {
+		opacity: 1;
+	}
+	.prose :global(.code-copy:hover) {
+		color: var(--color-accent);
+		border-color: var(--color-accent);
+	}
+	.prose :global(.code-copy.is-copied) {
+		opacity: 1;
+		color: var(--color-accent);
+		border-color: var(--color-accent);
+	}
+
+	@media (min-width: 1200px) {
+		:global(main#main-content:has(.post-shell)) {
+			max-width: 1140px;
+		}
+		.post-shell {
+			display: grid;
+			grid-template-columns: 1fr minmax(0, var(--container-base)) 1fr;
+			gap: var(--space-12);
+			align-items: start;
+		}
+		.prose {
+			grid-column: 2;
+			width: 100%;
+			max-width: none;
+			margin: 0;
+		}
+		.post-shell > :global(.toc-area) {
+			grid-column: 3;
 		}
 	}
 </style>
