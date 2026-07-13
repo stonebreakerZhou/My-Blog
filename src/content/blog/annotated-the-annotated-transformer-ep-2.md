@@ -2,7 +2,8 @@
 title: "'Annotated'《The Annotated Transformer》(Ep.2)"
 description: "深度学习 Transformer 模型训练详解"
 pubDate: 2026-02-28
-categories: 
+heroImage: ./images/屏幕截图-2026-03-01-133028.png
+categories:
   - "transformer"
   - "深度学习"
 ---

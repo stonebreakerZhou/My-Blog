@@ -1,33 +1,54 @@
 ---
-import Social from './Social.astro';
-
-const platform = "github";
-const username = "HelloMyWorld419";
 ---
-
 <footer>
-	<p>&copy; {new Date().getFullYear()} Stonebreaker. All rights reserved.</p>
-	<div class="social-links">
-		<Social platform="github" username="HelloMyWorld419" />
-		<Social platform="zhihu" username="laughable-young" />
+	<div class="footer-inner">
+		<p class="copyright">© {new Date().getFullYear()} StoneBreaker</p>
+		<nav class="social-links">
+			<a href="https://github.com/stonebreakerZhou" target="_blank" rel="noopener noreferrer">GitHub</a>
+			<a href="https://www.zhihu.com/people/laughable-young" target="_blank" rel="noopener noreferrer">Zhihu</a>
+			<a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a>
+		</nav>
 	</div>
 </footer>
 
 <style>
 	footer {
+		margin-top: var(--space-16);
+		padding: var(--space-8) var(--space-4);
+		border-top: 1px solid var(--color-border-soft);
+		background: var(--color-bg-soft);
+	}
+	.footer-inner {
+		max-width: var(--container-max);
+		margin: 0 auto;
 		display: flex;
-		flex-direction: column;
+		justify-content: space-between;
 		align-items: center;
-		gap: 1rem;
-		margin-top: 2rem;
-		padding: 2em 1em 6em 1em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		color: rgb(var(--gray));
-		text-align: center;
+		flex-wrap: wrap;
+		gap: var(--space-4);
+	}
+	.copyright {
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+		margin: 0;
 	}
 	.social-links {
 		display: flex;
-		gap: 1rem;
-		margin-top: 0.5em;
+		gap: var(--space-6);
+	}
+	.social-links a {
+		color: var(--color-text-soft);
+		font-size: var(--text-sm);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	.social-links a:hover {
+		color: var(--color-accent);
+	}
+	@media (max-width: 600px) {
+		.footer-inner {
+			flex-direction: column;
+			text-align: center;
+		}
 	}
 </style>

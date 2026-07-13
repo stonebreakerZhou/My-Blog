@@ -1,23 +1,120 @@
 ---
-import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
----
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostList from '../components/PostList.astro';
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>Welcome to My Blog</h1>
-			<p>这是 StoneBreaker 的成长记录与分享平台。</p>
-			<p>与诸位一同成长，探寻 AI 世界、日常生活中的乐趣与意义。</p>
-			<p>欢迎阅读我的博客文章，期待与你交流分享。</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+const recentPosts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+---
+<BaseLayout
+	title="Sean · StoneBreaker"
+	description="AI research & learning notes"
+>
+	<section class="hero">
+		<div class="hero-inner">
+			<h1>Sean<span class="muted"> / StoneBreaker</span></h1>
+			<p class="tagline">AI development student at Beijing Institute of Technology.</p>
+			<p class="description">记录我对 AI、深度学习、机器学习的思考与笔记。</p>
+			<div class="hero-links">
+				<a href={`${import.meta.env.BASE_URL}blog/`} class="cta">Read the blog →</a>
+				<a href={`${import.meta.env.BASE_URL}about/`} class="muted-link">About me</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="recent">
+		<div class="section-header">
+			<h2>Recent posts</h2>
+			<a href={`${import.meta.env.BASE_URL}blog/`} class="see-all">See all →</a>
+		</div>
+		<PostList posts={recentPosts} />
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding: var(--space-20) 0 var(--space-16);
+		text-align: center;
+	}
+	.hero-inner {
+		max-width: var(--container-narrow);
+		margin: 0 auto;
+		padding: 0 var(--space-4);
+	}
+	.hero h1 {
+		font-size: var(--text-5xl);
+		margin-bottom: var(--space-4);
+		letter-spacing: -0.04em;
+	}
+	.hero h1 .muted {
+		color: var(--color-text-muted);
+		font-weight: 500;
+	}
+	.tagline {
+		color: var(--color-text);
+		font-size: var(--text-lg);
+		margin-bottom: var(--space-3);
+		font-weight: 500;
+	}
+	.description {
+		color: var(--color-text-soft);
+		margin-bottom: var(--space-8);
+	}
+	.hero-links {
+		display: flex;
+		gap: var(--space-4);
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+	.cta {
+		background: var(--color-accent);
+		color: white;
+		padding: var(--space-3) var(--space-6);
+		border-radius: var(--radius-md);
+		font-weight: 500;
+		text-decoration: none;
+		transition: background 0.2s ease;
+	}
+	.cta:hover {
+		background: var(--color-accent-hover);
+		color: white;
+	}
+	.muted-link {
+		color: var(--color-text-soft);
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.2s ease;
+	}
+	.muted-link:hover {
+		color: var(--color-accent);
+	}
+
+	.recent {
+		padding: var(--space-12) 0 var(--space-8);
+	}
+	.section-header {
+		max-width: var(--container-wide);
+		margin: 0 auto var(--space-6);
+		padding: 0 var(--space-4);
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+	.section-header h2 {
+		font-size: var(--text-2xl);
+		margin: 0;
+	}
+	.see-all {
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	.see-all:hover {
+		color: var(--color-accent);
+	}
+</style>

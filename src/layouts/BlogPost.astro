@@ -1,86 +1,76 @@
 ---
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
+import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
-import Header from '../components/Header.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
-
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 ---
-
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
-
-	<body>
-		<Header />
-		<main>
-			<article>
+<BaseLayout title={title} description={description}>
+	<article class="article">
+		{
+			heroImage && (
 				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+					<Image width={1020} height={510} src={heroImage} alt="" />
 				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
+			)
+		}
+		<div class="prose">
+			<header class="post-header">
+				<div class="date">
+					<FormattedDate date={pubDate} />
+					{
+						updatedDate && (
+							<div class="last-updated-on">
+								Last updated on <FormattedDate date={updatedDate} />
+							</div>
+						)
+					}
 				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+				<h1>{title}</h1>
+				<hr />
+			</header>
+			<slot />
+		</div>
+	</article>
+</BaseLayout>
+
+<style>
+	.article {
+		width: 100%;
+	}
+	.hero-image {
+		max-width: var(--container-wide);
+		margin: 0 auto var(--space-8);
+	}
+	.hero-image :global(img) {
+		width: 100%;
+		border-radius: var(--radius-xl);
+		box-shadow: var(--shadow-lg);
+	}
+	.prose {
+		width: var(--container-base);
+		max-width: calc(100% - var(--space-8));
+		margin: 0 auto;
+		color: var(--color-text);
+	}
+	.post-header {
+		text-align: center;
+		margin-bottom: var(--space-8);
+		padding-bottom: var(--space-6);
+	}
+	.post-header h1 {
+		margin: var(--space-4) 0;
+		font-size: var(--text-4xl);
+	}
+	.date {
+		margin-bottom: var(--space-2);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+	.last-updated-on {
+		font-style: italic;
+		margin-top: var(--space-1);
+	}
+</style>

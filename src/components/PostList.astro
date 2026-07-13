@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+const { posts } = Astro.props;
+---
+<section class="post-list-section">
+	<ul class="post-list">
+		{
+			posts.map((post, i) => (
+				<li class:list={[{ 'is-first': i === 0 }]}>
+					<a href={`${import.meta.env.BASE_URL}blog/${post.id}/`}>
+						{post.data.heroImage && (
+							<Image width={720} height={360} src={post.data.heroImage} alt="" />
+						)}
+						<h4 class="title">{post.data.title}</h4>
+						<p class="date">
+							<FormattedDate date={post.data.pubDate} />
+						</p>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+</section>
+
+<style>
+	.post-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-8);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.post-list li {
+		width: calc(50% - var(--space-4));
+	}
+	.post-list li * {
+		text-decoration: none;
+		transition: color 0.2s ease, box-shadow 0.2s ease;
+	}
+	.post-list li.is-first {
+		width: 100%;
+		margin-bottom: var(--space-6);
+		text-align: center;
+	}
+	.post-list li.is-first img {
+		width: 100%;
+	}
+	.post-list li.is-first .title {
+		font-size: var(--text-3xl);
+	}
+	.post-list li img {
+		margin-bottom: var(--space-3);
+		border-radius: var(--radius-lg);
+	}
+	.post-list li a {
+		display: block;
+	}
+	.post-list .title {
+		margin: 0;
+		color: var(--color-text);
+		line-height: var(--leading-snug);
+	}
+	.post-list .date {
+		margin: var(--space-2) 0 0;
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+	.post-list a:hover .title,
+	.post-list a:hover .date {
+		color: var(--color-accent);
+	}
+	.post-list a:hover img {
+		box-shadow: var(--shadow-lg);
+	}
+	@media (max-width: 720px) {
+		.post-list {
+			gap: var(--space-6);
+		}
+		.post-list li {
+			width: 100%;
+			text-align: center;
+		}
+		.post-list li.is-first {
+			margin-bottom: var(--space-3);
+		}
+		.post-list li.is-first .title {
+			font-size: var(--text-2xl);
+		}
+	}
+</style>

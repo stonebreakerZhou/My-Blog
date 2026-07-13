@@ -1,0 +1,35 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={title} description={description} />
+	</head>
+	<body>
+		<Header transition:persist />
+		<main id="main-content">
+			<slot />
+		</main>
+		<Footer transition:persist />
+	</body>
+</html>
+
+<style>
+	main#main-content {
+		width: 100%;
+		max-width: var(--container-wide);
+		margin: 0 auto;
+		padding: var(--space-12) var(--space-4);
+		min-height: 60vh;
+	}
+</style>
