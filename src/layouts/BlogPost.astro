@@ -3,9 +3,23 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import {
+	readingStats,
+	formatReadingTime,
+	formatWordCount,
+} from '../utils/reading-time';
 
-type Props = CollectionEntry<'blog'>['data'];
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+type Props = CollectionEntry<'blog'>['data'] & {
+	readingStats: ReturnType<typeof readingStats>;
+};
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	readingStats,
+} = Astro.props;
 ---
 <BaseLayout title={title} description={description}>
 	<article class="article">
@@ -30,6 +44,11 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				</div>
 				<h1>{title}</h1>
 				<hr />
+				<p class="meta">
+					<span>{formatReadingTime(readingStats)}</span>
+					<span class="dot" aria-hidden="true">·</span>
+					<span>{formatWordCount(readingStats)}</span>
+				</p>
 			</header>
 			<slot />
 		</div>
@@ -72,5 +91,17 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 	.last-updated-on {
 		font-style: italic;
 		margin-top: var(--space-1);
+	}
+	.meta {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: var(--space-2);
+		margin-top: var(--space-3);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+	}
+	.meta .dot {
+		opacity: 0.5;
 	}
 </style>
