@@ -1,0 +1,71 @@
+---
+/**
+ * Animated signature — SVG <text> rendered with Sacramento.
+ * Effect: outline stroke revealed left→right (clip-path), then fill fades in.
+ * Honors prefers-reduced-motion.
+ */
+interface Props {
+	variant?: 'home' | 'about';
+}
+const { variant = 'home' } = Astro.props;
+---
+
+<svg
+	class:list={['signature', `signature--${variant}`]}
+	viewBox="0 0 400 110"
+	xmlns="http://www.w3.org/2000/svg"
+	aria-label="Stonebreaker"
+	role="img"
+	preserveAspectRatio="xMidYMid meet"
+>
+	<text x="200" y="84" text-anchor="middle" class="sig-text">Stonebreaker</text>
+</svg>
+
+<style>
+	.signature {
+		display: block;
+		width: 100%;
+		max-width: 260px;
+		height: auto;
+		margin: 0 auto;
+		overflow: visible;
+		color: var(--color-text);
+	}
+	.signature--about {
+		max-width: 380px;
+	}
+	.sig-text {
+		font-family: var(--font-script);
+		font-size: 88px;
+		font-weight: 400;
+		fill: transparent;
+		stroke: currentColor;
+		stroke-width: 1.6;
+		paint-order: stroke fill;
+		clip-path: inset(0 100% 0 0);
+		-webkit-clip-path: inset(0 100% 0 0);
+		animation:
+			sig-reveal 2.4s cubic-bezier(0.65, 0, 0.35, 1) forwards,
+			sig-fill 0.55s ease-out 2.1s forwards;
+	}
+	@keyframes sig-reveal {
+		to {
+			clip-path: inset(0 0 0 0);
+			-webkit-clip-path: inset(0 0 0 0);
+		}
+	}
+	@keyframes sig-fill {
+		to {
+			fill: currentColor;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.sig-text {
+			animation: none;
+			clip-path: inset(0 0 0 0);
+			-webkit-clip-path: inset(0 0 0 0);
+			fill: currentColor;
+		}
+	}
+</style>

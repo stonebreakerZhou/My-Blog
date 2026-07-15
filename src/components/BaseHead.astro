@@ -41,6 +41,11 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#0891b2" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#22b8cf" media="(prefers-color-scheme: dark)" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="format-detection" content="telephone=no, email=no" />
 <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
 <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.ico`} />
 <link rel="sitemap" href={`${import.meta.env.BASE_URL}sitemap-index.xml`} />
@@ -57,7 +62,7 @@ const { title, description, image = FallbackImage } = Astro.props;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
 	rel="stylesheet"
-	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Sacramento&display=swap"
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&family=Spectral:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Sacramento&display=swap"
 />
 
 <!-- View Transitions (Astro 6 client router) -->

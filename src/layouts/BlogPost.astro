@@ -33,7 +33,7 @@ function postHref(post: CollectionEntry<'blog'>): string {
 	return `${import.meta.env.BASE_URL}blog/${post.id}/`;
 }
 ---
-<BaseLayout title={title} description={description}>
+<BaseLayout title={`${title} · Stonebreaker`} description={description}>
 	<div class="reading-progress" aria-hidden="true"></div>
 	<article class="article">
 		{
@@ -208,7 +208,14 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		font-weight: 500;
 		line-height: var(--leading-snug);
 	}
-	@media (max-width: 600px) {
+	@media (max-width: 720px) {
+		.hero-image {
+			margin: 0 0 var(--space-6);
+		}
+		.hero-image :global(img) {
+			border-radius: var(--radius-md);
+			box-shadow: var(--shadow-sm);
+		}
 		.post-nav {
 			flex-direction: column;
 		}

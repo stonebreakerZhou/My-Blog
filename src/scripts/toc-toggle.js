@@ -2,16 +2,6 @@ const STORAGE_KEY = 'toc';
 const STATE_OPEN = 'open';
 const STATE_CLOSED = 'closed';
 
-function readState() {
-	try {
-		return localStorage.getItem(STORAGE_KEY) === STATE_CLOSED
-			? STATE_CLOSED
-			: STATE_OPEN;
-	} catch {
-		return STATE_OPEN;
-	}
-}
-
 function writeState(state) {
 	try {
 		localStorage.setItem(STORAGE_KEY, state);
