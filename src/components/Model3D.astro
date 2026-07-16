@@ -1,0 +1,983 @@
+---
+/**
+ * Interactive voxel scene (craftz.dog-style).
+ * Built entirely from BoxGeometry — no external models.
+ * A suited wool sheep stands at a coding desk, holding a guitar.
+ */
+interface Props {
+	size?: number;
+	class?: string;
+}
+const { size = 340, class: className = "" } = Astro.props;
+---
+
+<div class:list={["model-3d", className]} style={`--size: ${size}px;`}>
+	<div class="model-stage">
+		<canvas class="model-canvas"></canvas>
+		<div class="model-loader" data-loader>
+			<span class="spinner" aria-hidden="true"></span>
+		</div>
+	</div>
+</div>
+
+<script>
+	import * as THREE from "three";
+	import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+	import * as BufferGeometryUtils from "three/examples/jsm/utils/BufferGeometryUtils.js";
+
+	const easeOutCirc = (x: number) => Math.sqrt(1 - Math.pow(x - 1, 4));
+
+	// Palette (per the reference + prompt).
+	const C = {
+		wool: 0xf2f1e8,
+		skin: 0xe5c5b5,
+		black: 0x000000,
+		suit: 0x111111,
+		shirt: 0xffffff,
+		bow: 0xffd700,
+		guitar: 0xc49a6c,
+		guitarDark: 0x5c4033,
+		wood: 0x6b4423,
+		floor: 0xc9c9c9,
+		beige: 0xd4c5a0,
+		screen: 0x001a0a,
+		code: 0x00ff66,
+	};
+
+	// ---- Geometry helpers ---------------------------------------------------
+
+	const mat = (
+		color: number,
+		opts: { emissive?: number; emissiveIntensity?: number } = {},
+	) => new THREE.MeshLambertMaterial({ color, ...opts });
+
+	const box = (
+		w: number,
+		h: number,
+		d: number,
+		color: number,
+		opts?: { emissive?: number; emissiveIntensity?: number },
+	) => {
+		const mesh = new THREE.Mesh(
+			new THREE.BoxGeometry(w, h, d),
+			mat(color, opts),
+		);
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		return mesh;
+	};
+
+	const place = (
+		parent: THREE.Object3D,
+		child: THREE.Object3D,
+		x: number,
+		y: number,
+		z: number,
+	) => {
+		child.position.set(x, y, z);
+		parent.add(child);
+	};
+
+	// Build a step / cluster from a list of voxel specs.
+	type Voxel = {
+		p: [number, number, number];
+		s: [number, number, number];
+		c: number;
+	};
+	const buildVoxels = (voxels: Voxel[]) => {
+		const g = new THREE.Group();
+		for (const v of voxels) {
+			const m = box(v.s[0], v.s[1], v.s[2], v.c);
+			place(g, m, v.p[0], v.p[1], v.p[2]);
+		}
+		return g;
+	};
+
+	// Merge a list of voxel specs into a single solid mesh (per-color group).
+	const mergeVoxels = (voxels: Voxel[]) => {
+		// Group by color so each color becomes one merged geometry + one material.
+		const byColor = new Map<number, THREE.BufferGeometry[]>();
+		for (const v of voxels) {
+			const geo = new THREE.BoxGeometry(v.s[0], v.s[1], v.s[2]);
+			geo.translate(v.p[0], v.p[1], v.p[2]);
+			const list = byColor.get(v.c) ?? [];
+			list.push(geo);
+			byColor.set(v.c, list);
+		}
+		const group = new THREE.Group();
+		for (const [color, geos] of byColor) {
+			const merged = BufferGeometryUtils.mergeGeometries(geos, false);
+			const mesh = new THREE.Mesh(
+				merged,
+				new THREE.MeshLambertMaterial({ color }),
+			);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			group.add(mesh);
+		}
+		return group;
+	};
+
+	// ---- Sheep --------------------------------------------------------------
+
+	function buildSheep(): THREE.Group {
+		const sheep = new THREE.Group();
+
+		// All voxels combined into one solid object.
+		const all: Voxel[] = [
+			// ═══════════════ 【羊毛身体】═══════════════
+			// 主躯干 + 侧边羊毛(让身体看起来圆润有体积)
+			{ p: [0, 0.7, 0], s: [1.55, 0.6, 0.75], c: C.wool }, // 躯干主体
+			{ p: [0.45, 0.7, 0], s: [0.25, 0.55, 0.5], c: C.wool }, // 右腰侧羊毛
+			{ p: [-0.45, 0.7, 0], s: [0.25, 0.55, 0.5], c: C.wool }, // 左腰侧羊毛
+			{ p: [0, 0.7, -0.35], s: [1.55, 0.55, 0.25], c: C.wool }, // 后背羊毛(臀部)
+			{ p: [0, 0.7, 0.35], s: [0.8, 0.5, 0.2], c: C.wool }, // 胸前羊毛(被西装盖住一点)
+			{ p: [0, 1.1, -0.15], s: [0.85, 0.25, 0.5], c: C.wool }, // 肩背横条
+			{ p: [0.35, 1.05, -0.1], s: [1.0, 0.25, 0.45], c: C.wool }, // 右肩背小羊毛
+			{ p: [-0.35, 1.05, -0.1], s: [1.0, 0.25, 0.45], c: C.wool }, // 左肩背小羊毛
+
+			// ═══════════════ 【头顶蓬松羊毛】═══════════════
+			// 头部上方层层叠叠的羊毛,有刘海
+			{ p: [0, 2.0, 0.0], s: [0.7, 0.25, 0.66], c: C.wool }, // 头顶最高层(羊角位置)
+			{ p: [0, 1.8, -0.15], s: [0.75, 0.3, 0.35], c: C.wool }, // 后脑勺羊毛
+			{ p: [0, 1.85, 0.35], s: [1.0, 0.2, 0.22], c: C.wool }, // 刘海(额头前垂)
+			{ p: [0.4, 1.55, 0.0], s: [0.22, 0.5, 0.45], c: C.wool }, // 右脸颊羊毛
+			{ p: [-0.4, 1.55, 0.0], s: [0.22, 0.5, 0.45], c: C.wool }, // 左脸颊羊毛
+			{ p: [0.15, 1.35, -0.35], s: [0.5, 1.0, 0.22], c: C.wool }, // 右后下层羊毛
+			{ p: [-0.15, 1.35, -0.35], s: [0.5, 0.8, 0.22], c: C.wool }, // 左后下层羊毛
+
+			// ═══════════════ 【羊角】═══════════════
+			// 头顶长出来的两根小弯角,米黄色,根部粗尖部细
+			{ p: [0.22, 2.18, 0.05], s: [0.1, 0.18, 0.1], c: 0xd9b382 }, // 右角根部
+			{ p: [0.28, 2.32, 0.05], s: [0.07, 0.12, 0.07], c: 0xd9b382 }, // 右角中段
+			{ p: [0.32, 2.42, 0.05], s: [0.04, 0.08, 0.04], c: 0xd9b382 }, // 右角尖端
+			{ p: [-0.22, 2.18, 0.05], s: [0.1, 0.18, 0.1], c: 0xd9b382 }, // 左角根部
+			{ p: [-0.28, 2.32, 0.05], s: [0.07, 0.12, 0.07], c: 0xd9b382 }, // 左角中段
+			{ p: [-0.32, 2.42, 0.05], s: [0.04, 0.08, 0.04], c: 0xd9b382 }, // 左角尖端
+
+			// ═══════════════ 【腿部羊毛(上 2/3)】═══════════════
+			// 4 条腿,白色羊毛部分
+			{ p: [0.28, 0.3, 0.4], s: [0.22, 0.6, 0.22], c: C.wool }, // 前右腿(羊毛)
+			{ p: [-0.28, 0.3, 0.4], s: [0.22, 0.6, 0.22], c: C.wool }, // 前左腿(羊毛)
+			{ p: [0.28, 0.3, -0.35], s: [0.22, 0.6, 0.22], c: C.wool }, // 后右腿(羊毛)
+			{ p: [-0.28, 0.3, -0.35], s: [0.22, 0.6, 0.22], c: C.wool }, // 后左腿(羊毛)
+
+			// ═══════════════ 【粉色皮肤:脸/嘴/耳朵】═══════════════
+			// 脸部、突出的嘴部、左右耳
+			{ p: [0, 1.45, 0.35], s: [1.0, 0.75, 0.4], c: C.skin }, // 主脸(粉色皮肤)
+			{ p: [0, 1.25, 0.7], s: [0.75, 0.45, 0.3], c: C.skin }, // 突出的小嘴
+			{ p: [0.4, 1.65, 0.1], s: [0.4, 0.22, 0.18], c: C.skin }, // 右耳
+			{ p: [-0.4, 1.65, 0.1], s: [0.4, 0.22, 0.18], c: C.skin }, // 左耳
+
+			// ═══════════════ 【粉色蹄子(腿下 1/3)】═══════════════
+			// 4 条腿最底部的蹄子
+			{ p: [0.28, 0.05, 0.4], s: [0.24, 0.15, 0.24], c: C.skin }, // 前右蹄
+			{ p: [-0.28, 0.05, 0.4], s: [0.24, 0.15, 0.24], c: C.skin }, // 前左蹄
+			{ p: [0.28, 0.05, -0.35], s: [0.24, 0.15, 0.24], c: C.skin }, // 后右蹄
+			{ p: [-0.28, 0.05, -0.35], s: [0.24, 0.15, 0.24], c: C.skin }, // 后左蹄
+
+			// ═══════════════ 【黑色:眼睛 + 鼻子】═══════════════
+			// 两只竖条眼睛和鼻子
+			{ p: [0, 1.3, 0.88], s: [0.22, 0.12, 0.08], c: C.black }, // 鼻子(嘴部最前端)
+			{ p: [0.16, 1.5, 0.58], s: [0.12, 0.18, 0.06], c: C.black }, // 右眼(竖条)
+			{ p: [-0.16, 1.5, 0.58], s: [0.12, 0.18, 0.06], c: C.black }, // 左眼(竖条)
+
+			// ═══════════════ 【黑色西装】═══════════════
+			// 下半身西装包裹 + 肩部 + 袖子
+			{ p: [0, 0.78, 0.3], s: [0.95, 0.65, 0.55], c: C.suit }, // 西装主体(包裹下半身)
+			{ p: [0, 1.15, 0.3], s: [1.05, 0.18, 0.6], c: C.suit }, // 肩部横条
+			{ p: [0.55, 0.7, 0.3], s: [0.22, 0.65, 0.3], c: C.suit }, // 右袖
+			{ p: [-0.55, 0.7, 0.3], s: [0.22, 0.65, 0.3], c: C.suit }, // 左袖
+
+			// ═══════════════ 【白衬衫 + 金领结】═══════════════
+			// 胸前露出的白衬衫 + 金色蝴蝶结
+			{ p: [0, 0.95, 0.6], s: [0.3, 0.32, 0.1], c: C.shirt }, // 白衬衫(领口)
+			{ p: [0, 0.95, 0.66], s: [0.1, 0.1, 0.06], c: C.bow }, // 领结中心
+			{ p: [-0.13, 0.95, 0.66], s: [0.14, 0.14, 0.06], c: C.bow }, // 领结左翼
+			{ p: [0.13, 0.95, 0.66], s: [0.14, 0.14, 0.06], c: C.bow }, // 领结右翼
+
+			// ═══════════════ 【小尾巴】═══════════════
+			// 转身 180° 后,尾巴在身体最后方(局部 -z 一侧,相机看不到 → 世界 +z 一侧能看到)
+			// 等等 — 转身 180° 后局部 -z 转到世界 +z,相机在世界 +z 一侧,所以局部 -z 仍是被相机看到的那面
+			// 但屁股 wool z ∈ [-0.475, -0.225],尾巴 z=-0.55 紧贴臀部后表面
+			// 蓬松小毛球:中心方块 + 上下左右各一块 → 近似球形
+			// 中心
+			{ p: [0.0, 0.7, -0.55], s: [0.18, 0.18, 0.18], c: C.wool },
+			// 上一块(轮廓更圆)
+			{ p: [0.0, 0.83, -0.5], s: [0.12, 0.1, 0.12], c: C.wool },
+			// 下一块
+			{ p: [0.0, 0.57, -0.5], s: [0.12, 0.1, 0.12], c: C.wool },
+			// 左一块
+			{ p: [-0.1, 0.7, -0.5], s: [0.1, 0.12, 0.12], c: C.wool },
+			// 右一块
+			{ p: [0.1, 0.7, -0.5], s: [0.1, 0.12, 0.12], c: C.wool },
+
+			// ═══════════════ 【白色手套(双手)】═══════════════
+			// 羊的两只手,放在胸前准备抱吉他
+			{ p: [0.5, 0.7, 0.85], s: [0.3, 0.22, 0.7], c: C.shirt }, // 右手
+			{ p: [-0.5, 0.7, 0.85], s: [0.3, 0.22, 0.7], c: C.shirt }, // 左手
+		];
+
+		sheep.add(mergeVoxels(all));
+
+		// Sit the sheep slightly elevated so hands reach desk surface naturally.
+		sheep.position.set(0, 0.52, 0.4);
+		// Turn to face the computer (which sits behind at -z).
+		sheep.rotation.y = Math.PI;
+		return sheep;
+	}
+
+	// ---- Desk + Workspace ---------------------------------------------------
+
+	function buildDesk(): THREE.Group {
+		const desk = new THREE.Group();
+
+		// ── Desktop (solid wood slab, merged legs). ──
+		const top = box(2.4, 0.12, 1.0, C.wood);
+		top.position.set(0, 0, 0);
+		desk.add(top);
+
+		const lh = 0.85;
+		const leg = (x: number, z: number) => {
+			const m = box(0.12, lh, 0.12, C.wood);
+			m.position.set(x, -lh / 2 - 0.06, z);
+			return m;
+		};
+		desk.add(leg(1.1, 0.42));
+		desk.add(leg(-1.1, 0.42));
+		desk.add(leg(1.1, -0.42));
+		desk.add(leg(-1.1, -0.42));
+
+		const SURFACE_Y = 0.06; // top surface of desk (sits on top of 0.12-thick slab)
+
+		// ── (Center) CRT-style monitor on a stand. ──
+		const monitor = new THREE.Group();
+		const stand = box(0.2, 0.18, 0.2, C.beige);
+		stand.position.set(0, 0.09, 0);
+		monitor.add(stand);
+		// Boxy CRT body — thicker than a flat panel, slight depth.
+		const crtBody = box(1.0, 0.7, 0.55, C.beige);
+		crtBody.position.set(0, 0.55, 0);
+		monitor.add(crtBody);
+		// Recessed screen face.
+		const screenFace = box(0.85, 0.55, 0.02, C.screen, {
+			emissive: C.code,
+			emissiveIntensity: 0.25,
+		});
+		screenFace.position.set(0, 0.58, 0.28);
+		monitor.add(screenFace);
+
+		// ── Pixel skull on the screen (7×7 grid of small green cubes). ──
+		// 1 = lit pixel, 0 = off. Drawn around screen center (0, 0.58, 0.295).
+		const skull = [
+			". X X . . X X .",
+			"X X X X X X X X",
+			"X . X X X X . X",
+			"X . X X X X . X",
+			". X X X X X X .",
+			". X . X X . X .",
+			". . . X X . . .",
+		];
+		const px = 0.045;
+		const startX = -((skull[0].length - 1) * px) / 2;
+		const startY = 0.58 + ((skull.length - 1) * px) / 2;
+		for (let r = 0; r < skull.length; r++) {
+			const row = skull[r].split(" ");
+			for (let c = 0; c < row.length; c++) {
+				if (row[c] !== "X") continue;
+				const lit = box(px * 0.9, px * 0.9, 0.005, C.code, {
+					emissive: C.code,
+					emissiveIntensity: 1.2,
+				});
+				lit.position.set(startX + c * px, startY - r * px, 0.295);
+				monitor.add(lit);
+			}
+		}
+		monitor.position.set(0, SURFACE_Y, -0.2);
+		desk.add(monitor);
+
+		// ── "stonebreaker" pixel label on the BACK of the monitor (faces away from camera). ──
+		// 5×7 pixel font per letter, green emissive like the screen.
+		// Back face of monitor body is at local z = -0.275; we place pixels at z = -0.282.
+		const font: Record<string, string[]> = {
+			s: [".XXX.", "X....", "X....", ".XX..", "...X.", "....X", "XXXX."],
+			t: ["XXXXX", "..X..", "..X..", "..X..", "..X..", "..X..", "..X.."],
+			o: [".XXX.", "X...X", "X...X", "X...X", "X...X", "X...X", ".XXX."],
+			n: ["X...X", "XX..X", "X.X.X", "X.X.X", "X...X", "X...X", "X...X"],
+			e: [".XXX.", "X...X", "X....", "XXXX.", "X....", "X...X", ".XXX."],
+			b: ["X....", "X....", "X.XX.", "XX..X", "X...X", "X...X", ".XXX."],
+			r: ["X.XX.", "XX..X", "X....", "X....", "X....", "X....", "X...."],
+			a: [".XXX.", "X...X", "X...X", ".XXXX", "....X", "X...X", ".XXX."],
+			k: ["X...X", "X..X.", "X.X..", "XX...", "X.X..", "X..X.", "X...X"],
+		};
+		const word = "stonebreaker";
+		const fpx = 0.014; // pixel pitch (size + gap)
+		const fsize = 0.010; // pixel cube side — thin
+		const letterGap = 0.008;
+		const letterW = 5 * fpx;
+		const wordW =
+			word.length * letterW + (word.length - 1) * letterGap;
+		const fstartX = -wordW / 2 + letterW / 2;
+		const fstartY = 0.72; // upper half of monitor back
+
+		for (let i = 0; i < word.length; i++) {
+			const ch = word[i];
+			const glyph = font[ch];
+			if (!glyph) continue;
+			// Negate cx so the text reads correctly from the camera's off-axis viewpoint
+			// (camera sits at +x +z, so object +x maps to camera "left" → mirror to fix).
+			const cx = -(fstartX + i * (letterW + letterGap));
+			for (let r = 0; r < glyph.length; r++) {
+				const row = glyph[r];
+				for (let c = 0; c < row.length; c++) {
+					if (row[c] !== "X") continue;
+					const dot = box(fsize, fsize, 0.005, C.code, {
+						emissive: C.code,
+						emissiveIntensity: 1.1,
+					});
+					dot.position.set(
+						cx - (c - 2) * fpx,
+						fstartY - r * fpx,
+						-0.282,
+					);
+					monitor.add(dot);
+				}
+			}
+		}
+
+		// ── (Center-front) Minimalist low-poly keyboard (per reference image). ──
+		// 14 columns × 5 rows of keycaps, no shell. Purple left + white main + purple right-top + gray arrow keys.
+		const keyboard: Voxel[] = [];
+		const KEY_W = 0.05;
+		const KEY_H = 0.04;
+		const KEY_D = 0.05;
+		const STEP = 0.06;
+		const kbStartX = -0.385;
+		const kbStartZ = -0.13;
+		const purple = 0x9b8cc4;
+		const white = 0xf5f0e8;
+		const darkPurple = 0x7c6fa6;
+		const gray = 0xb8c4d0;
+
+		const addKey = (
+			col: number,
+			row: number,
+			color: number,
+			wideCols = 1,
+		) => {
+			const x = kbStartX + (col + (wideCols - 1) / 2) * STEP;
+			const z = kbStartZ + row * STEP;
+			const w = KEY_W * wideCols + 0.01 * (wideCols - 1);
+			keyboard.push({
+				p: [x, 0.04, z],
+				s: [w, KEY_H, KEY_D],
+				c: color,
+			});
+		};
+
+		// Purple left block (cols 0-3, all 5 rows).
+		for (let row = 0; row < 5; row++) {
+			for (let col = 0; col < 4; col++) {
+				addKey(col, row, purple);
+			}
+		}
+
+		// White main area, rows 0-3 (cols 4-10), with a couple of dark accent keys.
+		for (let row = 0; row < 4; row++) {
+			for (let col = 4; col < 11; col++) {
+				addKey(col, row, white);
+			}
+		}
+		// Dark accent keys in the white area.
+		addKey(7, 1, darkPurple);
+		addKey(8, 2, darkPurple);
+
+		// Purple right-top cluster (cols 11-12, rows 0-2).
+		for (let row = 0; row < 3; row++) {
+			for (let col = 11; col < 13; col++) {
+				addKey(col, row, purple);
+			}
+		}
+		// Right side row 3: purple + dark accent.
+		addKey(11, 3, purple);
+		addKey(12, 3, darkPurple);
+
+		// Row 4 (front): small keys + long spacebar + arrow cluster.
+		addKey(4, 4, white);
+		addKey(5, 4, white);
+		addKey(6, 4, white, 4); // wide spacebar (covers cols 6-9)
+		addKey(10, 4, white);
+		addKey(11, 4, gray);
+		addKey(12, 4, gray);
+
+		desk.add(mergeVoxels(keyboard));
+		const kbGroup = desk.children[desk.children.length - 1];
+		kbGroup.position.set(0, SURFACE_Y, 0.28);
+
+		// ── (Left) Geometric coffee mug. ──
+		const mug: Voxel[] = [
+			// Mug body (larger, deeper ceramic mug).
+			{ p: [0, 0.2, 0], s: [0.32, 0.4, 0.32], c: C.shirt },
+			// Coffee surface (larger dark top).
+			{ p: [0, 0.4, 0], s: [0.26, 0.02, 0.26], c: 0x2a160a },
+			// Handle (larger, on right side).
+			{ p: [0.22, 0.2, 0], s: [0.08, 0.24, 0.12], c: C.shirt },
+			// Logo on the front-facing side (toward camera, +z).
+			{ p: [0, 0.22, 0.17], s: [0.1, 0.1, 0.02], c: 0xd94f3a },
+			// Saucer under the mug.
+			{ p: [0, -0.04, 0], s: [0.42, 0.04, 0.42], c: 0xe8e8ea },
+		];
+		desk.add(mergeVoxels(mug));
+		const mugGroup = desk.children[desk.children.length - 1];
+		mugGroup.position.set(-0.95, SURFACE_Y, 0.2);
+		mugGroup.rotation.y = -0.15;
+
+		// ── (Right) Cluster of 3 chocolate chip cookies + crumbs. ──
+		// Each cookie: a low-poly cylinder (8 sides) + chocolate chip cubes on top.
+		const cookieColor = 0xc8966b;
+		const chipColor = 0x3d1f0f;
+		const crumbColor = 0xa6805a;
+		const cookieMat = new THREE.MeshLambertMaterial({ color: cookieColor });
+
+		const makeCookie = (x: number, z: number, radius: number, rotY = 0) => {
+			const cookie = new THREE.Mesh(
+				new THREE.CylinderGeometry(radius, radius, 0.05, 8),
+				cookieMat,
+			);
+			cookie.position.set(x, SURFACE_Y + 0.025, z);
+			cookie.rotation.y = rotY;
+			cookie.castShadow = true;
+			cookie.receiveShadow = true;
+			desk.add(cookie);
+
+			// 4-5 chocolate chips on top of each cookie.
+			const chipCount = 4 + Math.floor(Math.random() * 2);
+			for (let i = 0; i < chipCount; i++) {
+				const angle = Math.random() * Math.PI * 2;
+				const dist = Math.random() * radius * 0.55;
+				const chip = box(0.025, 0.025, 0.025, chipColor);
+				chip.position.set(
+					x + Math.cos(angle) * dist,
+					SURFACE_Y + 0.055,
+					z + Math.sin(angle) * dist,
+				);
+				desk.add(chip);
+			}
+		};
+
+		// Three cookies, slightly overlapping, tucked next to the mug — pushed back & left to leave room for the keyboard in the center-front.
+		makeCookie(-0.55, 0.15, 0.13, 0.3);
+		makeCookie(-0.4, 0.02, 0.12, -0.4);
+		makeCookie(-0.3, -0.12, 0.11, 0.8);
+
+		// A few crumbs scattered around the cookie cluster.
+		const crumbPositions: [number, number, number][] = [
+			[-0.65, 0.08, 0.03],
+			[-0.22, 0.0, 0.02],
+			[-0.5, 0.2, -0.02],
+			[-0.2, 0.12, -0.04],
+			[-0.45, -0.15, 0.04],
+		];
+		for (const [cx, cy, cz] of crumbPositions) {
+			const crumb = box(
+				0.022 + Math.random() * 0.015,
+				0.015,
+				0.022 + Math.random() * 0.015,
+				crumbColor,
+			);
+			crumb.position.set(cx, SURFACE_Y + 0.008, cz);
+			crumb.rotation.y = Math.random() * Math.PI;
+			desk.add(crumb);
+		}
+
+		// ── (Right) Glass vase with a single flower (back to original spot). ──
+		const vase: Voxel[] = [
+			// Vase body (slight taper — two boxes).
+			{ p: [0, 0.1, 0], s: [0.16, 0.2, 0.16], c: 0xb8dde0 },
+			{ p: [0, 0.04, 0], s: [0.12, 0.08, 0.12], c: 0xa8d2d6 },
+		];
+		desk.add(mergeVoxels(vase));
+		const vaseGroup = desk.children[desk.children.length - 1];
+		vaseGroup.position.set(0.85, SURFACE_Y, 0.2);
+
+		// Stem + flower (separate children so they sit ON the vase group).
+		const stem = box(0.025, 0.35, 0.025, 0x4a7a3e);
+		stem.position.set(0.85, SURFACE_Y + 0.3, 0.2);
+		desk.add(stem);
+		// Pixel flower head — yellow center + 4 pink petals.
+		const flowerCenter = box(0.07, 0.07, 0.07, 0xffd54a, {
+			emissive: 0xffd54a,
+			emissiveIntensity: 0.3,
+		});
+		flowerCenter.position.set(0.85, SURFACE_Y + 0.52, 0.2);
+		desk.add(flowerCenter);
+		const petalColor = 0xf48fb1;
+		const petalPositions: [number, number][] = [
+			[0, 0.07],
+			[0.07, 0],
+			[0, -0.07],
+			[-0.07, 0],
+		];
+		for (const [dx, dy] of petalPositions) {
+			const petal = box(0.06, 0.06, 0.06, petalColor);
+			petal.position.set(0.85 + dx, SURFACE_Y + 0.52 + dy, 0.2);
+			desk.add(petal);
+		}
+
+		// Scale up so it dominates the scene; y raised so legs reach floor.
+		// Pulled forward so sheep hands rest on the front edge.
+		desk.scale.set(1.7, 1.7, 1.7);
+		desk.position.set(0, 1.118, -1.3);
+		return desk;
+	}
+
+	// ---- Chair (gaming seat) -----------------------------------------------
+	// Voxel gaming chair with red accents, positioned in world coords (not
+	// following the sheep rotation) so the seat stays fixed while the sheep
+	// sits on it.
+	function buildChair(): THREE.Group {
+		const chair = new THREE.Group();
+
+		const black = 0x1a1a1a;
+		const dark = 0x2a2a2a;
+		const red = 0xd94f3a;
+
+		// ── 5-star base (5 spokes radiating around the gas-lift axis) ──
+		// Each spoke is a thick box; overlap between neighbors forms a solid pentagon.
+		// At spoke-center radius 0.2, the arc per 72° segment is 0.2 * 1.257 ≈ 0.25,
+		// so spoke depth must be ≥ 0.25 for them to touch. We use 0.30 to overlap.
+		for (let i = 0; i < 5; i++) {
+			const angle = (i * 72 * Math.PI) / 180;
+			const spoke = box(0.4, 0.06, 0.30, dark);
+			spoke.position.set(0.2, 0.04, 0.5); // offset along +x so pivot is at center
+			const pivot = new THREE.Group();
+			pivot.position.set(0, 0.04, 0.5);
+			pivot.rotation.y = angle;
+			pivot.add(spoke);
+			chair.add(pivot);
+		}
+
+		const voxels: Voxel[] = [
+			// ── Gas-lift cylinder (connects base to seat) ──
+			{ p: [0, 0.3, 0.5], s: [0.1, 0.5, 0.1], c: dark },
+
+			// ── Seat cushion ──
+			{ p: [0, 0.55, 0.85], s: [0.95, 0.2, 0.95], c: black },
+			// Red stitch line on top of cushion.
+			{ p: [0, 0.605, 0.85], s: [0.95, 0.015, 0.95], c: red },
+
+			// ── Backrest (tall, behind sheep toward camera) ──
+			// Pulled forward to hug sheep's back (shoulder at world z=0.55, butt at z=0.875).
+			{ p: [0, 1.2, 1.2], s: [0.95, 1.3, 0.2], c: black },
+			// Red accent strip near top of backrest.
+			{ p: [0, 1.84, 1.2], s: [0.85, 0.04, 0.22], c: red },
+
+			// ── Headrest pillow ──
+			{ p: [0, 2.05, 1.2], s: [0.5, 0.2, 0.18], c: black },
+			// Small red logo on headrest front (faces away from sheep).
+			{ p: [0, 2.05, 1.2], s: [0.2, 0.06, 0.005], c: red },
+
+			// ── Armrests (left + right of seat) ──
+			{ p: [-0.52, 0.9, 0.5], s: [0.1, 0.5, 0.65], c: black },
+			{ p: [0.52, 0.9, 0.5], s: [0.1, 0.5, 0.65], c: black },
+			// Red padded tops on armrests.
+			{ p: [-0.52, 1.16, 0.5], s: [0.14, 0.04, 0.55], c: red },
+			{ p: [0.52, 1.16, 0.5], s: [0.14, 0.04, 0.55], c: red },
+		];
+
+		chair.add(mergeVoxels(voxels));
+		return chair;
+	}
+
+	// ---- Guitar + Stand -----------------------------------------------------
+	// Voxel cherry-red SG-style electric guitar, vertical on a minimal base stand.
+	function buildGuitar(): THREE.Group {
+		const setup = new THREE.Group();
+
+		const cherry = 0x8b1a1a;
+		const cherryDark = 0x5a0f0f;
+		const black = 0x111111;
+		const white = 0xf5f0e8;
+		const gold = 0xd4a838;
+		const pearloid = 0xe8e0d0;
+
+		// === GUITAR ===
+		const guitar = new THREE.Group();
+
+		const bodyVoxels: Voxel[] = [
+			// === SG BODY — proper double-cutaway profile ===
+			// Lower bout (big rounded bottom).
+			{ p: [0, 0.32, 0], s: [1.0, 0.5, 0.16], c: cherry },
+			// Upper bouts (slightly narrower, stepped).
+			{ p: [-0.3, 0.65, 0], s: [0.4, 0.3, 0.16], c: cherry },
+			{ p: [0.3, 0.65, 0], s: [0.4, 0.3, 0.16], c: cherry },
+			// Sharp horns (extending up where neck joins).
+			{ p: [-0.36, 0.95, 0], s: [0.22, 0.32, 0.16], c: cherry },
+			{ p: [0.36, 0.95, 0], s: [0.22, 0.32, 0.16], c: cherry },
+			// Center neck join block.
+			{ p: [0, 1.18, 0], s: [0.5, 0.18, 0.16], c: cherry },
+			// Body waist cutaway accent (subtle inner notch).
+			{ p: [-0.18, 0.55, 0.08], s: [0.08, 0.18, 0.005], c: cherryDark },
+			{ p: [0.18, 0.55, 0.08], s: [0.08, 0.18, 0.005], c: cherryDark },
+
+			// === PICKGUARD (large cream pearloid plate) ===
+			{ p: [0, 0.55, 0.09], s: [0.55, 0.55, 0.02], c: pearloid },
+			// Pickguard bevel (subtle black border).
+			{ p: [0, 0.85, 0.095], s: [0.4, 0.04, 0.005], c: black },
+			{ p: [0, 0.25, 0.095], s: [0.4, 0.04, 0.005], c: black },
+
+			// === TWO HUMBUCKER PICKUPS (gold) ===
+			// Bridge pickup.
+			{ p: [-0.05, 0.78, 0.11], s: [0.32, 0.08, 0.03], c: gold },
+			// Neck pickup.
+			{ p: [-0.05, 0.4, 0.11], s: [0.32, 0.08, 0.03], c: gold },
+			// Pickup pole pieces (small black dots on each pickup).
+			{ p: [-0.16, 0.78, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [-0.08, 0.78, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.0, 0.78, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.08, 0.78, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [-0.16, 0.4, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [-0.08, 0.4, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.0, 0.4, 0.13], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.08, 0.4, 0.13], s: [0.02, 0.02, 0.005], c: black },
+
+			// === BRIDGE ASSEMBLY (complex: stop tailpiece + bridge + saddles) ===
+			// Stop tailpiece (gold bar at the very back of bridge area).
+			{ p: [0, 0.14, 0.115], s: [0.26, 0.04, 0.04], c: gold },
+			// Bridge base (black).
+			{ p: [0, 0.22, 0.115], s: [0.24, 0.05, 0.04], c: black },
+			// Saddles (white horizontal stripes across the bridge).
+			{ p: [-0.08, 0.255, 0.135], s: [0.04, 0.025, 0.005], c: white },
+			{ p: [0, 0.255, 0.135], s: [0.04, 0.025, 0.005], c: white },
+			{ p: [0.08, 0.255, 0.135], s: [0.04, 0.025, 0.005], c: white },
+			// String through-body holes (small dots at the very bottom).
+			{ p: [-0.09, 0.14, 0.14], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [-0.03, 0.14, 0.14], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.03, 0.14, 0.14], s: [0.02, 0.02, 0.005], c: black },
+			{ p: [0.09, 0.14, 0.14], s: [0.02, 0.02, 0.005], c: black },
+
+			// === 3 CONTROL KNOBS (gold) — triangle layout near bridge ===
+			{ p: [0.32, 0.3, 0.12], s: [0.055, 0.055, 0.04], c: gold },
+			{ p: [0.32, 0.2, 0.12], s: [0.055, 0.055, 0.04], c: gold },
+			{ p: [0.32, 0.1, 0.12], s: [0.055, 0.055, 0.04], c: gold },
+			// Knob tops (slightly darker to indicate they're round).
+			{ p: [0.32, 0.3, 0.14], s: [0.04, 0.04, 0.005], c: 0xa08020 },
+			{ p: [0.32, 0.2, 0.14], s: [0.04, 0.04, 0.005], c: 0xa08020 },
+			{ p: [0.32, 0.1, 0.14], s: [0.04, 0.04, 0.005], c: 0xa08020 },
+
+			// === TOGGLE SWITCH (upper bout) ===
+			{ p: [-0.3, 0.75, 0.12], s: [0.04, 0.08, 0.025], c: white },
+			{ p: [-0.3, 0.78, 0.135], s: [0.025, 0.04, 0.015], c: gold },
+
+			// === OUTPUT JACK (black accent near knobs) ===
+			{ p: [0.36, 0.42, 0.1], s: [0.04, 0.07, 0.02], c: black },
+
+			// === STRAP BUTTON (bottom of body) ===
+			{ p: [0, 0.04, 0.1], s: [0.06, 0.06, 0.04], c: gold },
+
+			// === NECK BACK (cherry dark, behind fretboard) ===
+			{ p: [0, 1.95, -0.05], s: [0.16, 1.45, 0.04], c: cherryDark },
+			// Neck side binding (thin white strip on the sides of the neck).
+			{ p: [-0.08, 1.95, 0.005], s: [0.01, 1.45, 0.02], c: white },
+			{ p: [0.08, 1.95, 0.005], s: [0.01, 1.45, 0.02], c: white },
+
+			// === FRETBOARD (black, front of neck) ===
+			{ p: [0, 1.95, 0.01], s: [0.14, 1.45, 0.025], c: black },
+
+			// === 12 FRET WIRES (thin white bars across the fretboard) ===
+			{ p: [0, 2.6, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 2.49, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 2.38, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 2.27, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 2.16, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 2.05, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.94, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.83, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.72, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.61, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.5, 0.025], s: [0.14, 0.01, 0.005], c: white },
+			{ p: [0, 1.39, 0.025], s: [0.14, 0.01, 0.005], c: white },
+
+			// === FRET MARKER DOTS (white inlays) ===
+			// Single dots at fret 3, 5, 7, 9.
+			{ p: [0, 2.38, 0.04], s: [0.04, 0.04, 0.01], c: white },
+			{ p: [0, 2.16, 0.04], s: [0.04, 0.04, 0.01], c: white },
+			{ p: [0, 1.94, 0.04], s: [0.04, 0.04, 0.01], c: white },
+			{ p: [0, 1.72, 0.04], s: [0.04, 0.04, 0.01], c: white },
+			// Double dots at fret 12.
+			{ p: [-0.03, 1.5, 0.04], s: [0.04, 0.04, 0.01], c: white },
+			{ p: [0.03, 1.5, 0.04], s: [0.04, 0.04, 0.01], c: white },
+
+			// === NUT (white, between headstock and fretboard) ===
+			{ p: [0, 2.72, 0.025], s: [0.16, 0.03, 0.03], c: white },
+
+			// === HEADSTOCK (cherry red with classic SG "open book" shape) ===
+			// Main block.
+			{ p: [0, 2.95, 0], s: [0.32, 0.42, 0.05], c: cherry },
+			// Tapered tip at the very top.
+			{ p: [0, 3.18, 0], s: [0.22, 0.08, 0.05], c: cherry },
+
+			// Brand logo plate (gold rectangle on headstock front).
+			{ p: [0, 2.95, 0.03], s: [0.14, 0.07, 0.01], c: gold },
+			// Logo text dot (tiny dark accent inside logo).
+			{ p: [0, 2.95, 0.04], s: [0.05, 0.03, 0.005], c: cherryDark },
+
+			// === 6 TUNING PEGS (gold) — 3 on each side ===
+			{ p: [-0.2, 3.13, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			{ p: [-0.2, 2.95, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			{ p: [-0.2, 2.77, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			{ p: [0.2, 3.13, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			{ p: [0.2, 2.95, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			{ p: [0.2, 2.77, 0.02], s: [0.05, 0.05, 0.1], c: gold },
+			// Tuner knobs (small posts sticking out of each tuner).
+			{ p: [-0.24, 3.13, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+			{ p: [-0.24, 2.95, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+			{ p: [-0.24, 2.77, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+			{ p: [0.24, 3.13, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+			{ p: [0.24, 2.95, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+			{ p: [0.24, 2.77, 0.07], s: [0.035, 0.035, 0.03], c: gold },
+		];
+
+		guitar.add(mergeVoxels(bodyVoxels));
+		setup.add(guitar);
+
+		// === MINIMAL BASE STAND (just a small flat base + back lip) ===
+		const stand: Voxel[] = [
+			// Flat base plate (slightly wider than guitar body).
+			{ p: [0, 0.04, 0], s: [0.5, 0.08, 0.35], c: 0x2a2a2a },
+			// Small back lip (where the guitar body leans against).
+			{ p: [0, 0.22, -0.15], s: [0.42, 0.28, 0.04], c: 0x2a2a2a },
+			// Foam pad on the back lip (so the guitar doesn't scratch).
+			{ p: [0, 0.22, -0.13], s: [0.38, 0.26, 0.02], c: 0x5a5a5a },
+			// Small front bumper (prevents guitar from sliding off).
+			{ p: [0, 0.08, 0.15], s: [0.38, 0.04, 0.03], c: 0x2a2a2a },
+		];
+		setup.add(mergeVoxels(stand));
+
+		// Place the whole setup far to the side so it's separate from sheep and desk.
+		setup.position.set(2.6, 0, -1.4);
+		return setup;
+	}
+
+	function buildFloor(): THREE.Mesh {
+		const m = box(10, 0.2, 10, C.floor);
+		m.position.set(0, -0.55, 0);
+		m.receiveShadow = true;
+		return m;
+	}
+
+	// ---- Scene boot ---------------------------------------------------------
+
+	function initModels() {
+		const wraps = document.querySelectorAll<HTMLElement>(".model-3d");
+		const reduced = window.matchMedia(
+			"(prefers-reduced-motion: reduce)",
+		).matches;
+
+		wraps.forEach((wrap) => {
+			if (wrap.dataset.inited) return;
+			wrap.dataset.inited = "true";
+
+			const canvas =
+				wrap.querySelector<HTMLCanvasElement>(".model-canvas");
+			const loader = wrap.querySelector<HTMLElement>("[data-loader]");
+			if (!canvas) return;
+
+			const scene = new THREE.Scene();
+
+			const aspect = () =>
+				(wrap.clientWidth || 320) / (wrap.clientHeight || 320);
+			const scale = 3.6;
+			const camera = new THREE.OrthographicCamera(
+				-scale * aspect(),
+				scale * aspect(),
+				scale,
+				-scale,
+				0.01,
+				5000,
+			);
+			const initialPos = new THREE.Vector3(8, 5, 8);
+			camera.position.copy(initialPos);
+			// Look between sheep (z≈0.4) and monitor (z≈-1.7).
+			const target = new THREE.Vector3(0, 0.9, -0.5);
+			camera.lookAt(target);
+
+			const renderer = new THREE.WebGLRenderer({
+				canvas,
+				alpha: true,
+				antialias: true,
+			});
+			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+			renderer.setSize(
+				wrap.clientWidth || 320,
+				wrap.clientHeight || 320,
+				false,
+			);
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+			// Lights.
+			scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+			const key = new THREE.DirectionalLight(0xffffff, 1.0);
+			key.position.set(5, 10, 7);
+			key.castShadow = true;
+			key.shadow.mapSize.width = 1024;
+			key.shadow.mapSize.height = 1024;
+			key.shadow.camera.near = 0.5;
+			key.shadow.camera.far = 50;
+			key.shadow.camera.left = -6;
+			key.shadow.camera.right = 6;
+			key.shadow.camera.top = 6;
+			key.shadow.camera.bottom = -6;
+			scene.add(key);
+
+			// World.
+			scene.add(buildFloor());
+			const sheep = buildSheep();
+			scene.add(sheep);
+			const desk = buildDesk();
+			scene.add(desk);
+			const chair = buildChair();
+			scene.add(chair);
+			const guitar = buildGuitar();
+			scene.add(guitar);
+
+			if (loader) loader.classList.add("is-hidden");
+
+			const controls = new OrbitControls(camera, renderer.domElement);
+			controls.target.copy(target);
+			controls.enableZoom = false;
+			controls.enablePan = false;
+			controls.enableDamping = true;
+			controls.autoRotate = !reduced;
+			controls.autoRotateSpeed = 3;
+			// Restrict vertical rotation so you can't flip under the floor.
+			controls.minPolarAngle = Math.PI * 0.2;
+			controls.maxPolarAngle = Math.PI * 0.55;
+
+			let rafId = 0;
+			let frame = 0;
+			const clock = new THREE.Clock();
+			const animate = () => {
+				rafId = requestAnimationFrame(animate);
+
+				const t = clock.getElapsedTime();
+				// Sheep subtle bob (breathing).
+				if (!reduced) {
+					sheep.position.y = 0.52 + Math.sin(t * 1.6) * 0.03;
+				}
+
+				if (frame <= 100 && !reduced) {
+					frame += 1;
+					const rot = -easeOutCirc(frame / 100) * Math.PI * 2;
+					camera.position.x =
+						initialPos.x * Math.cos(rot) +
+						initialPos.z * Math.sin(rot);
+					camera.position.z =
+						initialPos.z * Math.cos(rot) -
+						initialPos.x * Math.sin(rot);
+					camera.position.y = initialPos.y;
+					camera.lookAt(target);
+				} else {
+					controls.update();
+				}
+				renderer.render(scene, camera);
+			};
+			animate();
+
+			const onResize = () => {
+				const a = aspect();
+				camera.left = -scale * a;
+				camera.right = scale * a;
+				camera.updateProjectionMatrix();
+				renderer.setSize(
+					wrap.clientWidth || 320,
+					wrap.clientHeight || 320,
+					false,
+				);
+			};
+			window.addEventListener("resize", onResize);
+
+			const observer = new MutationObserver(() => {
+				if (!document.contains(wrap)) {
+					cancelAnimationFrame(rafId);
+					window.removeEventListener("resize", onResize);
+					controls.dispose();
+					renderer.dispose();
+					observer.disconnect();
+				}
+			});
+			observer.observe(document.body, { childList: true, subtree: true });
+		});
+	}
+
+	initModels();
+	document.addEventListener("astro:after-swap", initModels);
+</script>
+
+<style>
+	.model-3d {
+		width: var(--size, 340px);
+		max-width: 100%;
+		aspect-ratio: 1;
+		margin: 0 auto;
+	}
+	.model-stage {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		border-radius: var(--radius-lg, 16px);
+		overflow: hidden;
+		background:
+			radial-gradient(
+				120% 90% at 50% -10%,
+				rgba(255, 255, 255, 0.4),
+				transparent 55%
+			),
+			linear-gradient(180deg, #e8e8ea 0%, #d4d4d6 100%);
+		box-shadow:
+			var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.18)),
+			inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+	}
+	.model-canvas {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		cursor: grab;
+		touch-action: none;
+	}
+	.model-canvas:active {
+		cursor: grabbing;
+	}
+	.model-loader {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: opacity 0.4s ease;
+	}
+	.model-loader.is-hidden {
+		opacity: 0;
+		pointer-events: none;
+	}
+	.spinner {
+		width: 34px;
+		height: 34px;
+		border-radius: 50%;
+		border: 3px solid rgba(0, 0, 0, 0.15);
+		border-top-color: #333;
+		animation: model-spin 0.8s linear infinite;
+	}
+	@keyframes model-spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.spinner {
+			animation: none;
+		}
+	}
+</style>
