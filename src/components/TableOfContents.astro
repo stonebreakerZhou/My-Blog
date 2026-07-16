@@ -255,7 +255,10 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 	}
 	.toc-drawer-nav {
 		padding: var(--space-2) 0;
-		max-height: 60vh;
+		/* Cap the expanded panel's vertical footprint so it doesn't
+		   dominate the viewport on mobile. Internal overflow keeps long
+		   TOCs scrollable inside this compact box. */
+		max-height: 38vh;
 		overflow-y: auto;
 		overscroll-behavior: contain;
 	}
@@ -267,8 +270,8 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 	.toc-drawer-item a {
 		display: flex;
 		align-items: center;
-		min-height: 44px;
-		padding: var(--space-2) var(--space-4);
+		min-height: 36px;
+		padding: var(--space-1) var(--space-4);
 		font-size: var(--text-sm);
 		line-height: var(--leading-snug);
 		color: var(--color-text-soft);
@@ -293,6 +296,24 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 	.toc-drawer-item.depth-3 a {
 		padding-left: var(--space-8);
 		font-size: var(--text-sm);
+	}
+
+	/* On mobile the drawer becomes a sticky top bar that stays under the
+	   header while the user scrolls. `position: fixed` removes it from
+	   the document flow so the article starts immediately under the header
+	   instead of leaving a sticky-shaped gap below it. */
+	@media (max-width: 1199px) {
+		.toc-drawer {
+			position: fixed;
+			top: 56px;
+			left: 0;
+			right: 0;
+			z-index: 90;
+			margin: 0;
+			border-radius: 0;
+			border-left: 0;
+			border-right: 0;
+		}
 	}
 
 	@media (min-width: 1200px) {
