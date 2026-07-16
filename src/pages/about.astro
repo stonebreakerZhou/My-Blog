@@ -29,11 +29,24 @@ const learning = [
 		name: "RL",
 		href: "https://github.com/stonebreakerZhou/RL_note_WestLakeU",
 	},
-	{ name: "LM alignment" },
+	{
+		name: "AI safety",
+		href: "https://aisafety.com/self-study",
+	},
 	{ name: "DL math" },
 ];
 
-const offDesk = ["Basketball", "History", "Bad math jokes"];
+const offDesk = [
+	{
+		name: "Basketball",
+		href: "https://www.nba.com/player/202681/kyrie-irving",
+	},
+	{
+		name: "History",
+		href: "https://zh.wikipedia.org/zh-sg/%E5%8F%AB%E9%AD%82%EF%BC%9A1768%E5%B9%B4%E4%B8%AD%E5%9B%BD%E5%A6%96%E6%9C%AF%E5%A4%A7%E6%81%90%E6%85%8C",
+	},
+	{ name: "Bad math jokes", href: "https://xkcd.com/" },
+];
 
 const findLabels = ["GitHub", "Zhihu", "Email"];
 ---
@@ -134,7 +147,23 @@ const findLabels = ["GitHub", "Zhihu", "Email"];
 		<section class="chips-section">
 			<h2>Off the desk</h2>
 			<ul class="chips soft">
-				{offDesk.map((t) => <li class="chip">{t}</li>)}
+				{
+					offDesk.map((t) => (
+						<li class="chip">
+							{t.href ? (
+								<a
+									href={t.href}
+									target="_blank"
+									rel="noopener noreferrer"
+								>
+									{t.name}
+								</a>
+							) : (
+								t.name
+							)}
+						</li>
+					))
+				}
 			</ul>
 		</section>
 
