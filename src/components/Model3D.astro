@@ -531,6 +531,150 @@ const { size = 340, class: className = "" } = Astro.props;
 		return desk;
 	}
 
+	// ---- Basketball ---------------------------------------------------------
+	// Pixel-style basketball generated mathematically on a 3D grid.
+	// Per the prompt:
+	//   - R ≈ 18 sphere built from BoxGeometry voxels
+	//   - Black seams rendered with ε-tolerance so they're continuous (26-connected)
+	//   - 4-color pixel shading driven by (x, y, z) position relative to
+	//     overhead light (1, 1, 1)
+	//   - Yellow highlight only fires next to a black seam (top-right area)
+	//   - InstancedMesh for a single draw call, matte MeshStandardMaterial
+	function buildBasketball(): THREE.Group {
+		const ball = new THREE.Group();
+
+		// Palette (per the prompt's 8-bit dithered look).
+		const yellow = 0xfcd05b;
+		const lightOrange = 0xf18a22;
+		const orange = 0xe66e19;
+		const darkOrange = 0xb64a0f;
+		const seamColor = 0x1a110e;
+
+		const R = 18; // sphere radius in voxel units
+		const eps = 1.2; // tolerance for seam detection (ensures line continuity)
+
+		// Light direction (top-right).
+		const Lx = 1,
+			Ly = 1,
+			Lz = 1;
+		const Lmag = Math.sqrt(Lx * Lx + Ly * Ly + Lz * Lz);
+
+		// Pass 1: decide color for every voxel inside the sphere, mark which
+		// cells are seams (so pass 2 can detect "adjacent to seam").
+		const cell = new Map<string, number>();
+		const seamSet = new Set<string>();
+		const key = (x: number, y: number, z: number) => `${x},${y},${z}`;
+
+		const isSeam = (x: number, y: number, z: number): boolean => {
+			// Horizontal equator (|y| < ε) — solid ring around the ball.
+			if (Math.abs(y) < eps) return true;
+			// Vertical meridian (|x| < ε) — solid ring around the ball.
+			if (Math.abs(x) < eps) return true;
+			// Parabolic side ribs: |x² + y² - z²·k| < ε.
+			// k controls how "wide" the parabola opens. 0.9 gives a nice
+			// sweep matching the reference's curved side seams.
+			const k = 0.9;
+			if (Math.abs(x * x + y * y - z * z * k) < eps * 12) return true;
+			return false;
+		};
+
+		for (let x = -R; x <= R; x++) {
+			for (let y = -R; y <= R; y++) {
+				for (let z = -R; z <= R; z++) {
+					if (x * x + y * y + z * z > R * R) continue;
+
+					// Seam takes priority over shading (per prompt's continuity req).
+					if (isSeam(x, y, z)) {
+						cell.set(key(x, y, z), seamColor);
+						seamSet.add(key(x, y, z));
+						continue;
+					}
+
+					// Lambert: brighter when cell normal aligns with light (1, 1, 1).
+					const d = Math.sqrt(x * x + y * y + z * z);
+					const dotL = (x * Lx + y * Ly + z * Lz) / (d * Lmag);
+
+					// Highlight zone first (overrides everything else for top-right).
+					const onTop = y > 0.4 * R && x > 0;
+
+					if (onTop && dotL > 0.65) {
+						cell.set(key(x, y, z), lightOrange);
+					} else if (dotL > 0.55) {
+						cell.set(key(x, y, z), orange);
+					} else if (y < -0.3 * R || x < -0.5 * R) {
+						cell.set(key(x, y, z), darkOrange);
+					} else {
+						cell.set(key(x, y, z), orange);
+					}
+				}
+			}
+		}
+
+		// Pass 2: upgrade cells next to a seam + in the top-right to yellow.
+		// 26-connectivity (any neighbor including diagonals).
+		const isNextToSeam = (x: number, y: number, z: number): boolean => {
+			for (let dx = -1; dx <= 1; dx++) {
+				for (let dy = -1; dy <= 1; dy++) {
+					for (let dz = -1; dz <= 1; dz++) {
+						if (dx === 0 && dy === 0 && dz === 0) continue;
+						if (seamSet.has(key(x + dx, y + dy, z + dz)))
+							return true;
+					}
+				}
+			}
+			return false;
+		};
+
+		for (const [k, c] of cell) {
+			if (c !== lightOrange) continue;
+			const [xs, ys, zs] = k.split(",").map(Number);
+			if (ys > 0.4 * R && xs > 0 && isNextToSeam(xs, ys, zs)) {
+				cell.set(k, yellow);
+			}
+		}
+
+		// Build the mesh with one InstancedMesh per color (max 5 colors).
+		const colors = [yellow, lightOrange, orange, darkOrange, seamColor];
+		const px = 0.018; // voxel size — tuned so R=18 → diameter ≈ 0.65
+		const cy = R * px; // lift so ball bottom sits on the floor
+
+		for (const color of colors) {
+			const positions: [number, number, number][] = [];
+			for (const [k, c] of cell) {
+				if (c !== color) continue;
+				const [x, y, z] = k.split(",").map(Number);
+				positions.push([x * px, y * px + cy, z * px]);
+			}
+			if (positions.length === 0) continue;
+
+			const geo = new THREE.BoxGeometry(px, px, px);
+			const mat = new THREE.MeshStandardMaterial({
+				color,
+				roughness: 1.0,
+				metalness: 0.0,
+				flatShading: true,
+			});
+			const inst = new THREE.InstancedMesh(geo, mat, positions.length);
+			const dummy = new THREE.Object3D();
+			for (let i = 0; i < positions.length; i++) {
+				dummy.position.set(
+					positions[i][0],
+					positions[i][1],
+					positions[i][2],
+				);
+				dummy.updateMatrix();
+				inst.setMatrixAt(i, dummy.matrix);
+			}
+			inst.instanceMatrix.needsUpdate = true;
+			inst.castShadow = true;
+			inst.receiveShadow = true;
+			ball.add(inst);
+		}
+
+		ball.position.set(-2.6, 0, -1.0);
+		return ball;
+	}
+
 	// ---- Chair (gaming seat) -----------------------------------------------
 	// Voxel gaming chair with red accents, positioned in world coords (not
 	// following the sheep rotation) so the seat stays fixed while the sheep
@@ -760,7 +904,11 @@ const { size = 340, class: className = "" } = Astro.props;
 	}
 
 	function buildFloor(): THREE.Mesh {
-		const m = box(10, 0.2, 10, C.floor);
+		// Invisible ground plane — only receives shadows (craftz.dog floating style).
+		const geo = new THREE.PlaneGeometry(20, 20);
+		const mat = new THREE.ShadowMaterial({ opacity: 0.28 });
+		const m = new THREE.Mesh(geo, mat);
+		m.rotation.x = -Math.PI / 2;
 		m.position.set(0, -0.55, 0);
 		m.receiveShadow = true;
 		return m;
@@ -807,6 +955,7 @@ const { size = 340, class: className = "" } = Astro.props;
 				alpha: true,
 				antialias: true,
 			});
+			renderer.setClearColor(0x000000, 0); // fully transparent canvas
 			renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 			renderer.setSize(
 				wrap.clientWidth || 320,
@@ -841,6 +990,8 @@ const { size = 340, class: className = "" } = Astro.props;
 			scene.add(chair);
 			const guitar = buildGuitar();
 			scene.add(guitar);
+			const basketball = buildBasketball();
+			scene.add(basketball);
 
 			if (loader) loader.classList.add("is-hidden");
 
@@ -926,18 +1077,8 @@ const { size = 340, class: className = "" } = Astro.props;
 		position: relative;
 		width: 100%;
 		height: 100%;
-		border-radius: var(--radius-lg, 16px);
-		overflow: hidden;
-		background:
-			radial-gradient(
-				120% 90% at 50% -10%,
-				rgba(255, 255, 255, 0.4),
-				transparent 55%
-			),
-			linear-gradient(180deg, #e8e8ea 0%, #d4d4d6 100%);
-		box-shadow:
-			var(--shadow-lg, 0 12px 32px rgba(0, 0, 0, 0.18)),
-			inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+		/* No card chrome — let the scene blend into the page. */
+		background: transparent;
 	}
 	.model-canvas {
 		position: relative;
