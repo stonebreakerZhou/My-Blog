@@ -1,0 +1,100 @@
+---
+/**
+ * Random quote rotator.
+ * - Picks one entry from the corpus on each fresh page load.
+ * - Anti-repeat: remembers the last 5 in localStorage and excludes them.
+ * - Hard refresh = new quote. Astro view transitions keep the same quote
+ *   for the session (cached on `window`).
+ * - Respects prefers-reduced-motion.
+ */
+---
+
+<aside class="quote-rotator">
+	<p class="quote-text"></p>
+	<p class="quote-author"></p>
+</aside>
+
+<script>
+	import { quotes, type Quote } from "../data/quotes";
+
+	const RECENT_KEY = "sb-quote-recent";
+	const RECENT_MAX = 5;
+	type QuoteWindow = Window & { __sbQuoteCache?: Quote };
+	const w = window as QuoteWindow;
+
+	function pickFresh(): Quote {
+		let recent: string[] = [];
+		try {
+			recent = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]");
+		} catch {}
+		const candidates = quotes.filter((q) => !recent.includes(q.q));
+		const pool = candidates.length > 0 ? candidates : quotes;
+		const picked = pool[Math.floor(Math.random() * pool.length)];
+		const updated = [picked.q, ...recent].slice(0, RECENT_MAX);
+		try {
+			localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+		} catch {}
+		return picked;
+	}
+
+	function renderAll(): void {
+		document.querySelectorAll(".quote-rotator").forEach((root) => {
+			const t = root.querySelector(".quote-text");
+			const a = root.querySelector(".quote-author");
+			if (!(t instanceof HTMLElement) || !(a instanceof HTMLElement)) return;
+			if (!w.__sbQuoteCache) w.__sbQuoteCache = pickFresh();
+			t.textContent = w.__sbQuoteCache.q;
+			a.textContent = w.__sbQuoteCache.a;
+		});
+	}
+
+	renderAll();
+	document.addEventListener("astro:after-swap", renderAll);
+</script>
+
+<style>
+	.quote-rotator {
+		max-width: 320px;
+	}
+	.quote-text {
+		margin: 0 0 2px;
+		font-family:
+			"Sacramento", "Noto Serif SC", "Brush Script MT", cursive;
+		font-size: 1.05rem;
+		line-height: 1.3;
+		color: var(--color-text);
+		animation: qr-fade 0.4s ease both;
+	}
+	.quote-author {
+		margin: 0;
+		font-family:
+			"Sacramento", "Noto Serif SC", "Brush Script MT", cursive;
+		font-size: 0.88rem;
+		line-height: 1.2;
+		color: var(--color-accent-text);
+		opacity: 0.75;
+		animation: qr-fade 0.4s ease 0.1s both;
+	}
+	@keyframes qr-fade {
+		from {
+			opacity: 0;
+			transform: translateY(2px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.quote-text,
+		.quote-author {
+			animation: none;
+		}
+	}
+	@media (max-width: 600px) {
+		.quote-rotator {
+			max-width: 100%;
+			text-align: center;
+		}
+	}
+</style>

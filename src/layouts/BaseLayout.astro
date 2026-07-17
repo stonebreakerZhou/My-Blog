@@ -19,6 +19,15 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 		<Header transition:persist />
 		<main id="main-content">
 			<slot />
+			<div class="footer-doodle" aria-hidden="true">
+				<img
+					src={`${import.meta.env.BASE_URL}doodle-sheep.png`}
+					alt=""
+					width="96"
+					height="96"
+					loading="lazy"
+				/>
+			</div>
 		</main>
 		<Footer transition:persist />
 	</body>
@@ -31,5 +40,35 @@ const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
 		margin: 0 auto;
 		padding: var(--space-12) var(--space-4);
 		min-height: 60vh;
+	}
+
+	/* Hand-drawn sheep doodle at the bottom-left of every page, tucked over
+	   the footer's copyright line. The PNG's core art is circular, so we crop
+	   it to a circle. Sketch style — light mode: multiply drops the white
+	   ground into the page; dark mode: invert flips it to white strokes, then
+	   screen drops the (now black) ground into the dark page. */
+	.footer-doodle {
+		display: flex;
+		justify-content: flex-start;
+		position: relative;
+		z-index: 1;
+		margin: var(--space-16) 0 0;
+		transform: translateY(var(--space-24));
+	}
+	.footer-doodle img {
+		width: clamp(72px, 12vw, 96px);
+		height: auto;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+		border-radius: 50%;
+		opacity: 0.9;
+		mix-blend-mode: multiply;
+		box-shadow: none;
+		pointer-events: none;
+	}
+	:global(html[data-theme='dark']) .footer-doodle img {
+		filter: invert(1);
+		mix-blend-mode: screen;
+		opacity: 0.82;
 	}
 </style>

@@ -67,30 +67,11 @@ const { size = 340, class: className = "" } = Astro.props;
 		return mesh;
 	};
 
-	const place = (
-		parent: THREE.Object3D,
-		child: THREE.Object3D,
-		x: number,
-		y: number,
-		z: number,
-	) => {
-		child.position.set(x, y, z);
-		parent.add(child);
-	};
-
-	// Build a step / cluster from a list of voxel specs.
+	// Voxel spec: position + size + color.
 	type Voxel = {
 		p: [number, number, number];
 		s: [number, number, number];
 		c: number;
-	};
-	const buildVoxels = (voxels: Voxel[]) => {
-		const g = new THREE.Group();
-		for (const v of voxels) {
-			const m = box(v.s[0], v.s[1], v.s[2], v.c);
-			place(g, m, v.p[0], v.p[1], v.p[2]);
-		}
-		return g;
 	};
 
 	// Merge a list of voxel specs into a single solid mesh (per-color group).
@@ -478,7 +459,7 @@ const { size = 340, class: className = "" } = Astro.props;
 			[-0.2, 0.12, -0.04],
 			[-0.45, -0.15, 0.04],
 		];
-		for (const [cx, cy, cz] of crumbPositions) {
+		for (const [cx, cz] of crumbPositions) {
 			const crumb = box(
 				0.022 + Math.random() * 0.015,
 				0.015,
