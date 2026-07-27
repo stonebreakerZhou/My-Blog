@@ -1,63 +1,50 @@
-# Astro Starter Kit: Blog
+# Stonebreaker Blog
 
-```sh
-npm create astro@latest -- --template blog
-```
+AI undergraduate @ BIT, writing notes on ML, DL, RL, AI safety and the math behind them.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✍️ Writing a new post
 
-Features:
+This blog uses **Obsidian as editor + Astro as engine**, with no conversion in between.
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+Read [`WRITING.md`](../WRITING.md) (in the repo root) for the full workflow:
 
-## 🚀 Project Structure
+- Obsidian Vault setup
+- File naming conventions
+- Frontmatter schema
+- Image / formula / code handling
+- How to embed interactive demos
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
+TL;DR — keep `_TEMPLATE.md` updated, write in Obsidian, push to git, done.
 
 ## 🧞 Commands
 
-All commands are run from the root of the project, from a terminal:
-
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+| `npm install`             | Install dependencies                            |
+| `npm run dev`             | Start local dev server at `localhost:4321`      |
+| `npm run build`           | Build production site to `./dist/`              |
+| `npm run preview`         | Preview the production build locally            |
+| `npm run astro check`     | Type-check the project                          |
+| `npm run astro -- --help` | Astro CLI help                                  |
 
-## 👀 Want to learn more?
+## 🚀 Project Structure
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```
+src/
+├── components/        Reusable Astro components
+├── content/blog/      Markdown / MDX posts (this is the Obsidian Vault)
+│   └── _TEMPLATE.md   Blank template — copy this for new posts
+├── layouts/           Page layouts (BaseLayout, BlogPost)
+├── pages/             Routes (index, about, posts)
+├── scripts/           Client-side scripts (TOC, reading progress, code copy)
+└── styles/            Global CSS
+```
 
-## Credit
+## 👀 Stack
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+- [Astro 6](https://astro.build/) — static site generator
+- [MDX](https://mdxjs.com/) — Markdown + components
+- [KaTeX](https://katex.org/) via `remark-math` + `rehype-katex` — math rendering
+- [Three.js](https://threejs.org/) — for interactive demos
+
+Based on the [Astro blog starter](https://github.com/withastro/astro/tree/main/examples/blog) / [Bear Blog](https://github.com/HermanMartinus/bearblog/).

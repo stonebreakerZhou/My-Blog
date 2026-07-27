@@ -1,0 +1,4 @@
+# Keep this directory tracked in git.
+# All blog post images live in src/content/blog/images/
+# (Obsidian auto-uploads attachments here when "Default location for new
+# attachments" is set to "In subfolder under current folder".)

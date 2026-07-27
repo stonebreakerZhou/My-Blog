@@ -1,0 +1,214 @@
+{
+  "main": {
+    "id": "b6b25972178e30bc",
+    "type": "split",
+    "children": [
+      {
+        "id": "2083192e612052ca",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6a032fe1e2f1a9f0",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "146a0dbff00afbd4",
+    "type": "split",
+    "children": [
+      {
+        "id": "ff1a00b81b552d12",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a76ca6783559637d",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "a5423de0dd055120",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "04f7db5386a5d191",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "ae48ec9e1c80a78d",
+    "type": "split",
+    "children": [
+      {
+        "id": "d543e1657fde99b3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6852ea6aadd494c5",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "annotated-the-annotated-transformer-ep-1.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "annotated-the-annotated-transformer-ep-1 的反向链接列表"
+            }
+          },
+          {
+            "id": "ec187eae5277ae18",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "annotated-the-annotated-transformer-ep-1.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "annotated-the-annotated-transformer-ep-1 的出链列表"
+            }
+          },
+          {
+            "id": "eb9f7fb6888ad61e",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "64c385df6a6cb70e",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "5f98596e05172a8b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "annotated-the-annotated-transformer-ep-1.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "annotated-the-annotated-transformer-ep-1 的大纲"
+            }
+          },
+          {
+            "id": "be8435d4c9ea8234",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {},
+              "icon": "calendar-with-checkmark",
+              "title": "Calendar"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "6a032fe1e2f1a9f0",
+  "lastOpenFiles": [
+    "annotated-the-annotated-transformer-ep-1.md",
+    "_TEMPLATE.md",
+    "Untitled.md",
+    "annotated-the-annotated-transformer-ep-2.md",
+    "test_templater.md.md",
+    "_TEMPLATE.md.tmp.16560.79760fc4ba4d",
+    "Untitled.base",
+    "Untitled 1.base",
+    "images/屏幕截图-2026-02-28-160552.png",
+    "images/屏幕截图-2026-02-28-160552-1024x564.png",
+    "images/屏幕截图-2026-02-28-203345.png",
+    "images/屏幕截图-2026-03-01-133028.png",
+    "images/屏幕截图-2026-03-04-181313.png",
+    "images/output.png",
+    "images/output-1.png",
+    "images/output-2.png",
+    "images/output-2-1024x687.png",
+    "images/output-3.png"
+  ]
+}
