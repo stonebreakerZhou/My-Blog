@@ -33,7 +33,7 @@ function postHref(post: CollectionEntry<'blog'>): string {
 	return `${import.meta.env.BASE_URL}blog/${post.id}/`;
 }
 ---
-<BaseLayout title={`${title} · Stonebreaker`} description={description}>
+<BaseLayout title={`${title} · Stonebreaker`} description={description} image={heroImage}>
 	<div class="reading-progress" aria-hidden="true"></div>
 	<article class="article">
 		{
