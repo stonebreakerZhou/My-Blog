@@ -2,7 +2,6 @@
 title: "<一句话讲清楚这篇讲什么>"
 description: "<≤160字，搜索摘要用>"
 pubDate: 2026-07-27
-heroImage: ./images/<file>.png
 categories:
   - "<分类1>"
   - "<分类2>"

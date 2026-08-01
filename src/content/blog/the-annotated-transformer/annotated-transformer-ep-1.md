@@ -2,7 +2,7 @@
 title: "'Annotated'《The Annotated Transformer》(Ep.1)"
 description: Detailed explanation on code from《The Annotated Transformer》from first principles, intuition and proof. (episode 1)
 pubDate: 2026-02-27
-heroImage: ./images/屏幕截图-2026-02-27-163029-1024x934.png
+heroImage: ../images/屏幕截图-2026-02-27-163029-1024x934.png
 categories:
   - transformer
   - 深度学习
@@ -24,7 +24,7 @@ Notice: 本文系列分为2篇，核心为本文Ep.1，另有Ep.2处于本文同
 
 首先，我们找到原论文中对于Transformer模型架构的整体描述与绘图：
 
-![](images/屏幕截图-2026-02-27-163029-1024x934.png)
+![](../images/屏幕截图-2026-02-27-163029-1024x934.png)
 
 整个Transformer模型架构分为左右两侧，分别是编码器(Encoder)和解码器(Decoder)。Transformer模型常用于词语预测/机器翻译任务，当我们喂给模型源文本(source)时，数据的流动方向是：
 
@@ -75,7 +75,7 @@ class EncoderDecoder(nn.Module):
 
 - 上述架构可以看到少了**最后的两个步骤：线性变换(Linear)得到logits + logits转变为概率值输出(SoftMax)**
 
-![](images/屏幕截图-2026-02-27-173742-1024x249.png)
+![](../images/屏幕截图-2026-02-27-173742-1024x249.png)
 
 这一段在上述EncoderDecoder架构中可以看出是一个generator来实现，现在便定义一个Generator大类并将其实例化便可得到generator
 
@@ -125,7 +125,7 @@ class Encoder(nn.Module):
 
 可以对照一下原论文里面的encoder建构：
 
-![](images/屏幕截图-2026-02-27-195238.png)
+![](../images/屏幕截图-2026-02-27-195238.png)
 
 刚才我们构建是直接使用 clone(layer, N)，那么现在就是构建这个要被传入的layer类：  
 第一个子层包括：多头自注意力层 + 残差连接&层归一化；  
@@ -311,7 +311,7 @@ sublayer\[0\]和\[1\]都是SublayerConnection的实例化类，在之前其明�
   
 对比下图可明确当前进度：
 
-![](images/屏幕截图-2026-02-27-195238-1.png)
+![](../images/屏幕截图-2026-02-27-195238-1.png)
 
 40%
 
@@ -319,7 +319,7 @@ Encoder部分搭建完毕，现在进行Decoder部分的搭建
 
 Decoder基本搭建过程大同小异，底层思路与Encoder差别不大，但观下图，我们发现内部涉及的子层一个是**掩码多头自注意力**，另一个则是**多头交叉注意力**，那么这两个我们需借助刚才定义好的MultiHeadedAttention这个抽象大类进行构建：
 
-![](images/屏幕截图-2026-02-28-094107.png)
+![](../images/屏幕截图-2026-02-28-094107.png)
 
 ## 掩码机制（Mask）
 
@@ -488,13 +488,13 @@ plt.show()
 
 输出为：（`True` (1) 通常显示为黄色/浅色。`False` (0) 通常渲染为紫色/深色）
 
-![](images/output.png)
+![](../images/output.png)
 
 75%
 
 回归主线，我们现在已经架构好了Encoder；Decoder里面已经把第一个掩码多头缩放点积自注意力层建构完毕，对比下图看下进度：
 
-![](images/屏幕截图-2026-02-28-094107-1.png)
+![](../images/屏幕截图-2026-02-28-094107-1.png)
 
 ## 交叉注意力与解码器
 
@@ -570,7 +570,7 @@ target\_mask用于Decoder的自注意力层，防止在训练时解码器偷看�
 
 再回顾一下Transformer整体架构，我们发现基本所有框架都已建成，现在只需要再完善实现里面的几个小工具即可
 
-![](images/屏幕截图-2026-02-28-160552-1024x564.png)
+![](../images/屏幕截图-2026-02-28-160552-1024x564.png)
 
 ## 收尾组件：Embedding、位置编码与 FFN
 
@@ -755,7 +755,7 @@ Notice: 本文系列分为2篇，核心为本文Ep.1，另有Ep.2处于本文同
 
 首先，我们找到原论文中对于Transformer模型架构的整体描述与绘图：
 
-![](images/屏幕截图-2026-02-27-163029-1024x934.png)
+![](../images/屏幕截图-2026-02-27-163029-1024x934.png)
 
 整个Transformer模型架构分为左右两侧，分别是编码器(Encoder)和解码器(Decoder)。Transformer模型常用于词语预测/机器翻译任务，当我们喂给模型源文本(source)时，数据的流动方向是：
 
@@ -806,7 +806,7 @@ class EncoderDecoder(nn.Module):
 
 - 上述架构可以看到少了**最后的两个步骤：线性变换(Linear)得到logits + logits转变为概率值输出(SoftMax)**
 
-![](images/屏幕截图-2026-02-27-173742-1024x249.png)
+![](../images/屏幕截图-2026-02-27-173742-1024x249.png)
 
 这一段在上述EncoderDecoder架构中可以看出是一个generator来实现，现在便定义一个Generator大类并将其实例化便可得到generator
 
@@ -856,7 +856,7 @@ class Encoder(nn.Module):
 
 可以对照一下原论文里面的encoder建构：
 
-![](images/屏幕截图-2026-02-27-195238.png)
+![](../images/屏幕截图-2026-02-27-195238.png)
 
 刚才我们构建是直接使用 clone(layer, N)，那么现在就是构建这个要被传入的layer类：  
 第一个子层包括：多头自注意力层 + 残差连接&层归一化；  
@@ -1042,7 +1042,7 @@ sublayer\[0\]和\[1\]都是SublayerConnection的实例化类，在之前其明�
   
 对比下图可明确当前进度：
 
-![](images/屏幕截图-2026-02-27-195238-1.png)
+![](../images/屏幕截图-2026-02-27-195238-1.png)
 
 40%
 
@@ -1050,7 +1050,7 @@ Encoder部分搭建完毕，现在进行Decoder部分的搭建
 
 Decoder基本搭建过程大同小异，底层思路与Encoder差别不大，但观下图，我们发现内部涉及的子层一个是**掩码多头自注意力**，另一个则是**多头交叉注意力**，那么这两个我们需借助刚才定义好的MultiHeadedAttention这个抽象大类进行构建：
 
-![](images/屏幕截图-2026-02-28-094107.png)
+![](../images/屏幕截图-2026-02-28-094107.png)
 
 ## 掩码机制（Mask）
 
@@ -1219,13 +1219,13 @@ plt.show()
 
 输出为：（`True` (1) 通常显示为黄色/浅色。`False` (0) 通常渲染为紫色/深色）
 
-![](images/output.png)
+![](../images/output.png)
 
 75%
 
 回归主线，我们现在已经架构好了Encoder；Decoder里面已经把第一个掩码多头缩放点积自注意力层建构完毕，对比下图看下进度：
 
-![](images/屏幕截图-2026-02-28-094107-1.png)
+![](../images/屏幕截图-2026-02-28-094107-1.png)
 
 ## 交叉注意力与解码器
 
@@ -1301,7 +1301,7 @@ target\_mask用于Decoder的自注意力层，防止在训练时解码器偷看�
 
 再回顾一下Transformer整体架构，我们发现基本所有框架都已建成，现在只需要再完善实现里面的几个小工具即可
 
-![](images/屏幕截图-2026-02-28-160552-1024x564.png)
+![](../images/屏幕截图-2026-02-28-160552-1024x564.png)
 
 ## 收尾组件：Embedding、位置编码与 FFN
 
@@ -1486,7 +1486,7 @@ Notice: 本文系列分为2篇，核心为本文Ep.1，另有Ep.2处于本文同
 
 首先，我们找到原论文中对于Transformer模型架构的整体描述与绘图：
 
-![](images/屏幕截图-2026-02-27-163029-1024x934.png)
+![](../images/屏幕截图-2026-02-27-163029-1024x934.png)
 
 整个Transformer模型架构分为左右两侧，分别是编码器(Encoder)和解码器(Decoder)。Transformer模型常用于词语预测/机器翻译任务，当我们喂给模型源文本(source)时，数据的流动方向是：
 
@@ -1537,7 +1537,7 @@ class EncoderDecoder(nn.Module):
 
 - 上述架构可以看到少了**最后的两个步骤：线性变换(Linear)得到logits + logits转变为概率值输出(SoftMax)**
 
-![](images/屏幕截图-2026-02-27-173742-1024x249.png)
+![](../images/屏幕截图-2026-02-27-173742-1024x249.png)
 
 这一段在上述EncoderDecoder架构中可以看出是一个generator来实现，现在便定义一个Generator大类并将其实例化便可得到generator
 
@@ -1587,7 +1587,7 @@ class Encoder(nn.Module):
 
 可以对照一下原论文里面的encoder建构：
 
-![](images/屏幕截图-2026-02-27-195238.png)
+![](../images/屏幕截图-2026-02-27-195238.png)
 
 刚才我们构建是直接使用 clone(layer, N)，那么现在就是构建这个要被传入的layer类：  
 第一个子层包括：多头自注意力层 + 残差连接&层归一化；  
@@ -1773,7 +1773,7 @@ sublayer\[0\]和\[1\]都是SublayerConnection的实例化类，在之前其明�
   
 对比下图可明确当前进度：
 
-![](images/屏幕截图-2026-02-27-195238-1.png)
+![](../images/屏幕截图-2026-02-27-195238-1.png)
 
 40%
 
@@ -1781,7 +1781,7 @@ Encoder部分搭建完毕，现在进行Decoder部分的搭建
 
 Decoder基本搭建过程大同小异，底层思路与Encoder差别不大，但观下图，我们发现内部涉及的子层一个是**掩码多头自注意力**，另一个则是**多头交叉注意力**，那么这两个我们需借助刚才定义好的MultiHeadedAttention这个抽象大类进行构建：
 
-![](images/屏幕截图-2026-02-28-094107.png)
+![](../images/屏幕截图-2026-02-28-094107.png)
 
 ## 掩码机制（Mask）
 
@@ -1950,13 +1950,13 @@ plt.show()
 
 输出为：（`True` (1) 通常显示为黄色/浅色。`False` (0) 通常渲染为紫色/深色）
 
-![](images/output.png)
+![](../images/output.png)
 
 75%
 
 回归主线，我们现在已经架构好了Encoder；Decoder里面已经把第一个掩码多头缩放点积自注意力层建构完毕，对比下图看下进度：
 
-![](images/屏幕截图-2026-02-28-094107-1.png)
+![](../images/屏幕截图-2026-02-28-094107-1.png)
 
 ## 交叉注意力与解码器
 
@@ -2032,7 +2032,7 @@ target\_mask用于Decoder的自注意力层，防止在训练时解码器偷看�
 
 再回顾一下Transformer整体架构，我们发现基本所有框架都已建成，现在只需要再完善实现里面的几个小工具即可
 
-![](images/屏幕截图-2026-02-28-160552-1024x564.png)
+![](../images/屏幕截图-2026-02-28-160552-1024x564.png)
 
 ## 收尾组件：Embedding、位置编码与 FFN
 
@@ -2217,7 +2217,7 @@ Notice: 本文系列分为2篇，核心为本文Ep.1，另有Ep.2处于本文同
 
 首先，我们找到原论文中对于Transformer模型架构的整体描述与绘图：
 
-![](images/屏幕截图-2026-02-27-163029-1024x934.png)
+![](../images/屏幕截图-2026-02-27-163029-1024x934.png)
 
 整个Transformer模型架构分为左右两侧，分别是编码器(Encoder)和解码器(Decoder)。Transformer模型常用于词语预测/机器翻译任务，当我们喂给模型源文本(source)时，数据的流动方向是：
 
@@ -2268,7 +2268,7 @@ class EncoderDecoder(nn.Module):
 
 - 上述架构可以看到少了**最后的两个步骤：线性变换(Linear)得到logits + logits转变为概率值输出(SoftMax)**
 
-![](images/屏幕截图-2026-02-27-173742-1024x249.png)
+![](../images/屏幕截图-2026-02-27-173742-1024x249.png)
 
 这一段在上述EncoderDecoder架构中可以看出是一个generator来实现，现在便定义一个Generator大类并将其实例化便可得到generator
 
@@ -2318,7 +2318,7 @@ class Encoder(nn.Module):
 
 可以对照一下原论文里面的encoder建构：
 
-![](images/屏幕截图-2026-02-27-195238.png)
+![](../images/屏幕截图-2026-02-27-195238.png)
 
 刚才我们构建是直接使用 clone(layer, N)，那么现在就是构建这个要被传入的layer类：  
 第一个子层包括：多头自注意力层 + 残差连接&层归一化；  
@@ -2504,7 +2504,7 @@ sublayer\[0\]和\[1\]都是SublayerConnection的实例化类，在之前其明�
   
 对比下图可明确当前进度：
 
-![](images/屏幕截图-2026-02-27-195238-1.png)
+![](../images/屏幕截图-2026-02-27-195238-1.png)
 
 40%
 
@@ -2512,7 +2512,7 @@ Encoder部分搭建完毕，现在进行Decoder部分的搭建
 
 Decoder基本搭建过程大同小异，底层思路与Encoder差别不大，但观下图，我们发现内部涉及的子层一个是**掩码多头自注意力**，另一个则是**多头交叉注意力**，那么这两个我们需借助刚才定义好的MultiHeadedAttention这个抽象大类进行构建：
 
-![](images/屏幕截图-2026-02-28-094107.png)
+![](../images/屏幕截图-2026-02-28-094107.png)
 
 ## 掩码机制（Mask）
 
@@ -2681,13 +2681,13 @@ plt.show()
 
 输出为：（`True` (1) 通常显示为黄色/浅色。`False` (0) 通常渲染为紫色/深色）
 
-![](images/output.png)
+![](../images/output.png)
 
 75%
 
 回归主线，我们现在已经架构好了Encoder；Decoder里面已经把第一个掩码多头缩放点积自注意力层建构完毕，对比下图看下进度：
 
-![](images/屏幕截图-2026-02-28-094107-1.png)
+![](../images/屏幕截图-2026-02-28-094107-1.png)
 
 ## 交叉注意力与解码器
 
@@ -2763,7 +2763,7 @@ target\_mask用于Decoder的自注意力层，防止在训练时解码器偷看�
 
 再回顾一下Transformer整体架构，我们发现基本所有框架都已建成，现在只需要再完善实现里面的几个小工具即可
 
-![](images/屏幕截图-2026-02-28-160552-1024x564.png)
+![](../images/屏幕截图-2026-02-28-160552-1024x564.png)
 
 ## 收尾组件：Embedding、位置编码与 FFN
 

@@ -16,7 +16,15 @@
   "folder_templates": [
     {
       "folder": "/",
-      "template": "_TEMPLATE.md"
+      "template": "_TEMPLATE.template"
+    },
+    {
+      "folder": "cs229/math-foundations",
+      "template": "_TEMPLATE.template"
+    },
+    {
+      "folder": "the-annotated-transformer",
+      "template": "_TEMPLATE.template"
     }
   ],
   "enable_file_templates": false,

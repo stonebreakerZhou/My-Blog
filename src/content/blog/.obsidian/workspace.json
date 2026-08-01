@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "2083192e612052ca",
+        "id": "67e73d43a583e9b9",
         "type": "tabs",
         "children": [
           {
-            "id": "6a032fe1e2f1a9f0",
+            "id": "0ea62ed1127226a6",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -190,16 +190,25 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "6a032fe1e2f1a9f0",
+  "active": "a76ca6783559637d",
   "lastOpenFiles": [
-    "annotated-the-annotated-transformer-ep-1.md",
-    "_TEMPLATE.md",
+    "cs229/math-foundations/Untitled.md",
     "Untitled.md",
-    "annotated-the-annotated-transformer-ep-2.md",
+    "cs229/math-foundations/linear-algebra.md",
+    "_TEMPLATE.template",
+    "the-annotated-transformer/annotated-transformer-ep-2.md.tmp.21692.da417c47b6d2",
+    "the-annotated-transformer/annotated-transformer-ep-2.md.tmp.21692.b9a857ba1aaf",
+    "_TEMPLATE.md.tmp.21692.27dee2060a9f",
+    "cs229/math-foundations/linear-algebra.md.tmp.21692.3e5980e04549",
+    "cs229/math-foundations/linear-algebra.md.tmp.21692.fd71b5a69614",
+    "cs229/math-foundations/linear-algebra.md.tmp.21692.36b37909889d",
+    "cs229/math-foundations/linear-algebra.md.tmp.21692.65e69e8dca60",
+    "cs229/math-foundations/linear-algebra.md.tmp.21692.9b8f58b2809c",
+    "the-annotated-transformer/annotated-transformer-ep-1.md",
+    "the-annotated-transformer/annotated-transformer-ep-2.md",
+    "the-annotated-transformer/annotated-transformer-ep-2.md.tmp.21692.b5e24547f29e",
+    "_TEMPLATE.md",
     "test_templater.md.md",
-    "_TEMPLATE.md.tmp.16560.79760fc4ba4d",
-    "Untitled.base",
-    "Untitled 1.base",
     "images/屏幕截图-2026-02-28-160552.png",
     "images/屏幕截图-2026-02-28-160552-1024x564.png",
     "images/屏幕截图-2026-02-28-203345.png",

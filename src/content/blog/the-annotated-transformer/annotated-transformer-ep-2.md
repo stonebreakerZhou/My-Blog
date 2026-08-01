@@ -2,7 +2,7 @@
 title: "'Annotated'《The Annotated Transformer》(Ep.2)"
 description: "Detailed explanation on code from《The Annotated Transformer》from first principles, intuition and proof. (episode 2)"
 pubDate: 2026-02-28
-heroImage: ./images/屏幕截图-2026-03-01-133028.png
+heroImage: ../images/屏幕截图-2026-03-01-133028.png
 categories:
   - "transformer"
   - "深度学习"
@@ -169,7 +169,7 @@ class Batch:
 
 这也是为什么原论文中模型架构图中：
 
-![](images/屏幕截图-2026-03-01-133028.png)
+![](../images/屏幕截图-2026-03-01-133028.png)
 
 特别标注了对于Decoder的输入进行了 **Shifted Right**的处理
 
@@ -360,7 +360,7 @@ plt.show()
 
 最终可视化呈现为：
 
-![](images/output-1.png)
+![](../images/output-1.png)
 
 50%
 
@@ -665,7 +665,7 @@ plt.show()
 
 最后对应的图像为：
 
-![](images/output-2-1024x687.png)
+![](../images/output-2-1024x687.png)
 
 图中每一行深色的地方就是模型在每一步的预测输出
 
@@ -723,7 +723,7 @@ test_sent = [1, 3, 5, 7, 9, 10, 2, 8, 4, 6]
 visualize_attention(model, test_sent)
 ```
 
-![](images/output-5-1024x276.png)
+![](../images/output-5-1024x276.png)
 
 上面中这行代码是关键：
 
@@ -800,7 +800,7 @@ text_sent = [1, 3, 5, 7, 9, 10, 2, 8, 4, 6]
 visualize_encoder_self_attention(model, test_sent)
 ```
 
-![](images/output-4-1024x276.png)
+![](../images/output-4-1024x276.png)
 
 自注意力可视化与交叉注意力可视化大同小异：  
 ①不需要运行greedy\_decode因为我们此处只是可视化Encoder的自注意力，不涉及Decoder  
