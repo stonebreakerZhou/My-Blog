@@ -116,13 +116,7 @@
 
 	/* Light-mode cream backdrop, applied to every page in light mode. */
 	:root:not([data-theme='dark']) body {
-		background: linear-gradient(
-			180deg,
-			#fdfaf5 0%,
-			#f7f3ec 40%,
-			#f5f0e7 100%
-		);
-		background-attachment: fixed;
+		background: #fdfaf5;
 	}
 
 	img, picture, video, canvas, svg {
