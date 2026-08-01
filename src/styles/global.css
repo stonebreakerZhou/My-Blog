@@ -116,7 +116,7 @@
 
 	/* Light-mode cream backdrop, applied to every page in light mode. */
 	:root:not([data-theme='dark']) body {
-		background: #fffbe6;
+		background: #f4ecd8;
 	}
 
 	img, picture, video, canvas, svg {
