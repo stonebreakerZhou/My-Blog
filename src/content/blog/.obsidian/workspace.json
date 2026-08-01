@@ -11,10 +11,14 @@
             "id": "0ea62ed1127226a6",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "cs229/math-foundations/linear-algebra.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "linear-algebra"
             }
           }
         ]
@@ -190,7 +194,7 @@
       "templater-obsidian:Templater": false
     }
   },
-  "active": "a76ca6783559637d",
+  "active": "0ea62ed1127226a6",
   "lastOpenFiles": [
     "cs229/math-foundations/Untitled.md",
     "Untitled.md",

@@ -1,5 +1,5 @@
 ---
-title: 线性代数回顾：从矩阵到最小二乘
+title: "CS229 review : 线性代数回顾"
 description: CS229 Lecture Notes 1 数学基础笔记第一篇，回顾线性代数核心概念：矩阵运算、范数、投影、特征值、二次型与最小二乘。
 pubDate: 2026-08-01
 series: cs229
@@ -17,8 +17,6 @@ categories:
 > - 投影 = 在子空间上找最近点；公式 $\operatorname{Proj}(y; A) = A(A^\top A)^{-1} A^\top y$
 > - 特征值 = 变换的不变方向；对称矩阵可对角化为 $A = U \Lambda U^\top$
 > - 二次型 = 对称矩阵的特征值决定符号（PD / PSD / ND / NSD / 不定）
-
-> 本文阅读时长约 20 分钟。配套代码：[Stanford CS229 Lecture Notes](https://cs229.stanford.edu/)
 
 ## 引子
 
@@ -635,8 +633,8 @@ $$
 
 ## 参考资料
 
-- [Stanford CS229 Lecture Notes 1 — Linear Algebra Review & Probability Review](https://cs229.stanford.edu/main_notes.pdf) — 原始讲义，本文是其中数学基础部分的中文整理
-- [Strang, Introduction to Linear Algebra](https://math.mit.edu/~gs/linearalgebra/) — MIT 公开课配套教材，比 CS229 更系统、更适合零基础入门
-- [3Blue1Brown — Essence of Linear Algebra](https://www.3blue1brown.com/topics/linear-algebra) — 系列视频，几何直觉的最佳入门，强烈推荐先看一遍再读本文
-- [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) — 矩阵恒等式速查表，本文涉及的所有公式都能在里面找到
-- [Boyd & Vandenberghe, Introduction to Applied Linear Algebra](https://vmls-book.stanford.edu/) — Stanford 另一门课的教材，偏应用 / 优化视角，跟 CS229 互补
+- [Stanford CS229 Linear Algebra Review](https://cs229.stanford.edu/section/cs229-linalg.pdf) — 原始讲义资料，本文是其中数学基础部分的中文整理
+- [Strang, Introduction to Linear Algebra](https://math.mit.edu/~gs/linearalgebra/) — Strang老爷子的MIT经典公开课，主要用于线性代数系统性的入门学习
+- [3Blue1Brown — Essence of Linear Algebra](https://www.bilibili.com/video/BV1ys411472E) — 系列视频，几何直觉的最佳入门，强烈推荐学习线性代数之前先看一遍便可豁然开朗
+- [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) — 矩阵恒等式、matrix calculus速查表，本文涉及的所有公式都能在里面找到，是开源pdf
+- [Boyd & Vandenberghe, Introduction to Applied Linear Algebra](https://vmls-book.stanford.edu/) — 偏应用 / 优化视角，是Stanford另一门课程教材，感觉可以拓展阅读
