@@ -1,6 +1,6 @@
 ---
 title: "CS229 : Lec 1 — 线性回归与梯度下降"
-description: CS229 Lecture 1 学习笔记，覆盖线性回归模型、LMS（最小二乘） 、Batch / Stochastic 梯度下降、正规方程的概率解释、LWR（局部加权线性回归）
+description: CS229 Lecture 1 学习笔记，覆盖线性回归模型、LMS（最小二乘）、Batch / Stochastic 梯度下降、正规方程及其概率解释。
 pubDate: 2026-08-02
 series: cs229
 subSeries: personal-lecture-notes
@@ -16,7 +16,6 @@ categories:
 > - **梯度下降求 $\theta$**：LMS（单样本）、Batch GD（全样本求和）、SGD（逐样本）三种更新规则；线性回归只有全局最优（不会陷入局部最优）
 > - **正规方程**：$\theta = (X^T X)^{-1} X^T y$，闭式解，照应最小二乘
 > - **概率视角**：误差 $\varepsilon \sim \mathcal{N}(0, \sigma^2)$ （高斯分布）+ 最大似然 $\Rightarrow$ 最小二乘 $J(\theta)$
-> - **局部加权线性回归 (LWR)**：非参数方法，权值 $w^{(i)} = \exp\!\left(-\frac{(x^{(i)} - x)^T(x^{(i)} - x)}{2\tau^2}\right)$，查询点附近样本影响最大
 
 ## 引子
 
@@ -313,83 +312,8 @@ $$
 
 > 正好就是原始的最小二乘代价函数 $J(\theta)$！这也正说明了为什么最小二乘中的代价函数要使用误差的平方和作为代价！实质就是跟随机误差的高斯分布假设以及高斯分布密度函数的形式特点有关！
 
-## 5. 局部加权线性回归（LWR）
-
-### 5.1 普通线性回归的问题
-
-原始的线性回归算法里，要对一个查询点 $x$ 做预测（比如要计算 $h(x)$），步骤是：
-
-1. 用最小二乘法拟合参数 $\theta$，让训练集所有样本的拟合误差平方和最小：
-   $$
-   \sum_i \left( y^{(i)} - \theta^T x^{(i)} \right)^2
-   $$
-2. 输出 $\theta^T x$
-
-可以看出，最小二乘法对**所有样本一视同仁**——每个样本对 $\theta$ 的影响力都是相同的。
-
-### 5.2 LWR 的做法
-
-在 LWR 里，步骤变成：
-
-1. 用参数 $\theta$ 拟合，但用**加权距离**作为目标：
-   $$
-   \sum_i w^{(i)} \left( y^{(i)} - \theta^T x^{(i)} \right)^2
-   $$
-2. 输出 $\theta^T x$
-
-其中 $w^{(i)}$ 是非负权值。直观地说：
-
-- 如果某个 $i$ 的 $w^{(i)}$ 很大，那么在选 $\theta$ 时就要**特别照顾**让 $(y^{(i)} - \theta^T x^{(i)})^2$ 这个误差值尽量小
-- 如果 $w^{(i)}$ 很小，那么这一项就基本被忽略
-
-> 也就是说，**权值越大的样本，误差被放大得越厉害，对 $\theta$ 的影响也就越大**。
-
-### 5.3 权值的选取
-
-最常用的权值公式：
-
-$$
-w^{(i)} = \exp\!\left( - \frac{\left( x^{(i)} - x \right)^2}{2\tau^2} \right)
-$$
-
-其中：
-
-- $x$ 是当前查询点
-- $\tau$ 是**带宽参数**（bandwidth parameter），控制衰减速度
-
-直观含义：
-
-① 当 $x^{(i)}$ 离查询点 $x$ 很近：$(x^{(i)} - x)^2 \to 0$，分子为 0，$\exp(0) = 1$，权重最大。
-
-② 当 $x^{(i)}$ 离查询点 $x$ 很远：$(x^{(i)} - x)^2 \to \infty$，指数函数趋近于 0，权重几乎为零。
-
-如果 $x$ 是向量，距离就用**欧几里得距离** （Euclidean distance）平方的泛化形式：
-
-$$
-w^{(i)} = \exp\!\left( - \frac{\left( x^{(i)} - x \right)^T \left( x^{(i)} - x \right)}{2\tau^2} \right)
-$$
-
-如果允许向量的不同维度有不同的伸缩尺度，可以引入**马氏距离**（Mahalanobis distance）：
-
-$$
-w^{(i)} = \exp\!\left( - \frac{\left( x^{(i)} - x \right)^T \Sigma^{-1} \left( x^{(i)} - x \right)}{2} \right)
-$$
-
-> 所以，$\theta$ 的选择过程会**自动偏向查询点 $x$ 附近的训练样本**。注意权值公式的形状像高斯密度，但它和高斯分布并没有直接关系——只是借了高斯函数的"钟形"衰减特性来给距离"打分"。
-
-### 5.4 参数 vs 非参数
-
-最后值得强调的是两种学习算法的本质区别：
-
-① **无权重线性回归**是**参数学习算法**（parametric learning algorithm）：参数 $\theta_i$ 的个数是固定的、有限的。一旦拟合出 $\theta_i$，就可以扔掉训练数据，不再需要它们做预测。
-
-② **局部加权线性回归**是**非参数学习算法**（non-parametric learning algorithm）：必须**一直保留整个训练集**——因为每来一个新的查询点 $x$，权值 $w^{(i)}$ 都要重算，最优 $\theta$ 也会随之改变。
-
-> "非参数"粗略地指："模型的复杂度和参数数量，会随着训练集规模 $m$ 的增大而线性增大。"
-
 ## 参考资料
 
 - [CS229 Lecture Notes 1](https://cs229.stanford.edu/notes2021fall/cs229-notes1.pdf) — 原始讲义，本文知识点的出处
 - [CS229 Lecture 1 (Autumn 2018) — Linear Regression and Gradient Descent](https://www.bilibili.com/video/BV1b4anzMEUv) — B站上Andrew Ng 吴恩达老师的讲课视频（Lecture 1），本文同样覆盖里面的讲课时的重要知识点
 - [The Matrix Cookbook](https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf) — 矩阵恒等式、矩阵微积分速查表，本文第 3 节涉及的所有公式都能在里面找到
-- [LWR——Locally Weighted Regression](https://www.cs.cmu.edu/afs/cs/project/jair/pub/volume4/cohn96a-html/node7.html)讲解LWR（局部加权回归算法）的第一手资料，拓展阅读
