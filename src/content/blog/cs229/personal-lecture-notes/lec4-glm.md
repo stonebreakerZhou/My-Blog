@@ -38,7 +38,7 @@ g(z) = \begin{cases}
 \end{cases}
 $$
 
-<div style="text-align: center;"><img src="../../images/unit_step_func.jpg" alt="unit step function" width="280" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/unit_step_func.jpg" alt="unit step function" width="280" /></div>
 
 然后仍然定义 hypothesis $h_\theta(x) = g(\theta^T x)$，但这里的 $g$ 是上面的阈值函数，再使用下面的更新规则（形式上和 logistic regression 一模一样）：
 
@@ -54,7 +54,7 @@ $$
 
 ② 类似地，若把正例错判成了负例，则给 $\vec{\theta}$ 加上 $\alpha \vec{x}$，让 $\vec{\theta}$ 与 $\vec{x}$ 之后尽量呈**正的点积**（即方向相同）。
 
-<div style="text-align: center;"><img src="../../images/Lec4_perceptron.jpg" alt="perceptron update rule" width="400" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec4_perceptron.jpg" alt="perceptron update rule" width="400" /></div>
 
 > **题外话**：20 世纪 60 年代，感知机被认为是"单个神经元工作方式"的粗糙模型。因为它足够简单，它也成为后面学习理论讨论的起点。但要强调：**感知机和 logistic regression、最小二乘线性回归**只是表面上相似，**本质上完全不同**。特别是：很难给感知机的预测附加一个有意义的概率解释；感知机学习算法也不能被推导为某个极大似然估计。
 
@@ -223,7 +223,7 @@ $$
 
 GLM 的整体思路可以分成两部分：**模型 + 分布**。先看一张 mental map 把整个流水线串起来：
 
-<div style="text-align: center;"><img src="../../images/Lec4_GLM_mental_map.jpg" alt="GLM mental map" width="540" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec4_GLM_mental_map.jpg" alt="GLM mental map" width="540" /></div>
 
 流水线是这样的：拿到输入 $x$，由于我们假设模型是线性模型，于是模型通过可学习参数 $\theta$ 输出 $\theta^T x$ 作为参数 $\eta$（即自然参数），$\eta$ 传递给 Exponential Family 作为核心参数（分布类型的选择取决于任务：预测实值就选 Gaussian，预测 $\in \{0, 1\}$ 就选 Bernoulli……再相应地选择 $b(y)$、$a(\eta)$、$T(y)$），最终在所选分布上得到预测值 $h(x)$，定义为给定 $x$ 下的条件期望 $E[y \mid x]$。
 
@@ -293,13 +293,13 @@ $$
 
 先看线性回归：输入 $x$，得到 $\theta^T x = \eta$。这里我们用 Gaussian 作为分布，所以 $\eta = \mu$。在 Gaussian 假设下，我们假设对每个 $x$，对应的 $y$ 服从方差为 1（注意：方差不为 1 时方差的大小可以被学习在 $\theta$ 中，所以简化起见我们通常令方差为 1）、均值为 $\theta^T x$ 的高斯分布：
 
-<div style="text-align: center;"><img src="../../images/Lec4_GLM_Guassian.jpg" alt="GLM linear regression(Gaussian)" width="540" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec4_GLM_Guassian.jpg" alt="GLM linear regression(Gaussian)" width="540" /></div>
 
 > 所以相当于**先假设存在上述数据分布规律**，而我们实际拿到的数据是这个规律下产生的样本，实际做的是一个**从右向左的倒推过程**，最终要找到合适的 $\theta$。
 
 同理对 logistic 回归任务，我们也要做这样的倒推：
 
-<div style="text-align: center;"><img src="../../images/Lec4_GLM_logistic.jpg" alt="GLM logistic regression(Bernoulli)" width="540" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec4_GLM_logistic.jpg" alt="GLM logistic regression(Bernoulli)" width="540" /></div>
 
 回顾 logistic regression：
 
@@ -346,7 +346,7 @@ $$
 
 先看一张图建立直观：数据被分成 $k$ 类，每一类都有一个"专属的分割线"——也就是下面的 $\theta_{\text{class}}$。
 
-<div style="text-align: center;"><img src="../../images/Lec4_softmax.jpg" alt="Multi-class classification" width="330" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec4_softmax.jpg" alt="Multi-class classification" width="330" /></div>
 
 所以我们实际上就是要找这些组参数 $\theta$ , 并画出图中那些最合适的分割线
 
