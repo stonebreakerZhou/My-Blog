@@ -124,7 +124,7 @@ $$
 
 <div align="center">
 
-<img src="/My-Blog/blog-images/logistic_func.jpg" alt="sigmoid / logistic 函数曲线" width="280" />
+<img src="/My-Blog/blog-images/logistic_func.webp" alt="sigmoid / logistic 函数曲线" width="280" loading="lazy" decoding="async" />
 
 </div>
 
@@ -269,7 +269,7 @@ $$
 
 <div align="center">
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Newton's-method.png" alt="Newton's method 求解零点" width="540" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Newton's-method.webp" alt="Newton's method 求解零点" width="540" loading="lazy" decoding="async" /></div>
 
 </div>
 

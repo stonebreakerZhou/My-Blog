@@ -1,4 +1,6 @@
-@import 'katex/dist/katex.min.css';
+/* KaTeX CSS is imported only in BlogPost.astro (where math actually renders)
+   to avoid pulling ~292 KB of woff2 fonts on every page. The .katex theme
+   overrides below remain in this file so they apply whenever .katex appears. */
 
 /* ============================================
      Design Tokens
