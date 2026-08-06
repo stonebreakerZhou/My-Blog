@@ -131,6 +131,14 @@ function postHref(post: CollectionEntry<'blog'>): string {
 	.prose :global(:is(h1, h2, h3, h4)) {
 		scroll-margin-top: var(--space-24);
 	}
+	/* On mobile the fixed TOC drawer occupies top:56px + ~44px of summary
+	   height (≈100px). Without this override, clicking a TOC link scrolls
+	   the heading to var(--space-24)=96px and the drawer partially covers it. */
+	@media (max-width: 1199px) {
+		.prose :global(:is(h1, h2, h3, h4)) {
+			scroll-margin-top: calc(56px + 44px + var(--space-4));
+		}
+	}
 	.post-shell {
 		display: block;
 	}

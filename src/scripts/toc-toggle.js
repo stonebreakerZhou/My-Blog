@@ -1,3 +1,5 @@
+import { initTocActive } from './toc-active.js';
+
 const STORAGE_KEY = 'toc';
 const STATE_OPEN = 'open';
 const STATE_CLOSED = 'closed';
@@ -29,6 +31,9 @@ export function initTocToggle() {
 				: STATE_CLOSED;
 		applyState(next);
 		writeState(next);
+		// Re-run the active-section observer so closing → re-opening brings
+		// highlighting back (initTocActive bails out when data-toc='closed').
+		initTocActive();
 	};
 
 	toggle.addEventListener('click', flip);

@@ -189,15 +189,19 @@ const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 		}
 	}
 
-	/* Closed state: hide the panel, show the side tab. */
-	:global(html[data-toc='closed']) .toc {
-		display: none;
-	}
-	:global(html[data-toc='closed']) .toc-toggle {
-		display: block;
-	}
-	:global(html[data-toc='closed']) .toc-close {
-		display: none;
+	/* Closed state: hide the panel, show the side tab. Scoped to desktop
+	   because the side tab is meaningless on mobile where the drawer is the
+	   only TOC visible and `.toc` is already display:none via .toc-area. */
+	@media (min-width: 1200px) {
+		:global(html[data-toc='closed']) .toc {
+			display: none;
+		}
+		:global(html[data-toc='closed']) .toc-toggle {
+			display: block;
+		}
+		:global(html[data-toc='closed']) .toc-close {
+			display: none;
+		}
 	}
 
 	/* ============================================

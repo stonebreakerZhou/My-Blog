@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
+                "file": "cs229/personal-lecture-notes/lec4-glm.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "lec2-lwr-and-classification"
+              "title": "lec4-glm"
             }
           }
         ]
@@ -196,12 +196,12 @@
   },
   "active": "0ea62ed1127226a6",
   "lastOpenFiles": [
+    "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.544a8aa99c52",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.96e4df620b64",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.e9c0bf333295",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.3b17144b027c",
     "2026-08-04.md",
-    "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
     "cs229/personal-lecture-notes/lec1-linear-regression.md",
     "cs229/math-foundations/linear-algebra.md",
     "cs229/math-foundations/Untitled.md",
@@ -212,7 +212,6 @@
     "_TEMPLATE.md.tmp.21692.27dee2060a9f",
     "cs229/math-foundations/linear-algebra.md.tmp.21692.3e5980e04549",
     "cs229/math-foundations/linear-algebra.md.tmp.21692.fd71b5a69614",
-    "cs229/math-foundations/linear-algebra.md.tmp.21692.36b37909889d",
     "the-annotated-transformer/annotated-transformer-ep-1.md",
     "the-annotated-transformer/annotated-transformer-ep-2.md",
     "_TEMPLATE.md",
