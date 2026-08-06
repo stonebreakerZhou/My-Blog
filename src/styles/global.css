@@ -313,18 +313,18 @@
 
 	.prose h2 {
 		font-size: 1.875rem;
-		margin: 2.4em 0 0.8em;
+		margin: 3em 0 1em;
 		letter-spacing: -0.02em;
 	}
 
 	.prose h3 {
 		font-size: 1.375rem;
-		margin: 1.9em 0 0.6em;
+		margin: 2.2em 0 0.6em;
 	}
 
 	.prose h4 {
 		font-size: var(--text-lg);
-		margin: 1.5em 0 0.5em;
+		margin: 1.6em 0 0.5em;
 	}
 
 	.prose h2 + p,

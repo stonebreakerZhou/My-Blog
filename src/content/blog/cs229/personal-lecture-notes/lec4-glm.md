@@ -24,6 +24,9 @@ categories:
 
 CS229 Lecture 4 主要话内容是**广义线性模型**（Generalized Linear Models, GLM）。我们会先复习一个看起来像 logistic regression、但其实完全不是概率模型的算法——**感知机**（perceptron）；然后介绍一个相当基础的工具——**指数族分布**（exponential family），用它统一 Gaussian、Bernoulli、Poisson 等常见分布；最后用三个假设推导出 GLM 的整体框架，并把它应用于最小二乘、logistic 回归，以及多分类的 **Softmax 回归**。
 
+
+---
+
 ## 1. 感知机学习算法
 
 Logistic regression 使用的 sigmoid 函数 $g(z) = 1 / (1 + e^{-z})$ 把整个实数轴 $(- \infty, + \infty)$ 压缩到 $(0, 1)$。设想把 logistic regression 稍微改一下，让它**只输出 0 或 1**——一个自然的做法是改用**阈值函数**（unit step function）：
@@ -54,6 +57,9 @@ $$
 <div style="text-align: center;"><img src="../../images/Lec4_perceptron.jpg" alt="perceptron update rule" width="400" /></div>
 
 > **题外话**：20 世纪 60 年代，感知机被认为是"单个神经元工作方式"的粗糙模型。因为它足够简单，它也成为后面学习理论讨论的起点。但要强调：**感知机和 logistic regression、最小二乘线性回归**只是表面上相似，**本质上完全不同**。特别是：很难给感知机的预测附加一个有意义的概率解释；感知机学习算法也不能被推导为某个极大似然估计。
+
+
+---
 
 ## 2. 指数族分布
 
@@ -168,6 +174,9 @@ $$
 | ③ 计数（count，1/2/3…）    | Poisson                        |
 | ④ 正实数（$\mathbb{R}^+$） | Gamma, Exponential             |
 | ⑤ 概率分布之上的概率分布         | Beta, Dirichlet（贝叶斯机器学习、统计里常见） |
+
+
+---
 
 ## 3. 广义线性模型（GLMs）
 
@@ -316,6 +325,9 @@ $$
 
 > 至此我们知道，在做二分类任务时，logistic （sigmoid） 函数就是假设函数形式的一个自然选择！
 
+
+---
+
 ## 4. Softmax 回归
 
 在第 3 节我们看到，logistic regression 用 sigmoid 把线性输出压到 $(0,1)$，解决二分类。本节把这条思路推广到 **$k$ 类**——也就是 **Softmax 回归**。Softmax 可以理解为 GLM 家族中的一员（把多项分布 multinomial 视作指数族），但更常用**交叉熵**（cross entropy）的方式直接推导，所以这里采用非 GLM 的方法，并把整节按"几何直观 → 参数表示 → 前向计算 → 损失函数"的顺序展开。
@@ -383,6 +395,9 @@ $$
 之后对参数做梯度下降即可。
 
 值得指出的是：softmax 的梯度更新**同样满足** GLM 节的统一更新规则 $\theta_j := \theta_j + \alpha (y^{(i)} - h_\theta(x^{(i)})) x_j^{(i)}$——这正是它能被纳入 GLM 家族的具体体现。
+
+
+---
 
 ## 参考资料
 
