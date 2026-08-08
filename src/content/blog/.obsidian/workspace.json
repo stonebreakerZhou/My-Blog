@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
+                "file": "cs229/personal-lecture-notes/lec4-glm.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "lec2-lwr-and-classification"
+              "title": "lec4-glm"
             }
           }
         ]
@@ -196,8 +196,8 @@
   },
   "active": "0ea62ed1127226a6",
   "lastOpenFiles": [
-    "cs229/personal-lecture-notes/lec4-glm.md",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
+    "cs229/personal-lecture-notes/lec4-glm.md",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.544a8aa99c52",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.96e4df620b64",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.e9c0bf333295",

@@ -7,7 +7,6 @@ subSeries: personal-lecture-notes
 order: 4
 categories:
   - CS229
-  - 指数族
   - 广义线性模型
   - Softmax 回归
 ---
