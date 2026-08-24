@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cs229/personal-lecture-notes/lec5-gda-and-naive-bayes.md",
+                "file": "cs229/personal-lecture-notes/lec6-laplace-smoothing-and-svm.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "lec5-gda-and-naive-bayes"
+              "title": "lec6-laplace-smoothing-and-svm"
             }
           }
         ]
@@ -78,7 +78,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "ae48ec9e1c80a78d",
@@ -197,8 +198,11 @@
   },
   "active": "1683e99aba84af87",
   "lastOpenFiles": [
-    "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
+    "cs229/personal-lecture-notes/lec6-laplace-smoothing-and-svm.md.tmp.191116.4199d8081855",
+    "2026-08-24.md",
+    "cs229/personal-lecture-notes/lec6-laplace-smoothing-and-svm.md",
     "cs229/personal-lecture-notes/lec5-gda-and-naive-bayes.md",
+    "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
     "cs229/personal-lecture-notes/lec4-glm.md",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.544a8aa99c52",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.96e4df620b64",
