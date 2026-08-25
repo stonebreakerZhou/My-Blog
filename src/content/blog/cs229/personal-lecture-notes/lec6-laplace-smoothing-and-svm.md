@@ -221,9 +221,11 @@ $$
 
 ### 2.1 引子：为什么需要非线性边界？
 
-> *本节配一个非线性边界分类的数据点图（占位待补）*
+一个简单的例子：给出下面的二分类数据集，要求给出分类的决策边界：
 
-普通的 Logistic 回归只能给出**线性**决策边界——因为它本质上是在拟合 $\theta^T x = 0$ 这一个超平面。
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_non-linear-classification.webp" alt="non-linear classification" width="250" loading="lazy" decoding="async" /></div>
+
+但是普通的 Logistic 回归只能给出**线性**决策边界——因为它本质上是在拟合 $\theta^T x = 0$ 这一个超平面。
 
 一个绕过这个限制的小技巧是**手工构造高维特征**。例如把特征向量从
 
@@ -244,6 +246,8 @@ $$
 $$
 
 ——这是一个**非线性**决策边界（圆形）。
+
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_non-linear-boudary.webp" alt="non-linear decision boundary" width="350" loading="lazy" decoding="async" /></div>
 
 > **问题**：手工挑选高维的特征非常困难——我们不知道到底哪些特征组合能给出合适的边界。**SVM 的关键能力**就是它能自动从原始特征 $x_1, x_2, \dots$ 出发，**映射到高维特征空间**，并在这个高维空间中学到一个**线性的分类器**，等价于在原始空间中产生**非线性**的边界。这就是后面要讲的**核函数（Kernels）** 的核心思想（见下一个Lecture）。
 
@@ -270,11 +274,17 @@ $$
 
 #### 2）几何间隔 (Geometric margin)
 
-> *本节配一张线性分类的示意图，以及两张不同分隔线的对比图（占位待补）*
-
 假设数据集是**线性可分**的。（保证每一个数据点都能被正确线性分隔到对应类别）
 
-SVM 要做的就是在低维空间中找一个**最优分隔线**（optimal margin classifier）——目标是让分隔线**离两边数据都尽可能远**。分隔线与最近数据点之间的距离，就叫**几何间隔** (geometric margin)。（此处配一个手绘图）
+SVM 要做的就是在低维空间中找一个**最优分隔线**（optimal margin classifier）——目标是让分隔线**离两边数据都尽可能远**。分隔线与最近数据点之间的距离，就叫**几何间隔** (geometric margin)。
+
+例如对下面的数据集画出最优分割线时，虽然蓝线和绿线都能将各个数据点正确划分到对应类别，但是蓝线要更优一些：
+
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_geometric-margin-comparison.webp" alt="maximizing geometric margin" width="360" loading="lazy" decoding="async" /></div>
+
+现在如果有一条**线性分类器** $w^T x + b = 0$。考虑一个被正确分类的数据点 $(x^{(i)}, y^{(i)})$，我们把这个训练样本的**几何间隔**定义为**数据点到决策边界之间的欧氏距离**，如下图所示：
+
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_geometric_margin.webp" alt="geometric margin illustration" width="360" loading="lazy" decoding="async" /></div>
 
 ### 2.3 SVM 的符号约定
 
@@ -341,15 +351,15 @@ $$
 \gamma^{(i)} = \frac{y^{(i)} (w^T x^{(i)} + b)}{\|w\|}
 $$
 
-> *本节配一张线性分类例图（占位待补）*
-
 直观理解：在分类正确时，这就是数据点到决策边界的**欧氏距离**。
+
 
 **② 整个训练集**的几何间隔：
 
 $$
 \gamma = \min_{i = 1, \dots, m} \gamma^{(i)}
 $$
+
 
 **几何间隔 vs 函数间隔**的关系：
 
@@ -371,6 +381,8 @@ $$
 $$
 
 > 最大化 $\gamma$，同时保证每个样本的几何间隔都至少是 $\gamma$ （下面那行是约束条件）。
+
+> 不过这里有个关键问题：**这个原始问题其实是一个**非凸（non-convex）**优化问题**，直接用梯度下降之类的数值方法很难求解出最优的 $w, b$。所以我们需要做一步转化，把它变成一个凸问题。
 
 #### 转化：用函数间隔替换
 
@@ -397,6 +409,32 @@ $$
 $$
 
 也就等价于要去最小化 $\|w\|$，即等价于去最小化 $\frac{1}{2} \|w\|^2$（加 $\frac{1}{2}$ 是为了求导方便，并且最优解的位置不会改变）。
+
+#### 约束条件的推导
+
+现在把目光转向**约束条件**。最开始的约束是
+
+$$
+\frac{y^{(i)} (w^T x^{(i)} + b)}{\|w\|} \geq \gamma, \quad i = 1, \dots, m
+$$
+
+两边同时乘以 $\|w\|$，简单变形得到
+
+$$
+y^{(i)} (w^T x^{(i)} + b) \geq \gamma\, \|w\|, \quad i = 1, \dots, m
+$$
+
+接下来关键的一步：因为我们已经令 $\hat\gamma = 1$，于是
+
+$$
+\gamma\, \|w\| = \frac{\hat\gamma}{\|w\|} \cdot \|w\| = \hat\gamma = 1
+$$
+
+代入上式右端，约束条件最终化为
+
+$$
+y^{(i)} (w^T x^{(i)} + b) \geq 1, \quad i = 1, \dots, m
+$$
 
 #### 最终版本
 
