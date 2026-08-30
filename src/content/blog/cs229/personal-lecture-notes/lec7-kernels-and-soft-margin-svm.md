@@ -79,13 +79,13 @@ $$
 
 可以证明：解出的 $w$ 永远**垂直于决策边界**——$w$ 决定边界的方向，$b$ 只决定边界的相对位置。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w_perpendicular_boundary.webp" alt="w is orthogonal to the boundary" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w_perpendicular_boundary.webp" alt="w is orthogonal to the boundary" width="70%" loading="lazy" decoding="async" /></div>
 
 既然 $w$ 与边界垂直，而训练样本 $\{x^{(i)}\}$ 张成的空间里必然包含这个方向，$w$ 落在 $\text{span}(\{x^{(i)}\})$ 里也就很自然了。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w-boudary_eg1.webp" alt="orthogonality example 1" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w-boudary_eg1.webp" alt="orthogonality example 1" width="70%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w-boudary_eg2.webp" alt="orthogonality example 2" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_w-boudary_eg2.webp" alt="orthogonality example 2" width="70%" loading="lazy" decoding="async" /></div>
 
 ---
 
@@ -216,7 +216,7 @@ $$
 \Phi(x)^T \Phi(z) = (x^T z)^2
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_Phi_dot-product.webp" alt="dot product illustration" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_Phi_dot-product.webp" alt="dot product illustration" width="70%" loading="lazy" decoding="async" /></div>
 
 计算 $(x^T z)^2$ 只需要 $O(n)$ 时间（先算 $x^T z$ 这个标量，再平方），相比显式构造 $\Phi$ 省了一个量级。
 
@@ -404,7 +404,7 @@ $$
 
 把数据映射到高维空间后，数据集会变得**更容易分开**。但如果数据本身有噪声，我们不应该追求把每个点都分对——那样会让决策边界变得过于复杂、过拟合。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_not-linearly-separable-data.webp" alt="not linearly separable data boundary" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_not-linearly-separable-data.webp" alt="not linearly separable data boundary" width="70%" loading="lazy" decoding="async" /></div>
 
 ### 8.2 $\ell_1$-norm Soft Margin SVM
 
@@ -438,7 +438,7 @@ $$
 
 > 用 Soft Margin 的另一个理由：如果只有一个 outlier （异常值），硬间隔 SVM 会让决策边界被严重拉偏；所以 Soft Margin 更鲁棒。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_soft_SVM_boudary.webp" alt="soft margin SVM boundary" width="40%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec7_soft_SVM_boudary.webp" alt="soft margin SVM boundary" width="70%" loading="lazy" decoding="async" /></div>
 
 ### 8.3 对偶形式
 
