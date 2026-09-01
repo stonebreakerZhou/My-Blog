@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md",
+                "file": "cs229/personal-lecture-notes/lec8-learning-algorithm-application.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "lec7-kernels-and-soft-margin-svm"
+              "title": "lec8-learning-algorithm-application"
             }
           }
         ]
@@ -197,6 +197,10 @@
   },
   "active": "edd60ddf17c69050",
   "lastOpenFiles": [
+    "2026-08-24.md",
+    "2026-09-05.md",
+    "cs229/personal-lecture-notes/lec8-learning-algorithm-application.md",
+    "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md",
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.9070e5a93d48",
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.f1ab373d176e",
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.026e5efec2fe",
@@ -206,14 +210,11 @@
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.5786aa1b1598",
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.736b7c3ebfc9",
     "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md.tmp.6344.c7e3a88599fe",
-    "cs229/personal-lecture-notes/lec7-kernels-and-soft-margin-svm.md",
     "cs229/personal-lecture-notes/lec6-laplace-smoothing-and-svm.md",
     "cs229/personal-lecture-notes/lec6-laplace-smoothing-and-svm.md.tmp.191116.4199d8081855",
-    "2026-08-24.md",
     "cs229/personal-lecture-notes/lec5-gda-and-naive-bayes.md",
     "cs229/personal-lecture-notes/lec2-lwr-and-classification.md",
     "cs229/personal-lecture-notes/lec4-glm.md",
-    "cs229/personal-lecture-notes/lec2-lwr-and-classification.md.tmp.27528.544a8aa99c52",
     "2026-08-04.md",
     "cs229/personal-lecture-notes/lec1-linear-regression.md",
     "cs229/math-foundations/linear-algebra.md",
