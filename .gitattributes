@@ -1,0 +1,6 @@
+# Normalize line endings for all text files to LF.
+# - On checkout (Windows autocrlf=true), Git would otherwise rewrite LF → CRLF
+#   and warn "This file uses 'LF' line endings..." for every newly-written file.
+# - On commit, Git stores LF in the repo.
+# - Binary detection is automatic.
+* text=auto eol=lf

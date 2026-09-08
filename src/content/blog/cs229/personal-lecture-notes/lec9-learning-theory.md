@@ -61,6 +61,7 @@ categories:
 ---
 
 
+
 ## 2. Bias & Variance 的参数视角
 
 在 Lec 8 我们从模型复杂度的角度看 Bias / Variance，这一讲换一个视角——**把"参数估计"看作一个统计问题**。
@@ -69,13 +70,13 @@ categories:
 
 以线性回归为例：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_data_view.jpg" alt="data view" width="85%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_data_view.webp" alt="data view" width="85%" loading="lazy" decoding="async" /></div>
 
 上面这种"画散点 + 拟合直线"的视角是**数据视图**。
 
 如果换到**参数视图**：我们关心的是真实参数 $\theta^*$ 的位置，而不是具体某一次拟合出来的直线长什么样。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_parameter_view.jpg" alt="parameter view" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_parameter_view.webp" alt="parameter view" width="75%" loading="lazy" decoding="async" /></div>
 
 ### 2.2 Bias / Variance 作为采样分布的性质
 
@@ -120,13 +121,14 @@ Bias 和 Variance 是**互相独立**的，它们都是"在固定数据量 $m$ �
 ---
 
 
+
 ## 3. Approximation / Estimation：泛化误差的三层分解
 
 ### 3.1 一些记号
 
 为了将泛化形式化表示，我们先画出一个假设空间的图：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_hypothesis_space.jpg" alt="hypothesis space" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_hypothesis_space.webp" alt="hypothesis space" width="50%" loading="lazy" decoding="async" /></div>
 
 - $g$：**理论最优** hypothesis（在所有可能函数中最好的那一个）
 - $\mathcal{H}$：一个**假设类**（比如所有线性分类器；所有SVM...）
@@ -146,7 +148,7 @@ Bias 和 Variance 是**互相独立**的，它们都是"在固定数据量 $m$ �
 
 - $\varepsilon(g)$：**Bayes error / 不可约误差**：即使选了最优的 $g$，仍然会犯错的概率——这是任何模型都跨不过去的天花板，原因是数据自带噪声。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_error_risk_plot.jpg" alt="error plot" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_error_risk_plot.webp" alt="error plot" width="70%" loading="lazy" decoding="async" /></div>
 
 ### 3.2 误差的分解
 
@@ -183,11 +185,12 @@ $$
 
 
 
+
 ## 4. Empirical Risk Minimizer (ERM)
 
-最朴素的学习算法：
+最朴素的学习算法 ERM：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_ERM.jpg" alt="ERM" width="85%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_ERM.webp" alt="ERM" width="85%" loading="lazy" decoding="async" /></div>
 
 $$
 \hat h_{\text{ERM}} = \arg\min_{h \in \mathcal{H}} \frac{1}{m} \sum_{i=1}^m \mathbf{1}\{h(x^{(i)}) \ne y^{(i)}\}
@@ -201,7 +204,8 @@ $$
 
 
 
-## 5. Uniform Convergence
+
+## 5. Uniform Convergence ($\cal H$ 上的一致收敛性)
 
 ### 5.1 两个核心问题
 
@@ -214,14 +218,14 @@ $$
 > 工具① **Union bound（联合界）**：如果有 $k$ 个事件 $A_1, \dots, A_k$（不必独立），则
 >
 > $$
- P(A_1 \cup A_2 \cup \dots \cup A_k) \le P(A_1) + \dots + P(A_k)
- $$
+> P(A_1 \cup A_2 \cup \dots \cup A_k) \le P(A_1) + \dots + P(A_k)
+> $$
 
 > 工具② **Hoeffding 不等式**：设 $Z_1, Z_2, \dots, Z_m \sim \text{Bernoulli}(\phi)$，$\hat\phi = \frac{1}{m} \sum_{i=1}^m Z_i$，$\gamma > 0$，则
 >
 > $$
- P(|\hat\phi - \phi| > \gamma) \le 2 \exp(-2 \gamma^2 m)
- $$
+> P(|\hat\phi - \phi| > \gamma) \le 2 \exp(-2 \gamma^2 m)
+> $$
 
 ### 5.3 问题①：简单情况出发，固定一个 $h_i$，经验误差与泛化误差的关系
 
@@ -256,18 +260,19 @@ $$
 但这里有一个**逻辑漏洞**：上面的推导是"先固定 $h$，再去采样数据"；实际情况却是"先采样数据，再用 ERM 选出 $\hat h$"——$\hat h$ 和数据并不是独立的， $\hat h$ 是对于这个特定数据下最优的那个假设。
 
 
-### 5.4 一致收敛 (Uniform Convergence)：把上面的结果推广到所有 $h$
+### 5.4 一致收敛 (Uniform Convergence)：把上面的结果推广到 $\cal H$ 中的所有 $h$
 
 要修复这个漏洞，我们需要把"对一个 $h$ 集中"推广到"**对 $\mathcal{H}$ 中所有 $h$ 同时集中**"，由于我们在训练前不知道最后会得到 $\cal H$ 中的哪个 $h$，但是这样无论算法最终选中 $\cal H$ 中的哪个 $h$，最后都不会出错（经验误差最小化可以得到泛化误差最小化）——这就是 **uniform convergence**：
 
 > **定义 (Uniform Convergence)**：$\mathcal{H}$ 中**所有** $h$ 的 $\hat\varepsilon_S(h)$ 都同时接近 $\varepsilon(h)$。
 
+下面我们就准备来证明一致收敛性：
 
-### 5.5 情形 1：有限假设类
+### 5.5.1 情形 1：一致收敛在有限假设类上的证明
 
 **假设** $\mathcal{H}$ 的大小有限：$|\mathcal{H}| = k$。
 
-对每个 $h \in \mathcal{H}$，Hoeffding 都给出一个界。套 Union bound 把 $k$ 个 bound 加起来：
+对每个 $h \in \mathcal{H}$，Hoeffding 都给出一个界。用 Union bound 把 $k$ 个 bound 加起来：
 
 $$
 P\!\left(\exists h \in \mathcal{H},\ |\hat\varepsilon_S(h) - \varepsilon(h)| > \gamma\right) \le k \cdot 2 \exp(-2 \gamma^2 m)
@@ -293,6 +298,12 @@ m \;\ge\; \frac{1}{2\gamma^2} \log\!\left(\frac{2k}{\delta}\right)
 $$
 
 这个界叫做 **sample complexity**——告诉我们：要达到 $\gamma$ 容忍度 + $\delta$ 失败率，至少需要多少样本。
+
+### 5.5.2 情形二：一致收敛性在无限假设类上的证明
+
+这一段证明省略，把"有限类"的结果推广到"无限类"正是第6节 **VC 维**要做的事。
+
+
 
 
 ### 5.6 问题②：$\varepsilon(\hat h)$ vs $\varepsilon(h^*)$
@@ -322,13 +333,8 @@ $$
 > $$
 > \varepsilon(\hat h) \le \varepsilon(h^*) + 2\sqrt{\frac{1}{2m} \log\!\left(\frac{2k}{\delta}\right)}
 > $$
-
-
-### 5.7 情形 2：无限假设类
-
-把"有限类"的结果推广到"无限类"——这正是下一节 **VC 维**要做的事。
-
 ---
+
 
 
 
@@ -349,6 +355,7 @@ $$
 这告诉我们：**只要训练样本 $m$ 远大于 $\text{VC}(\mathcal{H})$，泛化误差就会很小**——这正是学习算法能泛化的根本原因。
 
 ---
+
 
 
 ## 参考资料
