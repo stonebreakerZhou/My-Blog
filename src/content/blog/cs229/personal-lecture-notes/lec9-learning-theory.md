@@ -39,6 +39,7 @@ categories:
 
 ---
 
+
 ## 1. 基本假设 (Setup & Assumptions)
 
 要谈学习理论，必须先把**设定**写清楚：
@@ -58,6 +59,7 @@ categories:
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_learning_algo_procedure.webp" alt="learning procedure" width="80%" loading="lazy" decoding="async" /></div>
 
 ---
+
 
 ## 2. Bias & Variance 的参数视角
 
@@ -116,6 +118,7 @@ $$
 Bias 和 Variance 是**互相独立**的，它们都是"在固定数据量 $m$ 下的算法自身的属性"。
 
 ---
+
 
 ## 3. Approximation / Estimation：泛化误差的三层分解
 
@@ -255,7 +258,7 @@ $$
 
 ### 5.4 一致收敛 (Uniform Convergence)：把上面的结果推广到所有 $h$
 
-要修复这个漏洞，我们需要把"对一个 $h$ 集中"推广到"**对 $\mathcal{H}$ 中所有 $h$ 同时集中**"——这就是 **uniform convergence**：
+要修复这个漏洞，我们需要把"对一个 $h$ 集中"推广到"**对 $\mathcal{H}$ 中所有 $h$ 同时集中**"，由于我们在训练前不知道最后会得到 $\cal H$ 中的哪个 $h$，但是这样无论算法最终选中 $\cal H$ 中的哪个 $h$，最后都不会出错（经验误差最小化可以得到泛化误差最小化）——这就是 **uniform convergence**：
 
 > **定义 (Uniform Convergence)**：$\mathcal{H}$ 中**所有** $h$ 的 $\hat\varepsilon_S(h)$ 都同时接近 $\varepsilon(h)$。
 
