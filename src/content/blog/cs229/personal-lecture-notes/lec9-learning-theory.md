@@ -56,7 +56,7 @@ categories:
 
 3. **存在真实参数** $\theta^*$（或真实函数 $h^*$）：确定性函数把样本映射到一个常数。注意 $\theta^*$ 不是随机变量，只是**未知的固定值**。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_learning_algo_procedure.webp" alt="learning procedure" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_learning_algo_procedure.webp" alt="learning procedure" width="100%" loading="lazy" decoding="async" /></div>
 
 ---
 
@@ -70,13 +70,13 @@ categories:
 
 以线性回归为例：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_data_view.webp" alt="data view" width="85%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_data_view.webp" alt="data view" width="90%" loading="lazy" decoding="async" /></div>
 
 上面这种"画散点 + 拟合直线"的视角是**数据视图**。
 
 如果换到**参数视图**：我们关心的是真实参数 $\theta^*$ 的位置，而不是具体某一次拟合出来的直线长什么样。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_parameter_view.webp" alt="parameter view" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_parameter_view.webp" alt="parameter view" width="85%" loading="lazy" decoding="async" /></div>
 
 ### 2.2 Bias / Variance 作为采样分布的性质
 
@@ -128,7 +128,7 @@ Bias 和 Variance 是**互相独立**的，它们都是"在固定数据量 $m$ �
 
 为了将泛化形式化表示，我们先画出一个假设空间的图：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_hypothesis_space.webp" alt="hypothesis space" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_hypothesis_space.webp" alt="hypothesis space" width="85%" loading="lazy" decoding="async" /></div>
 
 - $g$：**理论最优** hypothesis（在所有可能函数中最好的那一个）
 - $\mathcal{H}$：一个**假设类**（比如所有线性分类器；所有SVM...）
@@ -148,7 +148,7 @@ Bias 和 Variance 是**互相独立**的，它们都是"在固定数据量 $m$ �
 
 - $\varepsilon(g)$：**Bayes error / 不可约误差**：即使选了最优的 $g$，仍然会犯错的概率——这是任何模型都跨不过去的天花板，原因是数据自带噪声。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_error_risk_plot.webp" alt="error plot" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_error_risk_plot.webp" alt="error plot" width="90%" loading="lazy" decoding="async" /></div>
 
 ### 3.2 误差的分解
 
@@ -190,7 +190,7 @@ $$
 
 最朴素的学习算法 ERM：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_ERM.webp" alt="ERM" width="85%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_ERM.webp" alt="ERM" width="100%" loading="lazy" decoding="async" /></div>
 
 $$
 \hat h_{\text{ERM}} = \arg\min_{h \in \mathcal{H}} \frac{1}{m} \sum_{i=1}^m \mathbf{1}\{h(x^{(i)}) \ne y^{(i)}\}
@@ -229,7 +229,7 @@ $$
 
 ### 5.3 问题①：简单情况出发，固定一个 $h_i$，经验误差与泛化误差的关系
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_epsilon%28hat%28h%29%29_with_epsilon%28h%29.webp" alt="ε(ĥ) and ε(h)" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_epsilon%28hat%28h%29%29_with_epsilon%28h%29.webp" alt="ε(ĥ) and ε(h)" width="85%" loading="lazy" decoding="async" /></div>
 
 挑出某个具体的 $h_i$，定义
 
@@ -308,7 +308,7 @@ $$
 
 ### 5.6 问题②：$\varepsilon(\hat h)$ vs $\varepsilon(h^*)$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_epsilon%28hat%28h%29%29_with_epsilon%28h%5Estar%29.webp" alt="ε(ĥ) and ε(h*)" width="85%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec9_epsilon%28hat%28h%29%29_with_epsilon%28h%5Estar%29.webp" alt="ε(ĥ) and ε(h*)" width="90%" loading="lazy" decoding="async" /></div>
 
 Hoeffding 不等式给出
 
