@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Obsidian vault app state (per-user, not content)
+# Keeping this out of the repo avoids spurious LF/CRLF warnings
+# on Windows and keeps the blog content tree clean.
+.obsidian/
