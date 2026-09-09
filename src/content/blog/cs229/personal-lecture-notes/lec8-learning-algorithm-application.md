@@ -66,19 +66,19 @@ $$
 
 直观地看，以一个五阶多项式拟合数据集为例：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_dataset.webp" alt="dataset" width="30%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_dataset.webp" alt="dataset" width="60%" loading="lazy" decoding="async" /></div>
 
 - ① $\lambda = 0$：相当于直接拟合一个五阶多项式，会**过拟合**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_overfit.webp" alt="overfit" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_overfit.webp" alt="overfit" width="60%" loading="lazy" decoding="async" /></div>
 
 - ② $\lambda$ 太大：相当于把 $\theta$ 强行压向 0，当 $\lambda$ 充分大时 $h_\theta(x) \approx 0$，会**欠拟合**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_underfit.webp" alt="underfit" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_underfit.webp" alt="underfit" width="60%" loading="lazy" decoding="async" /></div>
 
 - ③ 选一个合适的 $\lambda$，既不让参数太大，又允许模型刻画数据：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_just-right.webp" alt="just right" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_just-right.webp" alt="just right" width="60%" loading="lazy" decoding="async" /></div>
 
 ### 2.2 逻辑回归的正则化
 
@@ -88,7 +88,7 @@ $$
 \arg\max_\theta \sum_{i=1}^n \log p(y^{(i)} \mid x^{(i)}; \theta) \color{red}{- \lambda \|\theta\|^2}
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_logistic.webp" alt="logistic regression regularization" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec8_regularization_logistic.webp" alt="logistic regression regularization" width="60%" loading="lazy" decoding="async" /></div>
 
 > **Rule of thumb for logistic regression （经验法则）**：如果不加正则化，至少需要训练样本数与待拟合参数数量**同一量级**，否则容易过拟合。
 
