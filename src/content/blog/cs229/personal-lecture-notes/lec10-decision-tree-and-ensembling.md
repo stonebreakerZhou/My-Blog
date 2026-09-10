@@ -29,7 +29,7 @@ categories:
 
 前面几讲学的都是**线性模型**（线性回归、逻辑回归、SVM 等）。它们的决策边界都是线性的，遇到下图中这种数据就束手无策（当然也可以比如说用 SVM 把数据投影到高维空间，但是比较麻烦）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset_1.webp" alt="dataset 1" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset_1.webp" alt="dataset 1" width="80%" loading="lazy" decoding="async" /></div>
 
 这一讲进入**非线性模型**的第一个代表——**决策树 (Decision Tree)**。然后会讲它的"加强版"——**集成方法 (Ensemble Methods)**：Bagging / Random Forest / Boosting。
 
@@ -48,7 +48,7 @@ categories:
 
 最终得到的区域划分像这样：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset_1_split.webp" alt="dataset 1 split" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset_1_split.webp" alt="dataset 1 split" width="80%" loading="lazy" decoding="async" /></div>
 
 ### 1.2 分裂函数
 
@@ -100,9 +100,9 @@ $$
 
 两种 split：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_misclassification_simple-eg1_split1.webp" alt="dataset 2 split 1" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_misclassification_simple-eg1_split1.webp" alt="dataset 2 split 1" width="80%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_misclassification_simple-eg1_split2.webp" alt="dataset 2 split 2" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_misclassification_simple-eg1_split2.webp" alt="dataset 2 split 2" width="80%" loading="lazy" decoding="async" /></div>
 
 直觉上 split ② 更好（多分离出了一些正例）。但 misclassification loss 算出来两者**完全一样**：
 
@@ -125,7 +125,7 @@ $$
 
 > 直观：来自信息论——"告诉一个样本它属于哪个类"所需的信息 bit 数。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve1.webp" alt="cross-entropy loss curve" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve1.webp" alt="cross-entropy loss curve" width="80%" loading="lazy" decoding="async" /></div>
 
 这是一条**严格凹**曲线。如果两个子区域 $R_1, R_2$ **样本数相同**，那 loss 变化量就是
 
@@ -133,9 +133,9 @@ $$
 L(R_p) - \frac{L(R_1) + L(R_2)}{2} > 0
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve2.webp" alt="CE curve with two regions" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve2.webp" alt="CE curve with two regions" width="80%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve3.webp" alt="CE curve midpoint" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve3.webp" alt="CE curve midpoint" width="80%" loading="lazy" decoding="async" /></div>
 
 由于样本数相同，所以两个子区域的 $\hat P_c$ 平均起来就是父区域的 $\hat P_c$：
 
@@ -149,7 +149,7 @@ $$
 
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_CE-loss_curve_midpoint_eg.webp" alt="CE loss midpoint verification" width="70%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_loss-change_on_CE-loss_curve.webp" alt="loss change on CE curve" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_loss-change_on_CE-loss_curve.webp" alt="loss change on CE curve" width="100%" loading="lazy" decoding="async" /></div>
 
 #### ④ Gini Loss
 
@@ -157,7 +157,7 @@ $$
 L_{\text{Gini}} = \sum_c \hat p_c\, (1 - \hat p_c)
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_Gini-loss_curve.webp" alt="Gini loss curve" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_Gini-loss_curve.webp" alt="Gini loss curve" width="80%" loading="lazy" decoding="async" /></div>
 
 也是**严格凹**的（实际上严格凸也是——这里不严格区分凸凹的关键在于"midpoint 处的值低于两端均值"），所以行为和 cross-entropy 一样。
 
@@ -169,7 +169,7 @@ $$
 
 ### 1.4 回归树 (Regression Tree)
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_regression-tree_dataset.webp" alt="regression tree dataset" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_regression-tree_dataset.webp" alt="regression tree dataset" width="85%" loading="lazy" decoding="async" /></div>
 
 回归任务下，叶节点的预测输出不再是"多数类"，而是**所有落到这个区域里的样本目标值的均值**：
 
@@ -213,16 +213,16 @@ $$
 - **测试时**：$O(d)$（从根到叶，深度 $d$）
 - **训练时**：$O(n f d)$（每个样本经过 $d$ 层，每层扫 $f$ 个特征）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_depth.webp" alt="decision tree depth" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_depth.webp" alt="decision tree depth" width="85%" loading="lazy" decoding="async" /></div>
 
 > 最优情况是平衡二叉树，$d < \log_2 n$；但实践中很少严格平衡。
 
 
 ### 1.8 缺点：不适合加性可分
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset3.webp" alt="dataset 3" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_dataset3.webp" alt="dataset 3" width="80%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_no-additive.webp" alt="decision tree on dataset 3" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec10_DT_no-additive.webp" alt="decision tree on dataset 3" width="80%" loading="lazy" decoding="async" /></div>
 
 左图这种**斜对角可分**的数据，线性 / 逻辑回归一条黑虚线就能搞定；但决策树只能沿着坐标轴画阶梯状边界，要用很多次分裂才能近似——边界很粗糙。
 
