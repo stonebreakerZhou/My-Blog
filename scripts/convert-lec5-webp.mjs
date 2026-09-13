@@ -1,5 +1,4 @@
 import sharp from 'sharp';
-import { readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const SRC = 'E:/personal_website/note_drafts/images';
