@@ -478,11 +478,11 @@ For iteration t = 1, ... :
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot4.webp" alt="momentum route" width="90%" loading="lazy" decoding="async" /></div>
 
 > 初始化 $v = 0$，每一步：
->
-> $$
- v := \beta v + (1 - \beta) \frac{\partial \mathcal{L}}{\partial w}, \qquad w := w - \alpha v
+
 $$
->
+v := \beta v + (1 - \beta) \frac{\partial \mathcal{L}}{\partial w}, \qquad w := w - \alpha v
+$$
+
 > "$w$ 的更新直接使用 $v$"——这样 $v$ 同时携带了**当前梯度**和**历史方向**，行为像物理里的**惯性**："momentum" 就是这个意思：让更新有"惯性"，不会轻易被噪声带偏方向。
 
 > **关键属性**：因为是"带权"的——所以方向的改变**不会太剧烈**（哪怕某一步的梯度方向突然跳一下，$v$ 不会一下子跟着跳）。
