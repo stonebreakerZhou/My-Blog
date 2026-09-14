@@ -66,7 +66,7 @@ $$
 
 下面以这个简单三层网络为例子：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_simple-nn_eg.webp" alt="simple neural network" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_simple-nn_eg.webp" alt="simple neural network" width="100%" loading="lazy" decoding="async" /></div>
 
 > **约定**：$\mathcal{J}$ 对 $W^{[\ell]}$ 求导时，先利用求和的线性性 → 只算 $\partial \mathcal{L} / \partial W^{[\ell]}$，最后对 $m$ 个样本求和取平均即可。下面从**最靠近 cost 的 $W^{[3]}$** 开始往回倒推。
 
@@ -272,7 +272,7 @@ $$
 
 假设输入 $x = \begin{pmatrix} x_1 \\ x_2 \end{pmatrix}$ 的原始分布是这样：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_raw_input.webp" alt="raw input distribution" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_raw_input.webp" alt="raw input distribution" width="60%" loading="lazy" decoding="async" /></div>
 
 问题在于：做 $W^{[1]} x + b^{[1]}$ 算 $Z^{[1]}$ 时，如果 $x$ 太大，那 $Z^{[1]}$ 也很容易进入激活函数的**饱和区**（sigmoid 的两端）→ 梯度消失 → 学不动。
 
@@ -292,7 +292,7 @@ $$
 
 归一化后的分布：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_input.webp" alt="normalized input distribution" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_input.webp" alt="normalized input distribution" width="60%" loading="lazy" decoding="async" /></div>
 
 > **注意**：**测试**时，必须用**训练集上算出来的 $\mu, \sigma$** 来归一化测试集；**不能**在测试集上重新算 $\mu, \sigma$。
 
@@ -301,11 +301,11 @@ $$
 
 loss 曲面对比：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_loss-plot_compare.webp" alt="normalized loss plot comparison" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_loss-plot_compare.webp" alt="normalized loss plot comparison" width="100%" loading="lazy" decoding="async" /></div>
 
 梯度下降路径对比：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_loss-plot-route_compare.webp" alt="normalized optimizing route comparison" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_loss-plot-route_compare.webp" alt="normalized optimizing route comparison" width="100%" loading="lazy" decoding="async" /></div>
 
 > 归一化后（右图），loss 曲面更"圆"——梯度下降不会在陡峭方向上反复震荡，**收敛效率显著提升**。
 
@@ -435,7 +435,7 @@ For iteration t = 1, ... :
 
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_cost_function_compare.webp" alt="cost function comparison" width="80%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_mini-batch_GD_plot.webp" alt="mini-batch GD route" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_mini-batch_GD_plot.webp" alt="mini-batch GD route" width="80%" loading="lazy" decoding="async" /></div>
 
 | | Batch GD（左图）| Mini-batch GD（右图）|
 |---|---|---|
@@ -455,11 +455,11 @@ For iteration t = 1, ... :
 
 来看一个典型的 loss 等高线图（横长纵窄的山谷形）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot1.webp" alt="loss contour plot" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot1.webp" alt="loss contour plot" width="80%" loading="lazy" decoding="async" /></div>
 
 普通梯度下降的方向**总是垂直于等高线**——结果就是：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot2.webp" alt="ordinary GD route" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot2.webp" alt="ordinary GD route" width="80%" loading="lazy" decoding="async" /></div>
 
 > 在窄长山谷里走"之字形"——水平方向进展很慢，垂直方向反复震荡。
 
@@ -467,7 +467,7 @@ For iteration t = 1, ... :
 
 我们想要的效果：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot3.webp" alt="desired optimization route" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot3.webp" alt="desired optimization route" width="100%" loading="lazy" decoding="async" /></div>
 
 **水平方向**一直同方向累积得多 → 大步向前；**垂直方向**上下震荡有抵消 → 下一次垂直走向变小。
 
@@ -475,7 +475,7 @@ For iteration t = 1, ... :
 
 让参数更新方向变成**过去梯度的指数加权平均**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot4.webp" alt="momentum route" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot4.webp" alt="momentum route" width="90%" loading="lazy" decoding="async" /></div>
 
 > 初始化 $v = 0$，每一步：
 >
