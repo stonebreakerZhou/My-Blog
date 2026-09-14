@@ -10,12 +10,8 @@ categories:
   - Backpropagation
   - Chain Rule
   - Activation Function
-  - Sigmoid
-  - ReLU
-  - Tanh
   - Input Normalization
   - Weight Initialization
-  - Vanishing Gradient
   - Mini-batch Gradient Descent
   - Momentum
 ---
@@ -50,7 +46,7 @@ Lec 11 讲了神经网络的基本结构（前向传播），但**梯度到底�
 
 ### 1.1 Cost function & update rule
 
-回顾神经网络要最小化的代价函数：
+回顾神经网络要最小化的代价函数（针对整体全部样本）：
 
 $$
 \mathcal{J}(\hat y, y) = \frac{1}{m} \sum_{i=1}^{m} \mathcal{L}^{(i)}(\hat y, y)
@@ -62,7 +58,7 @@ $$
 \mathcal{L}^{(i)} = - \big[\, y^{(i)} \log \hat y^{(i)} + (1 - y^{(i)}) \log (1 - \hat y^{(i)}) \,\big]
 $$
 
-每一层 $\ell$ 都有自己的参数 $W^{[\ell]}, b^{[\ell]}$，更新规则：
+每一层 $\ell$ 都有自己的参数 $W^{[\ell]}, b^{[\ell]}$，其更新规则为：
 
 $$
 W^{[\ell]} := W^{[\ell]} - \alpha \, \frac{\partial \mathcal{J}}{\partial W^{[\ell]}}
@@ -72,7 +68,7 @@ $$
 
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_simple-nn_eg.webp" alt="simple neural network" width="80%" loading="lazy" decoding="async" /></div>
 
-> **约定**：$\mathcal{J}$ 对 $W^{[\ell]}$ 求导时，先利用求和的线性性 → 只算 $\partial \mathcal{L} / \partial W^{[\ell]}$，最后对 $m$ 个样本求和取平均即可。下面从**最靠近 cost 的 $W^{[3]}$** 开始倒推。
+> **约定**：$\mathcal{J}$ 对 $W^{[\ell]}$ 求导时，先利用求和的线性性 → 只算 $\partial \mathcal{L} / \partial W^{[\ell]}$，最后对 $m$ 个样本求和取平均即可。下面从**最靠近 cost 的 $W^{[3]}$** 开始往回倒推。
 
 ---
 
@@ -85,7 +81,7 @@ $$
 \frac{\partial \mathcal{L}}{\partial W^{[3]}} = - \Big[\, y^{(i)} \frac{\partial}{\partial W^{[3]}} \log\big(\sigma(W^{[3]} a^{[2]} + b^{[3]})\big) + (1 - y^{(i)}) \frac{\partial}{\partial W^{[3]}} \log\big(1 - \sigma(W^{[3]} a^{[2]} + b^{[3]})\big) \,\Big]
 $$
 
-用上两个标准恒等式：
+此处求导涉及的两个性质：
 
 $$
 \frac{\partial \log(\sigma(f))}{\partial w} = \frac{1}{\sigma(f)} \cdot \frac{\partial \sigma(f)}{\partial w}
@@ -140,36 +136,42 @@ $$
 
 ### 1.3 求 $\partial \mathcal{L} / \partial W^{[2]}$
 
-现在求 $W^{[2]}$ 的梯度——链式路径**比 $W^{[3]}$ 更长**：
+现在往回推到第二层求 $W^{[2]}$ 的梯度——链式路径**比 $W^{[3]}$ 更长**：
 
 $$
-\frac{\partial \mathcal{L}}{\partial W^{[2]}} = \color{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot \color{blue}{\frac{\partial Z^{[3]}}{\partial a^{[2]}}} \cdot \color{green}{\frac{\partial a^{[2]}}{\partial Z^{[2]}}} \cdot \color{purple}{\frac{\partial Z^{[2]}}{\partial W^{[2]}}}
+\frac{\partial \mathcal{L}}{\partial W^{[2]}} = \textcolor{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot \textcolor{blue}{\frac{\partial Z^{[3]}}{\partial a^{[2]}}} \cdot \textcolor{green}{\frac{\partial a^{[2]}}{\partial Z^{[2]}}} \cdot \textcolor{purple}{\frac{\partial Z^{[2]}}{\partial W^{[2]}}}
 $$
 
-> **技巧**：链式法则里**只有相邻变量之间**才能直接传递偏导——所以每一步的中间变量必须真的参与依赖链。
+(we need variables that directly connect to each other to pass down the chain rule)
 
-注意到：
-
-$$
-\frac{\partial \mathcal{L}}{\partial W^{[3]}} = \color{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot \frac{\partial Z^{[3]}}{\partial W^{[3]}} = \color{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot a^{[2]T}
-$$
-
-又因为已知 $\partial \mathcal{L} / \partial W^{[3]} = -(y^{(i)} - a^{[3]}) \, a^{[2]T}$，所以**红色部分**等于：
+注意到 $\partial \mathcal{L} / \partial W^{[3]}$ 对应 $\partial \mathcal{L} / \partial W^{[2]}$ 里的前两项（红色部分）。所以直接代入得：
 
 $$
-\color{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} = - (y^{(i)} - a^{[3]}) = (a^{[3]} - y^{(i)})
+\begin{aligned}
+\frac{\partial \mathcal{L}}{\partial W^{[3]}} &= \textcolor{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot \frac{\partial Z^{[3]}}{\partial W^{[3]}} \\
+&= \textcolor{red}{\frac{\partial \mathcal{L}}{\partial a^{[3]}} \cdot \frac{\partial a^{[3]}}{\partial Z^{[3]}}} \cdot a^{[2]T}
+\end{aligned}
 $$
 
-代回 $W^{[2]}$ 的链式展开：
+又因为我们已知：
 
 $$
-\frac{\partial \mathcal{L}}{\partial W^{[2]}} = (a^{[3]} - y^{(i)}) \cdot \color{blue}{W^{[3]T}} \cdot \color{green}{a^{[2]} (1 - a^{[2]})} \cdot \color{purple}{a^{[1]T}}
+\frac{\partial \mathcal{L}}{\partial W^{[3]}} = - (y^{(i)} - a^{[3]}) \, a^{[2]T}
 $$
 
-> 颜色标记：<span style="color: red;">**红**</span> = 上一节算 $W^{[3]}$ 时已经得到的回传梯度；<span style="color: blue;">**蓝**</span> = $\partial Z^{[3]} / \partial a^{[2]}$；<span style="color: green;">**绿**</span> = 本地激活梯度 $\sigma'(Z^{[2]})$；<span style="color: purple;">**紫**</span> = 本地线性梯度 $\partial Z^{[2]} / \partial W^{[2]}$。
+所以红色部分就等于 $- (y^{(i)} - a^{[3]})$。
+
+代入 $\partial \mathcal{L} / \partial W^{[2]}$ 后得：
+
+$$
+\begin{aligned}
+\frac{\partial \mathcal{L}}{\partial W^{[2]}} &= - (y^{(i)} - a^{[3]}) \cdot \textcolor{blue}{\frac{\partial Z^{[3]}}{\partial a^{[2]}}} \cdot \textcolor{green}{\frac{\partial a^{[2]}}{\partial Z^{[2]}}} \cdot \textcolor{purple}{\frac{\partial Z^{[2]}}{\partial W^{[2]}}} \\
+&= (a^{[3]} - y^{(i)}) \cdot \textcolor{blue}{W^{[3]T}} \cdot \textcolor{green}{a^{[2]} (1 - a^{[2]})} \cdot \textcolor{purple}{a^{[1]T}}
+\end{aligned}
+$$
 
 
-### 形状分析
+### 数据形状分析
 
 各项的形状（输入 $x \in \mathbb{R}^{3 \times 1}$，隐藏层 2 神经元，输出层 1 神经元）：
 
@@ -192,7 +194,7 @@ $$
 = \mathbb{R}^{2 \times 1} \, * \, \mathbb{R}^{2 \times 1} \cdot \mathbb{R}^{1 \times 1} \cdot \mathbb{R}^{1 \times 3} = \mathbb{R}^{2 \times 3}
 $$
 
-形状正好 = $W^{[2]}$ 本身的形状，✓。
+形状正好 = $W^{[2]}$ 本身的形状  ✓  （注意 $*$ 表示 Hadamard product）
 
 > **关键观察**：算 $W^{[2]}$ 的时候**复用了算 $W^{[3]}$ 时已经得到的红色部分**——这就是"反向传播"省时间的本质：每往回推一层，只是再多乘一个**本地梯度**（蓝色 $W^{[3]T}$ + 绿色 $\sigma'(Z^{[2]})$ + 紫色 $a^{[1]T}$），不需要重新从 $\mathcal{L}$ 一路链式乘到这一层。
 
@@ -206,7 +208,7 @@ $$
 
 
 
-## 2. 改善神经网络 (Improving NNs)
+## 2. 改进神经网络 (Improving NNs)
 
 光有反向传播算法还不够——下面这些**训练技巧**在实践中不可或缺。
 
@@ -292,7 +294,7 @@ $$
 
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_normalized_input.webp" alt="normalized input distribution" width="50%" loading="lazy" decoding="async" /></div>
 
-> **重要**：测试时，必须用**训练集上算出来的 $\mu, \sigma$** 来归一化测试集；**不能**在测试集上重新算 $\mu, \sigma$。
+> **注意**：**测试**时，必须用**训练集上算出来的 $\mu, \sigma$** 来归一化测试集；**不能**在测试集上重新算 $\mu, \sigma$。
 
 
 #### 直观效果
@@ -371,7 +373,7 @@ W^(l) = np.random.randn(shape) * np.sqrt(2 / n^(l-1))
 ```
 
 > ReLU 会把一半的神经元（$z \le 0$ 的那部分）置零——这意味着实际**有效输入**只有一半。
-> 为了补偿这种"减半"效应，要把方差放大一倍——把分子从 $1$ 改成 $2$。
+> 为了补偿这种"减半"效应，要把方差放大一倍——所以只用把分子从 $1$ 改成 $2$。
 
 
 **③ Xavier 初始化**：
@@ -467,7 +469,7 @@ For iteration t = 1, ... :
 
 <div style="text-align: center;"><img src="/My-Blog/blog-images/Lec12_momentum_loss-plot3.webp" alt="desired optimization route" width="80%" loading="lazy" decoding="async" /></div>
 
-**水平方向**累积得多 → 大步向前；**垂直方向**上下抵消 → 振荡被削弱。
+**水平方向**一直同方向累积得多 → 大步向前；**垂直方向**上下震荡有抵消 → 下一次垂直走向变小。
 
 #### 做法：Momentum
 
@@ -478,8 +480,8 @@ For iteration t = 1, ... :
 > 初始化 $v = 0$，每一步：
 >
 > $$
-> v := \beta v + (1 - \beta) \frac{\partial \mathcal{L}}{\partial w}, \qquad w := w - \alpha v
-> $$
+ v := \beta v + (1 - \beta) \frac{\partial \mathcal{L}}{\partial w}, \qquad w := w - \alpha v
+$$
 >
 > "$w$ 的更新直接使用 $v$"——这样 $v$ 同时携带了**当前梯度**和**历史方向**，行为像物理里的**惯性**："momentum" 就是这个意思：让更新有"惯性"，不会轻易被噪声带偏方向。
 
