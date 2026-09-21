@@ -11,7 +11,6 @@ categories:
   - Convergence Proof
   - EM Algorithm
   - MLE Closed Form
-  - Posterior Responsibility
 ---
 
 

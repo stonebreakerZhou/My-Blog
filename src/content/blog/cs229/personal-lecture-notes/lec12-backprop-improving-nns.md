@@ -8,7 +8,6 @@ order: 12
 categories:
   - CS229
   - Backpropagation
-  - Chain Rule
   - Activation Function
   - Input Normalization
   - Weight Initialization

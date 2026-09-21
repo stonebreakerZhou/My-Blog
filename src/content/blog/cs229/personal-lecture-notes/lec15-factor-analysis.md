@@ -10,8 +10,6 @@ categories:
   - Factor Analysis
   - EM Algorithm
   - Multivariate Gaussian
-  - Marginal Distribution
-  - Conditional Distribution
   - Latent Variable
   - Low-rank Decomposition
 ---
