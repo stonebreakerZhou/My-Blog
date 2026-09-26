@@ -4,52 +4,131 @@ import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import { readingStats, formatReadingTime } from '../utils/reading-time';
 
+type BlogEntry = CollectionEntry<'blog'>;
+
 interface Props {
-	posts: CollectionEntry<'blog'>[];
+	posts: BlogEntry[];
 }
 const { posts } = Astro.props;
 
-const grouped: Record<string, CollectionEntry<'blog'>[]> = {};
+// --- Group by series → year ---
+// Articles without a `series` field fall into a "Notes" bucket so they
+// are never silently dropped. New series appear automatically once they
+// contain at least one article with the matching frontmatter field.
+//
+// NOTE: Astro's frontmatter parser treats `<T>` inside object literal
+// type annotations as JSX. We avoid generic syntax entirely and rely
+// on inference / explicit `: string` on locals.
+const seriesLabels: { [k: string]: string } = {
+	'cs229': 'CS229',
+	'rl-westlake-u': 'RL_WestLakeU',
+	'the-annotated-transformer': 'The Annotated Transformer',
+	'__notes__': 'Notes',
+};
+const seriesOrder = ['cs229', 'rl-westlake-u', 'the-annotated-transformer', '__notes__'];
+
+const bySeries: { [k: string]: BlogEntry[] } = {};
 for (const post of posts) {
-	const year = String(post.data.pubDate.getFullYear());
-	(grouped[year] ??= []).push(post);
+	const key = post.data.series && seriesLabels[post.data.series]
+		? post.data.series
+		: '__notes__';
+	(bySeries[key] ??= []).push(post);
 }
-const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+// Stable series order: known series first (in declared order), then any
+// unknown series (defensive) appended alphabetically.
+const knownSeries = seriesOrder.filter((k) => bySeries[k]);
+const unknownSeries = Object.keys(bySeries).filter((k) => !seriesOrder.includes(k)).sort();
+const orderedSeries = [...knownSeries, ...unknownSeries];
+
+function formatLatestDate(items: BlogEntry[]): string {
+	const dates = items.map((p) => p.data.pubDate).sort((a, b) => b.getTime() - a.getTime());
+	if (dates.length === 0) return '';
+	const d = dates[0];
+	return d.toISOString().slice(0, 10);
+}
 ---
+
 <section class="posts-by-year">
 	{
-		years.map((year) => (
-			<div class="year-group">
-				<span class="year-label" aria-hidden="true">
-					{year}
-				</span>
-				<h2 class="year-heading">{year}</h2>
-				<ul class="post-list">
-					{grouped[year].map((post) => {
-						const stats = readingStats(post.body ?? '');
-						return (
-							<li class="post-row">
-								<a href={`${import.meta.env.BASE_URL}blog/${post.id}/`} class="post-link">
-									{post.data.heroImage && (
-										<div class="thumb">
-											<Image width={160} height={96} src={post.data.heroImage} alt="" />
-										</div>
-									)}
-									<div class="meta">
-										<h3 class="title">{post.data.title}</h3>
-										<p class="info">
-											<FormattedDate date={post.data.pubDate} />
-											<span class="dot" aria-hidden="true">·</span>
-											<span>{formatReadingTime(stats)}</span>
-										</p>
+		orderedSeries.map((seriesKey) => {
+			const seriesPosts = bySeries[seriesKey] ?? [];
+			// Group posts inside a series by year, then sort newest year first.
+			const byYear: { [k: string]: BlogEntry[] } = {};
+			for (const post of seriesPosts) {
+				const year = String(post.data.pubDate.getFullYear());
+				(byYear[year] ??= []).push(post);
+			}
+			const years = Object.keys(byYear).sort((a, b) => b.localeCompare(a));
+			// Within a year, prefer the `order` field when present, otherwise
+			// keep stable chronological order.
+			for (const year of years) {
+				byYear[year].sort((a, b) => {
+					const ao = a.data.order;
+					const bo = b.data.order;
+					if (ao != null && bo != null) return ao - bo;
+					if (ao != null) return -1;
+					if (bo != null) return 1;
+					return b.data.pubDate.getTime() - a.data.pubDate.getTime();
+				});
+			}
+			const label = seriesLabels[seriesKey] ?? seriesKey;
+			const seriesId = `series-${seriesKey}`;
+			const count = seriesPosts.length;
+			const latest = formatLatestDate(seriesPosts);
+			return (
+				<details class="series" id={seriesId} data-series={seriesKey} open>
+					<summary class="series-summary">
+						<span class="series-chevron" aria-hidden="true">▶</span>
+						<span class="series-name">{label}</span>
+						<span class="series-meta">
+							<span class="series-count">{count} {count === 1 ? 'post' : 'posts'}</span>
+							{latest && <span class="series-dot" aria-hidden="true">·</span>}
+							{latest && <span class="series-date">{latest}</span>}
+						</span>
+					</summary>
+					<div class="series-body">
+						<div class="series-body-inner">
+							{count === 0 ? (
+								<p class="series-empty">筹备中，敬请期待 ✍️</p>
+							) : (
+								years.map((year) => (
+									<div class="year-group">
+										<span class="year-label" aria-hidden="true">
+											{year}
+										</span>
+										<h2 class="year-heading">{year}</h2>
+										<ul class="post-list">
+											{byYear[year].map((post) => {
+												const stats = readingStats(post.body ?? '');
+												return (
+													<li class="post-row">
+														<a href={`${import.meta.env.BASE_URL}blog/${post.id}/`} class="post-link">
+															{post.data.heroImage && (
+																<div class="thumb">
+																	<Image width={160} height={96} src={post.data.heroImage} alt="" />
+																</div>
+															)}
+															<div class="meta">
+																<h3 class="title">{post.data.title}</h3>
+																<p class="info">
+																	<FormattedDate date={post.data.pubDate} />
+																	<span class="dot" aria-hidden="true">·</span>
+																	<span>{formatReadingTime(stats)}</span>
+																</p>
+															</div>
+														</a>
+													</li>
+												);
+											})}
+										</ul>
 									</div>
-								</a>
-							</li>
-						);
-					})}
-				</ul>
-			</div>
-		))
+								))
+							)}
+						</div>
+					</div>
+				</details>
+			);
+		})
 	}
 </section>
 
@@ -60,13 +139,104 @@ const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 		margin: 0 auto;
 		padding: 0 var(--space-4);
 	}
-	.year-group {
+
+	/* ===== Series ===== */
+	.series {
 		position: relative;
-		padding: var(--space-12) 0 var(--space-8);
-	}
-	.year-group + .year-group {
+		padding: var(--space-4) 0 var(--space-6);
 		border-top: 1px solid var(--color-border-soft);
 	}
+	.series:first-of-type {
+		border-top: none;
+	}
+
+	.series-summary {
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		padding: var(--space-2) var(--space-3);
+		margin: 0;
+		cursor: pointer;
+		list-style: none;
+		border-radius: var(--radius-md);
+		transition: background 0.15s ease;
+		user-select: none;
+	}
+	.series-summary::-webkit-details-marker {
+		display: none;
+	}
+	.series-summary:hover {
+		background: var(--color-bg-soft);
+	}
+	.series-summary:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.series-chevron {
+		display: inline-block;
+		font-size: 0.75em;
+		color: var(--color-text-muted);
+		transition: transform 220ms ease;
+		transform-origin: center;
+		width: 1em;
+		text-align: center;
+	}
+	.series[open] > .series-summary .series-chevron {
+		transform: rotate(90deg);
+	}
+
+	.series-name {
+		font-size: var(--text-xl);
+		font-weight: 600;
+		color: var(--color-text);
+		letter-spacing: -0.01em;
+	}
+
+	.series-meta {
+		margin-left: auto;
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+	.series-dot {
+		opacity: 0.5;
+	}
+
+	/* Smooth expand/collapse via grid-template-rows — no JS height math. */
+	.series-body {
+		display: grid;
+		grid-template-rows: 1fr;
+		transition: grid-template-rows 240ms ease;
+	}
+	.series:not([open]) .series-body {
+		grid-template-rows: 0fr;
+	}
+	.series-body-inner {
+		overflow: hidden;
+		min-height: 0;
+	}
+
+	.series-empty {
+		margin: var(--space-4) 0 var(--space-2);
+		padding: var(--space-4) var(--space-3);
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+		font-style: italic;
+		text-align: center;
+	}
+
+	/* ===== Year (within series) ===== */
+	.year-group {
+		position: relative;
+		padding: var(--space-6) 0 var(--space-4);
+	}
+	.year-group + .year-group {
+		border-top: 1px dashed var(--color-border-soft);
+	}
+
 	.year-label {
 		position: absolute;
 		top: -1rem;
@@ -81,6 +251,12 @@ const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 		z-index: 0;
 		opacity: 0.85;
 	}
+	:root[data-theme='dark'] .year-label {
+		/* Cool slate that sits a step above the near-black background
+		   (#0e1117), echoing --color-border-soft. */
+		color: #21262d;
+	}
+
 	.year-heading {
 		position: relative;
 		z-index: 1;
@@ -91,6 +267,8 @@ const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 		padding-left: 0.5em;
 		letter-spacing: 0.05em;
 	}
+
+	/* ===== Post list (unchanged from previous design) ===== */
 	.post-list {
 		position: relative;
 		z-index: 1;
@@ -158,6 +336,7 @@ const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 	.info .dot {
 		opacity: 0.5;
 	}
+
 	@media (max-width: 600px) {
 		.thumb {
 			width: 64px;
@@ -170,5 +349,73 @@ const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
 		.year-label {
 			font-size: 80px;
 		}
+		.series-name {
+			font-size: var(--text-lg);
+		}
+		.series-meta {
+			font-size: var(--text-xs);
+		}
+	}
+
+	/* Respect users who prefer reduced motion. */
+	@media (prefers-reduced-motion: reduce) {
+		.series-body,
+		.series-chevron {
+			transition: none;
+		}
 	}
 </style>
+
+<script>
+	// Persist open/closed state per series in localStorage so the page
+	// returns the way the reader left it. localStorage may be unavailable
+	// (private mode, file:// in some browsers), so guard every access.
+	const STORAGE_KEY = 'stonebreaker:series-open';
+
+	function readState(): Record<string, boolean> {
+		try {
+			const raw = localStorage.getItem(STORAGE_KEY);
+			if (!raw) return {};
+			const parsed = JSON.parse(raw);
+			return parsed && typeof parsed === 'object' ? (parsed as Record<string, boolean>) : {};
+		} catch {
+			return {};
+		}
+	}
+
+	function writeState(state: Record<string, boolean>): void {
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+		} catch {
+			// ignore — storage disabled, state just won't persist
+		}
+	}
+
+	function applyState(): void {
+		const state = readState();
+		document.querySelectorAll<HTMLDetailsElement>('details.series').forEach((el) => {
+			const key = el.dataset.series;
+			if (!key) return;
+			if (key in state) {
+				el.open = state[key] === true;
+			}
+		});
+	}
+
+	function bindHandlers(): void {
+		document.querySelectorAll<HTMLDetailsElement>('details.series').forEach((el) => {
+			const key = el.dataset.series;
+			if (!key) return;
+			el.addEventListener('toggle', () => {
+				const state = readState();
+				state[key] = el.open;
+				writeState(state);
+			});
+		});
+	}
+
+	document.addEventListener('astro:page-load', () => {
+		applyState();
+		bindHandlers();
+	});
+</script>
