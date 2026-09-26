@@ -4,7 +4,7 @@ description: CS229 Lec 14 的两篇补充证明。① K-Means 收敛性证明；
 pubDate: 2026-09-17
 series: cs229
 subSeries: personal-lecture-notes
-order: 14.5
+order: 15.5
 categories:
   - CS229
   - K-Means

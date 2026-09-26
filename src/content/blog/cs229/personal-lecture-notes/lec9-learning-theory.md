@@ -4,7 +4,7 @@ description: CS229 Lecture 9 学习笔记，先给出两个前提假设；再从
 pubDate: 2026-09-08
 series: cs229
 subSeries: personal-lecture-notes
-order: 9
+order: 10
 categories:
   - CS229
   - Learning Theory

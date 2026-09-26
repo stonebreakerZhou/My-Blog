@@ -4,7 +4,7 @@ description: CS229 Lecture 14 学习笔记。进入无监督学习：① K-Means
 pubDate: 2026-09-16
 series: cs229
 subSeries: personal-lecture-notes
-order: 14
+order: 15
 categories:
   - CS229
   - Unsupervised Learning

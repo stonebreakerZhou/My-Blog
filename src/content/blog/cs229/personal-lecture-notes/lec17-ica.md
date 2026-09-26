@@ -4,7 +4,7 @@ description: CS229 Lecture 17 学习笔记。① ICA 的两个歧义；② ICA �
 pubDate: 2026-09-22
 series: cs229
 subSeries: personal-lecture-notes
-order: 17
+order: 18
 categories:
   - CS229
   - ICA

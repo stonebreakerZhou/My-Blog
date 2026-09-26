@@ -1,10 +1,10 @@
 ---
-title: "CS229 : Lec 2 — 局部加权回归与逻辑回归"
-description: CS229 Lecture 2 学习笔记，覆盖 LWR（局部加权线性回归），以及分类问题中的 逻辑(Logistic)回归 和 牛顿切线算法 (Newton's method)
+title: "CS229 : Lec 3 — 局部加权回归与逻辑回归"
+description: CS229 Lecture 3 学习笔记，覆盖 LWR（局部加权线性回归），以及分类问题中的 逻辑(Logistic)回归 和 牛顿切线算法 (Newton's method)
 pubDate: 2026-08-03
 series: cs229
 subSeries: personal-lecture-notes
-order: 2
+order: 4
 categories:
   - CS229
   - LWR

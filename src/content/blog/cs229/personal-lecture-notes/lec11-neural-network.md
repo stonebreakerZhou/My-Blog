@@ -4,7 +4,7 @@ description: CS229 Lecture 11 笔记。从Logistic Regression 出发，把它看
 pubDate: 2026-09-12
 series: cs229
 subSeries: personal-lecture-notes
-order: 11
+order: 12
 categories:
   - CS229
   - Neural Networks

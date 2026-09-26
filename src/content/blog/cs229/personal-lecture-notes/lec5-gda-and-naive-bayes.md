@@ -4,7 +4,7 @@ description: CS229 Lecture 5 学习笔记，主要介绍两种生成式学习算
 pubDate: 2026-08-09
 series: cs229
 subSeries: personal-lecture-notes
-order: 5
+order: 6
 categories:
   - CS229
   - GDA

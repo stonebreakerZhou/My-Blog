@@ -4,7 +4,7 @@ description: CS229 Lecture 10 学习笔记。第一个非线性模型——决�
 pubDate: 2026-09-10
 series: cs229
 subSeries: personal-lecture-notes
-order: 10
+order: 11
 categories:
   - CS229
   - Decision Tree

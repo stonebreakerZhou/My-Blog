@@ -4,7 +4,7 @@ description: CS229 Lecture 6 学习笔记，先补充 Naive Bayes 的 Laplace �
 pubDate: 2026-08-24
 series: cs229
 subSeries: personal-lecture-notes
-order: 6
+order: 7
 categories:
   - CS229
   - Naive Bayes

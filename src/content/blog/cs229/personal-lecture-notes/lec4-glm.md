@@ -4,7 +4,7 @@ description: CS229 Lecture 4 学习笔记，从感知机学习算法起步，覆
 pubDate: 2026-08-06
 series: cs229
 subSeries: personal-lecture-notes
-order: 4
+order: 5
 categories:
   - CS229
   - 广义线性模型

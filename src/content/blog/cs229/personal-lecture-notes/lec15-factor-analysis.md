@@ -4,7 +4,7 @@ description: CS229 Lecture 15 学习笔记。① EM 可看成 J(θ, Q) 的坐标
 pubDate: 2026-09-18
 series: cs229
 subSeries: personal-lecture-notes
-order: 15
+order: 16
 categories:
   - CS229
   - Factor Analysis

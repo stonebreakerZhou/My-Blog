@@ -1,10 +1,10 @@
 ---
-title: "CS229 : Lec 1 — 线性回归与梯度下降"
-description: CS229 Lecture 1 学习笔记，覆盖线性回归模型、LMS（最小二乘）、Batch / Stochastic 梯度下降、正规方程及其概率解释。
+title: "CS229 : Lec 2 — 线性回归与梯度下降"
+description: CS229 Lecture 2 学习笔记，覆盖线性回归模型、LMS（最小二乘）、Batch / Stochastic 梯度下降、正规方程及其概率解释。
 pubDate: 2026-08-02
 series: cs229
 subSeries: personal-lecture-notes
-order: 1
+order: 3
 categories:
   - CS229
   - 线性回归

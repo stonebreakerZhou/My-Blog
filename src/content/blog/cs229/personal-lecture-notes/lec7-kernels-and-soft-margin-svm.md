@@ -4,7 +4,7 @@ description: CS229 Lecture 7 笔记，从上一讲的 Optimal Margin Classifier 
 pubDate: 2026-08-30
 series: cs229
 subSeries: personal-lecture-notes
-order: 7
+order: 8
 categories:
   - CS229
   - SVM

@@ -4,7 +4,7 @@ description: CS229 Lecture 13 学习笔记。当模型表现不好时，怎么�
 pubDate: 2026-09-15
 series: cs229
 subSeries: personal-lecture-notes
-order: 13
+order: 14
 categories:
   - CS229
   - Model Debugging

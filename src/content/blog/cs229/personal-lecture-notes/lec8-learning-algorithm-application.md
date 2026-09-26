@@ -4,7 +4,7 @@ description: CS229 Lecture 8 学习笔记，讲学习算法应用中的相关知
 pubDate: 2026-09-01
 series: cs229
 subSeries: personal-lecture-notes
-order: 8
+order: 9
 categories:
   - CS229
   - Bias-Variance

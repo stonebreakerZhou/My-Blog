@@ -4,7 +4,7 @@ description: CS229 Lecture 12 学习笔记。上半场：用链式法则手动�
 pubDate: 2026-09-14
 series: cs229
 subSeries: personal-lecture-notes
-order: 12
+order: 13
 categories:
   - CS229
   - Backpropagation

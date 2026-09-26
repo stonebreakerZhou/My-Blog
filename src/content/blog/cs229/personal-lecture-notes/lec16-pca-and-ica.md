@@ -4,7 +4,7 @@ description: CS229 Lecture 16 学习笔记。① PCA：找到数据最大方差�
 pubDate: 2026-09-21
 series: cs229
 subSeries: personal-lecture-notes
-order: 16
+order: 17
 categories:
   - CS229
   - PCA
