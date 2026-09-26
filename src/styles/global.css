@@ -521,6 +521,30 @@
 	}
 
 	/* ============================================
+	   Comments (giscus) — only mounted for series
+	   that opted in via GISCUS_TERM_BY_SERIES.
+	   ============================================ */
+	.comments-section {
+		margin-top: var(--space-12);
+		padding-top: var(--space-8);
+		border-top: 1px solid var(--color-border-soft);
+	}
+	.comments-title {
+		margin: 0 0 var(--space-2);
+		font-size: var(--text-2xl);
+		letter-spacing: -0.01em;
+	}
+	.comments-hint {
+		margin: 0 0 var(--space-6);
+		color: var(--color-text-muted);
+		font-size: var(--text-sm);
+		line-height: var(--leading-relaxed);
+	}
+	.giscus-mount {
+		min-height: 1px; /* hold layout space before giscus script loads */
+	}
+
+	/* ============================================
 	   Touch targets — bump interactive elements to ≥ 44×44 on coarse pointers.
 	   global.css is unscoped, so plain class selectors reach all components.
 	   ============================================ */

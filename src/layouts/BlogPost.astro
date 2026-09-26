@@ -11,6 +11,12 @@ import {
 	formatWordCount,
 	type ReadingStats,
 } from '../utils/reading-time';
+import {
+	GISCUS_REPO,
+	GISCUS_REPO_ID,
+	GISCUS_CATEGORY_ID,
+	GISCUS_TERM_BY_SERIES,
+} from '../consts';
 
 type Props = CollectionEntry<'blog'>['data'] & {
 	readingStats: ReadingStats;
@@ -25,10 +31,20 @@ const {
 	updatedDate,
 	heroImage,
 	readingStats,
+	series,
 	newer,
 	older,
 	headings,
 } = Astro.props;
+
+// Resolve giscus discussion term from the article's series field.
+// Articles whose series is not in the whitelist won't render the comments
+// section — see the conditional in the template below.
+const giscusTerm: string | null = series ? GISCUS_TERM_BY_SERIES[series] ?? null : null;
+const giscusEnabled = giscusTerm !== null;
+const giscusRepo = GISCUS_REPO;
+const giscusRepoId = GISCUS_REPO_ID;
+const giscusCategoryId = GISCUS_CATEGORY_ID;
 
 function postHref(post: CollectionEntry<'blog'>): string {
 	return `${import.meta.env.BASE_URL}blog/${post.id}/`;
@@ -66,6 +82,17 @@ function postHref(post: CollectionEntry<'blog'>): string {
 					</p>
 				</header>
 				<slot />
+				{
+					giscusTerm && (
+						<section class="comments-section" data-term={giscusTerm} aria-label="文章评论">
+							<h2 class="comments-title">💬 一起讨论</h2>
+							<p class="comments-hint">
+								用 GitHub 账号登录后即可评论，支持 Markdown、代码块、emoji 表情 😊 和 @ 提及。本课程所有 Lec 的讨论汇总在同一个 Discussion，方便跨篇联想和查阅历史问题。
+							</p>
+							<div class="giscus-mount"></div>
+						</section>
+					)
+				}
 				{
 					(newer || older) && (
 						<nav class="post-nav" aria-label="Post navigation">
@@ -109,6 +136,40 @@ function postHref(post: CollectionEntry<'blog'>): string {
 		initTocToggle();
 	});
 </script>
+
+{giscusEnabled && (
+	<script is:inline define:vars={{ giscusRepo, giscusRepoId, giscusCategoryId }}>
+		// Inject giscus widget for the current page. Runs on every page-load
+		// (incl. SPA navigation via ClientRouter) and clears any prior iframe
+		// to avoid stacking on back/forward.
+		function initGiscus() {
+			var host = document.querySelector('.comments-section[data-term]');
+			if (!host) return;
+			var mount = host.querySelector('.giscus-mount');
+			if (!mount) return;
+			mount.replaceChildren();
+			var term = host.dataset.term;
+			if (!term) return;
+			var s = document.createElement('script');
+			s.src = 'https://giscus.app/client.js';
+			s.setAttribute('data-repo', giscusRepo);
+			s.setAttribute('data-repo-id', giscusRepoId);
+			s.setAttribute('data-category-id', giscusCategoryId);
+			s.setAttribute('data-mapping', 'specific');
+			s.setAttribute('data-term', term);
+			s.setAttribute('data-strict', '1');
+			s.setAttribute('data-reactions-enabled', '1');
+			s.setAttribute('data-emit-metadata', '0');
+			s.setAttribute('data-input-position', 'bottom');
+			s.setAttribute('data-theme', 'preferred_color_scheme');
+			s.setAttribute('data-lang', 'zh-CN');
+			s.setAttribute('crossorigin', 'anonymous');
+			s.async = true;
+			mount.appendChild(s);
+		}
+		document.addEventListener('astro:page-load', initGiscus);
+	</script>
+)}
 
 <style>
 	.article {
