@@ -223,7 +223,7 @@ $$
 
 一个简单的例子：给出下面的二分类数据集，要求给出分类的决策边界：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_non-linear-classification.webp" alt="non-linear classification" width="250" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec6_non-linear-classification.webp" alt="non-linear classification" width="250" loading="lazy" decoding="async" /></div>
 
 但是普通的 Logistic 回归只能给出**线性**决策边界——因为它本质上是在拟合 $\theta^T x = 0$ 这一个超平面。
 
@@ -247,7 +247,7 @@ $$
 
 ——这是一个**非线性**决策边界（圆形）。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_non-linear-boudary.webp" alt="non-linear decision boundary" width="350" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec6_non-linear-boudary.webp" alt="non-linear decision boundary" width="350" loading="lazy" decoding="async" /></div>
 
 > **问题**：手工挑选高维的特征非常困难——我们不知道到底哪些特征组合能给出合适的边界。**SVM 的关键能力**就是它能自动从原始特征 $x_1, x_2, \dots$ 出发，**映射到高维特征空间**，并在这个高维空间中学到一个**线性的分类器**，等价于在原始空间中产生**非线性**的边界。这就是后面要讲的**核函数（Kernels）** 的核心思想（见下一个Lecture）。
 
@@ -280,11 +280,11 @@ SVM 要做的就是在低维空间中找一个**最优分隔线**（optimal marg
 
 例如对下面的数据集画出最优分割线时，虽然蓝线和绿线都能将各个数据点正确划分到对应类别，但是蓝线要更优一些：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_geometric-margin-comparison.webp" alt="maximizing geometric margin" width="360" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec6_geometric-margin-comparison.webp" alt="maximizing geometric margin" width="360" loading="lazy" decoding="async" /></div>
 
 现在如果有一条**线性分类器** $w^T x + b = 0$。考虑一个被正确分类的数据点 $(x^{(i)}, y^{(i)})$，我们把这个训练样本的**几何间隔**定义为**数据点到决策边界之间的欧氏距离**，如下图所示：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec6_geometric_margin.webp" alt="geometric margin illustration" width="360" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec6_geometric_margin.webp" alt="geometric margin illustration" width="360" loading="lazy" decoding="async" /></div>
 
 ### 2.3 SVM 的符号约定
 

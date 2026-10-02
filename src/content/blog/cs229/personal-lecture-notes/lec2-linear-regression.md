@@ -104,7 +104,7 @@ $$
 - 更新幅度正比于 $(h_\theta(x^{(i)}) - y^{(i)})$：预测越准，更新越小；预测越偏，更新越大
 - 也就是说，当某个训练样本已经预测得很准时，参数几乎不需要再动；反之，预测偏差大的样本会触发更大的调整
 
-![LMS 在二次函数等高线上运行](../../images/ellipsis_contours.png)
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/ellipsis_contours.png" alt="LMS 在二次函数等高线上运行" width="70%" loading="lazy" decoding="async" /></div>
 
 ### 2.2 批量 vs 随机梯度下降
 

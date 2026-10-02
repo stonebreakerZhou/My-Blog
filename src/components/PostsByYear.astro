@@ -21,11 +21,12 @@ const { posts } = Astro.props;
 // on inference / explicit `: string` on locals.
 const seriesLabels: { [k: string]: string } = {
 	'cs229': 'CS229',
+	'cs231n': 'CS231n',
 	'rl-westlake-u': 'RL_WestLakeU',
 	'the-annotated-transformer': 'The Annotated Transformer',
 	'__notes__': 'Notes',
 };
-const seriesOrder = ['cs229', 'rl-westlake-u', 'the-annotated-transformer', '__notes__'];
+const seriesOrder = ['cs229', 'cs231n', 'rl-westlake-u', 'the-annotated-transformer', '__notes__'];
 
 const bySeries: { [k: string]: BlogEntry[] } = {};
 for (const post of posts) {

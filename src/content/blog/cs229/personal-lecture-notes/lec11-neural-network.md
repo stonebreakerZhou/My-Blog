@@ -57,7 +57,7 @@ $$
 \hat y = \sigma(w^T x + b), \quad \sigma(z) = \frac{1}{1 + e^{-z}}
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_LR_eg1.webp" alt="logistic regression as a single neuron" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_LR_eg1.webp" alt="logistic regression as a single neuron" width="100%" loading="lazy" decoding="async" /></div>
 
 > **关键观察**：**Logistic Regression 本质上就是一个"神经元"**——线性部分 + sigmoid 激活。
 
@@ -88,7 +88,7 @@ $$
 
 最简单粗暴的做法：**输出层放 3 个独立神经元**，各管各的——这样会得到 $\hat y_1, \hat y_2, \hat y_3$ 三维输出：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_LR_eg2.webp" alt="multi-class logistic regression as 3 neurons" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_LR_eg2.webp" alt="multi-class logistic regression as 3 neurons" width="100%" loading="lazy" decoding="async" /></div>
 
 > **记号**：`[1]` 表示 **层 (layer)** 的编号，同一层内的神经元彼此**互不通信**；下标 $1, 2, 3$ 是层内的神经元索引。
 
@@ -111,7 +111,7 @@ $$
 
 去掉激活只算 $Z$：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_softmax_eg.webp" alt="softmax classification network" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_softmax_eg.webp" alt="softmax classification network" width="100%" loading="lazy" decoding="async" /></div>
 
 Softmax 把 $Z$ 归一化成概率分布（和 = 1），三个输出之间因此**相互依赖**——不能像 e.g.² 那样独立训练。
 
@@ -141,7 +141,7 @@ $$
 - **线性激活**（$a = Z$）——直接输出数值
 - **ReLU (Rectified Linear Unit)**——输出非负值（年龄 / 价格这类天然非负的目标很合适）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_ReLU.webp" alt="ReLU activation" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_ReLU.webp" alt="ReLU activation" width="50%" loading="lazy" decoding="async" /></div>
 
 $$
 \text{ReLU}(z) = \max(0, z)
@@ -185,7 +185,7 @@ $$
 
 ### 2.1 一个简单的两层神经网络
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_neural_network_architecture_eg.webp" alt="simple 2-layer neural network" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_neural_network_architecture_eg.webp" alt="simple 2-layer neural network" width="100%" loading="lazy" decoding="async" /></div>
 
 这个网络有 **1 个隐藏层**（hidden layer）+ 1 个输出层（output layer），输入是 3 个特征 $x_1, x_2, x_3$。
 
@@ -196,14 +196,14 @@ $$
 
 ### 2.2 参数数量怎么算
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_neural_network_parameters.webp" alt="parameters in the neural network" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_neural_network_parameters.webp" alt="parameters in the neural network" width="100%" loading="lazy" decoding="async" /></div>
 
 每一条边 = 一个权重 $w$。所以参数总数 = 边的数量 + 偏置数量。
 
 
 ### 2.3 三层神经网络的术语
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_neural_network_3layers.webp" alt="three layers of the neural network" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_neural_network_3layers.webp" alt="three layers of the neural network" width="100%" loading="lazy" decoding="async" /></div>
 
 | 层                              | 角色                                                         |
 | ------------------------------ | ---------------------------------------------------------- |
@@ -216,14 +216,14 @@ $$
 
 ### 2.4 房价预测例子：从知识驱动构建网络到端到端学习（全连接层）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_house_price_neural_network_with-knowledge.webp" alt="neural network with prior knowledge" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_house_price_neural_network_with-knowledge.webp" alt="neural network with prior knowledge" width="100%" loading="lazy" decoding="async" /></div>
 
 如果我们**用人类先验知识**手工设计网络——比如先算"家庭规模"，再算"家庭收入"，再算"家庭购买力"，最后推"房价"——结构很清晰，但**靠人脑设计**。
 
 
 **但更常见的做法**：相邻两层之间**全连接**，让人工神经网络**端到端 (end-to-end)** 自己学：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_house_price_neural_network_fully-connected.webp" alt="fully connected neural network" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_house_price_neural_network_fully-connected.webp" alt="fully connected neural network" width="100%" loading="lazy" decoding="async" /></div>
 
 > 这是一个**黑箱模型**——我们不约束中间在算什么，让网络自己决定。这就是 **end-to-end learning**。
 
@@ -237,7 +237,7 @@ $$
 
 ### 3.1 单样本：3 层网络
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_propagation_architecture.webp" alt="3-layer network architecture" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_propagation_architecture.webp" alt="3-layer network architecture" width="100%" loading="lazy" decoding="async" /></div>
 
 把上面的图翻译成数学公式：
 
@@ -268,7 +268,7 @@ $$
 
 实际训练中我们不会一次只跑一个样本——而是把 $m$ 个样本**横向拼起来**成一个输入矩阵 $X$：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_batched_input.webp" alt="batched input X" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_batched_input.webp" alt="batched input X" width="70%" loading="lazy" decoding="async" /></div>
 
 $$
 X = \big[\, x^{(1)} \mid x^{(2)} \mid \cdots \mid x^{(m)} \,\big] \in \mathbb{R}^{n_x \times m}
@@ -282,7 +282,7 @@ $$
 
 此时线性部分（中间变量）的形状变化：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec11_batched_linear_part.webp" alt="shape of batched Z" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec11_batched_linear_part.webp" alt="shape of batched Z" width="80%" loading="lazy" decoding="async" /></div>
 
 $$
 Z^{[1]} \in \mathbb{R}^{3 \times m}, \quad Z^{[2]} \in \mathbb{R}^{2 \times m}, \quad Z^{[3]} \in \mathbb{R}^{1 \times m}

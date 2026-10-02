@@ -195,7 +195,7 @@ $$
 
 > 注意：**正交矩阵作用到一个 $\mathcal{N}(0, I)$ 的变量上面后得到的分布仍然是 $\mathcal{N}(0, I)$**！
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec17_standard_Guassian_contour.webp" alt="standard Gaussian contour" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec17_standard_Guassian_contour.webp" alt="standard Gaussian contour" width="80%" loading="lazy" decoding="async" /></div>
 
 > **补充理解**：正交矩阵只包含「翻转 + 旋转」这两种操作及其复合，而以二维正态分布为例，其等高线为圆——翻转、旋转后等高线不变，故输出的分布不变！
 
@@ -228,7 +228,7 @@ $$
 
 > **e.g.**：若 $S$ 是高斯随机变量，则其 CDF 是从 0 单调递增到 1 的函数。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec17_CDF-to-PDF.webp" alt="CDF to PDF" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec17_CDF-to-PDF.webp" alt="CDF to PDF" width="100%" loading="lazy" decoding="async" /></div>
 
 > （这其实就是概率论中密度函数与分布函数的关系）
 
@@ -257,7 +257,7 @@ $$
 
 画出 $s$ 和 $x$ 的密度图：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec17_density_s-x.webp" alt="density from $s$ to $x$" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec17_density_s-x.webp" alt="density from $s$ to $x$" width="70%" loading="lazy" decoding="async" /></div>
 
 
 

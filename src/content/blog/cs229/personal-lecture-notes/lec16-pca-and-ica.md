@@ -48,7 +48,7 @@ Lec 16 进入**降维**与**独立成分分析**：
 
 比如我们有一个 inch–centimeter 的二维数据集，由于长度单位之间可以转换，这个数据集实际上应当处于**一个一维的子空间**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_PCA_eg1_dataset.webp" alt="PCA example dataset" width="80%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_PCA_eg1_dataset.webp" alt="PCA example dataset" width="80%" loading="lazy" decoding="async" /></div>
 
 > PCA 算法要做的事就是**找到图中那个倾斜的一维维度方向**——那应该是数据变化的**主轴**。与它正交的维度上只有数据点采集时的噪声。把数据投影到这根轴上，二维数据就会变为一维。
 
@@ -78,7 +78,7 @@ $$
 
 预处理后的数据集：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_PCA_pre-processed_dataset.webp" alt="pre-processed dataset" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_PCA_pre-processed_dataset.webp" alt="pre-processed dataset" width="60%" loading="lazy" decoding="async" /></div>
 
 > 看起来**绿线是一个相当好的变化轴（一维子空间）**——而红线是一个不好的子空间。**为什么？**
 
@@ -88,7 +88,7 @@ $$
 
 > 事实上，上面两种直觉在**数学上是等价的**。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_PCA_intuition_illustration.webp" alt="PCA intuition" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_PCA_intuition_illustration.webp" alt="PCA intuition" width="60%" loading="lazy" decoding="async" /></div>
 
 
 ### 1.5 数学公式化
@@ -201,7 +201,7 @@ $$
 > - 如果决定用 PCA，**测试集要用同一组训练集上找出的特征向量**
 > - **每个特征向量的方向很不稳定**——试图解释方向的物理含义通常是幻觉，但**张成的子空间本身通常是稳定的**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_unstable_eigenvectors.webp" alt="unstable eigenvectors" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_unstable_eigenvectors.webp" alt="unstable eigenvectors" width="70%" loading="lazy" decoding="async" /></div>
 
 
 
@@ -243,7 +243,7 @@ $$
 s \in \mathbb{R}^n \quad (n \text{ speakers}), \quad s_j^{(i)} = \text{信号来自第 } j \text{ 个 speaker 在时刻 } i
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_ICA_eg1_source.webp" alt="source signals" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_ICA_eg1_source.webp" alt="source signals" width="50%" loading="lazy" decoding="async" /></div>
 
 > 注意：我们此时采样要保证两个样本**时间戳一致**。
 
@@ -300,7 +300,7 @@ $$
 
 假设数据源是 2 个 speaker（每个时刻每个 speaker 发出的随机数在 $(-1, 1)$ 之间）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_ICA_illustration_source.webp" alt="pre-processed source" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_ICA_illustration_source.webp" alt="pre-processed source" width="60%" loading="lazy" decoding="async" /></div>
 
 先回忆下 $s$ 怎么变成 $x$ （矩阵乘法所代表的每一维度值的线性组合）：
 
@@ -310,7 +310,7 @@ $$
 
 即每个 $s$ 通过一个线性变换变成 $x$：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec16_ICA_illustration_observe.webp" alt="observed data" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec16_ICA_illustration_observe.webp" alt="observed data" width="60%" loading="lazy" decoding="async" /></div>
 
 > 所以实际中我们**观测到 $x$**，试图找到一个**线性变换把 $x$ 还原回 $s$**。
 

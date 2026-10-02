@@ -47,23 +47,23 @@ categories:
 
 给定一个**无标签**数据集，希望算法自动找出数据分成的若干簇：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_k-means_1.webp" alt="unlabeled dataset" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_k-means_1.webp" alt="unlabeled dataset" width="50%" loading="lazy" decoding="async" /></div>
 
 ### 1.1 算法步骤
 
 **第一步**：选两个叉号作为**聚类中心 (cluster centroids)**——根据每个样本到哪个中心更近来染色：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_k-means_2.webp" alt="initial centroids" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_k-means_2.webp" alt="initial centroids" width="50%" loading="lazy" decoding="async" /></div>
 
 **第二步**：分别计算蓝色 / 红色点的均值，把中心**移到均值位置**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_k-means_3.webp" alt="move centroids to means" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_k-means_3.webp" alt="move centroids to means" width="50%" loading="lazy" decoding="async" /></div>
 
 **迭代**：按到新中心的距离重新染色，再把中心移到新的均值位置：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_k-means_4.webp" alt="reassign and update" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_k-means_4.webp" alt="reassign and update" width="50%" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_k-means_5.webp" alt="converged" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_k-means_5.webp" alt="converged" width="50%" loading="lazy" decoding="async" /></div>
 
 **迭代到收敛**为止。
 
@@ -119,7 +119,7 @@ $$
 
 给定发动机的**振动值**和**热量值**组合，判断它是不是异常样本：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_GMM_1.webp" alt="engine anomaly detection" width="55%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_GMM_1.webp" alt="engine anomaly detection" width="55%" loading="lazy" decoding="async" /></div>
 
 一种实现是**直接建模** $p(x)$ 这个函数告诉我们"特征组合 $x$ 出现的密度有多高"。当 $p(x) < \epsilon$ 时，就认为是**异常**。
 
@@ -135,7 +135,7 @@ $$
 
 我们换个思路——把它看成**两个高斯分布的混合 (mixture of Gaussian)**。下图中两个椭圆分别是两个高斯分布的等高线：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_GMM_2.webp" alt="two Gaussian ellipses" width="55%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_GMM_2.webp" alt="two Gaussian ellipses" width="55%" loading="lazy" decoding="async" /></div>
 
 > 注意二维高斯分布的密度函数的等高线就是一个椭圆——两个椭圆的拼接就是最终的密度。
 
@@ -151,7 +151,7 @@ $$
 
 假设我们有这样一组**一维**数据点：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_GMM_3.webp" alt="1D GMM example" width="75%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_GMM_3.webp" alt="1D GMM example" width="75%" loading="lazy" decoding="async" /></div>
 
 我们假设这些数据来自**两个高斯分布**，但**不知道**每个点来自哪个分布（无标签）。
 
@@ -372,7 +372,7 @@ $$
 f(\mathbb{E}[X]) \le \mathbb{E}[f(X)]
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_Jensen-inequality.webp" alt="Jensen's inequality" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_Jensen-inequality.webp" alt="Jensen's inequality" width="50%" loading="lazy" decoding="async" /></div>
 
 进一步，如果 $f'' > 0$（$f$ 是**严格凸**），则：
 
@@ -401,23 +401,23 @@ $$
 
 把整个迭代优化过程画出来：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_EM_1.webp" alt="log-likelihood curve" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_EM_1.webp" alt="log-likelihood curve" width="50%" loading="lazy" decoding="async" /></div>
 
 **首先**，随机初始化 $\theta$：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_EM_2.webp" alt="initialize theta" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_EM_2.webp" alt="initialize theta" width="50%" loading="lazy" decoding="async" /></div>
 
 **1) E-step**：在当前 $\theta$ 处为对数似然曲线（绿线）**构造下界**，有两条性质——① 在下方；② 在 $\theta$ 处**与对数似然相切（相等）**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_EM_3.webp" alt="E-step: lower bound" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_EM_3.webp" alt="E-step: lower bound" width="50%" loading="lazy" decoding="async" /></div>
 
 **2) M-step**：找到使绿线下界最大化的新 $\theta$ 值，把 $\theta$ **更新过去**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_EM_4.webp" alt="M-step: maximize bound" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_EM_4.webp" alt="M-step: maximize bound" width="50%" loading="lazy" decoding="async" /></div>
 
 **接着**在新的 $\theta$ 处再构造新的下界，迭代更新——最终收敛到**局部最优**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec14_EM_5.webp" alt="convergence" width="50%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec14_EM_5.webp" alt="convergence" width="50%" loading="lazy" decoding="async" /></div>
 
 
 ### 6.4 数学推导

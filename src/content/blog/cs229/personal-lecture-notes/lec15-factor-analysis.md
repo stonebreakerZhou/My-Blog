@@ -113,7 +113,7 @@ $$
 
 比如有一个 **2 维**特征数据集，100 个数据点。这样具有充足数据点的时候我们可以用 mixture of Gaussians 拟合：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec15_GMM_fit_eg.webp" alt="GMM fit example" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec15_GMM_fit_eg.webp" alt="GMM fit example" width="70%" loading="lazy" decoding="async" /></div>
 
 > 但是存在**不**适合用 GMM 而用因子分析的情况：$m \approx n$ 或 $m \ll n$（$n$ 是特征维度，$m$ 是样本数）
 
@@ -151,7 +151,7 @@ $$
 
 比如 $m = 2, n = 2$：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec15_GMM_fit_problem_eg.webp" alt="GMM fit problem" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec15_GMM_fit_problem_eg.webp" alt="GMM fit problem" width="70%" loading="lazy" decoding="async" /></div>
 
 > 如果画拟合出来的高斯分布的等高线，这会是**无限细的一条线**（实际上我们拟合了一条直线给这些点）。
 
@@ -317,7 +317,7 @@ $$
 
 由于 $z \sim \mathcal{N}(0, 1)$，先从数轴上的一维高斯分布中采样 7 个 $z$ 值：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec15_Guassian_sample-z.webp" alt="$z$'s sampled from a Gaussian" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec15_Guassian_sample-z.webp" alt="$z$'s sampled from a Gaussian" width="100%" loading="lazy" decoding="async" /></div>
 
 不妨设：
 
@@ -333,7 +333,7 @@ $$
 
 **所以当没有噪声 $\epsilon$ 时，$x$ 都落在一条直线上**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec15_x_without_noise.webp" alt="$x$'s without Gaussian noises" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec15_x_without_noise.webp" alt="$x$'s without Gaussian noises" width="100%" loading="lazy" decoding="async" /></div>
 
 再不妨设：
 
@@ -351,7 +351,7 @@ $$
 
 相当于在每个 $x$ 上加一个高斯等高线（噪声就会让 $x$ 产生一定的偏移量）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec15_actual_sample_x.webp" alt="actual sampled $x$'s" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec15_actual_sample_x.webp" alt="actual sampled $x$'s" width="100%" loading="lazy" decoding="async" /></div>
 
 从这些高斯里采样，得到红色叉号——这就是我们建模后所认为的数据集 $x$ 的生成方式。
 

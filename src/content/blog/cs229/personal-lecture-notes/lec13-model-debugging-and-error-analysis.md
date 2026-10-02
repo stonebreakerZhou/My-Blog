@@ -75,7 +75,7 @@ $$
 
 #### 1) High Variance 的典型学习曲线
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec13_learning-curve_high-variance.webp" alt="high variance learning curve" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec13_learning-curve_high-variance.webp" alt="high variance learning curve" width="70%" loading="lazy" decoding="async" /></div>
 
 对应**过拟合**：
 
@@ -84,7 +84,7 @@ $$
 
 #### 2) High Bias 的典型学习曲线
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec13_learning-curve_high-bias.webp" alt="high bias learning curve" width="70%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec13_learning-curve_high-bias.webp" alt="high bias learning curve" width="70%" loading="lazy" decoding="async" /></div>
 
 - ① 即使是 training error 也高得不可接受
 - ② Train / test error **差距很小**
@@ -111,7 +111,7 @@ $$
 
 #### ① 算法（LR 的 gradient ascent）是否收敛了？
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec13_maximize_J(theta).webp" alt="objective optimization" width="60%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec13_maximize_J(theta).webp" alt="objective optimization" width="60%" loading="lazy" decoding="async" /></div>
 
 > 仅看目标函数 $J(\theta)$ 曲线**很难判断算法是否真的收敛**了——这是不收敛的常见隐忧。
 
@@ -208,7 +208,7 @@ $$
 
 很多实际系统会把多个学习组件拼成一条**流水线 (pipeline)**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec13_system-pipeline.webp" alt="system pipeline" width="100%" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec13_system-pipeline.webp" alt="system pipeline" width="100%" loading="lazy" decoding="async" /></div>
 
 > **目标**：把最后得到的误差**归因**到每个组件——看看每个组件到底贡献了多少错误，方便我们决定**下一个该改进哪个组件**。
 

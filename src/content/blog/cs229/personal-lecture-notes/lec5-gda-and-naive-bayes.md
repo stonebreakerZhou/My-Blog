@@ -87,13 +87,13 @@ $$
 
 下面几张图建立参数变化对于多元高斯分布影响的直观理解：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_multivariate_Guassian_bumps1.webp" alt="Multivariate Gaussian bumps1" width="350" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_multivariate_Guassian_bumps1.webp" alt="Multivariate Gaussian bumps1" width="350" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_multivariate_Guassian_bumps2.webp" alt="Multivariate Gaussian bumps2" width="300" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_multivariate_Guassian_bumps2.webp" alt="Multivariate Gaussian bumps2" width="300" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_multivariate_Guassian_contours.webp" alt="Multivariate Gaussian contours" width="450" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_multivariate_Guassian_contours.webp" alt="Multivariate Gaussian contours" width="450" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_multivariate_Guassian_bumps3.webp" alt="Multivariate Gaussian bumps3" width="300" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_multivariate_Guassian_bumps3.webp" alt="Multivariate Gaussian bumps3" width="300" loading="lazy" decoding="async" /></div>
 
 ### 2.2 GDA 模型设定
 
@@ -199,11 +199,11 @@ $$
 
 **Logistic 回归（判别式）**：直接拟合一条参数为 $\theta$ 的直线，输出 $\theta^T x$ 作为决策边界。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_LW_figure.webp" alt="logistic regression iteration" width="400" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_LW_figure.webp" alt="logistic regression iteration" width="400" loading="lazy" decoding="async" /></div>
 
 **GDA（生成式）**：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_GDA_approach.webp" alt="GDA approach" width="450" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_GDA_approach.webp" alt="GDA approach" width="450" loading="lazy" decoding="async" /></div>
 
 GDA 的步骤：
 
@@ -284,11 +284,11 @@ $$
 
 下面这张手绘图把这条流水线分步拆开来看：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_GDA_simple_example_figure1.webp" alt="GDA simple example figure 1" width="400" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_GDA_simple_example_figure1.webp" alt="GDA simple example figure 1" width="400" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_GDA_simple_example_figure2.webp" alt="GDA simple example figure 2" width="400" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_GDA_simple_example_figure2.webp" alt="GDA simple example figure 2" width="400" loading="lazy" decoding="async" /></div>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_GDA_simple_example_figure3.webp" alt="GDA simple example figure 3" width="400" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_GDA_simple_example_figure3.webp" alt="GDA simple example figure 3" width="400" loading="lazy" decoding="async" /></div>
 
 可以看出：**若训练集中 $\phi = 0.5$，则 $p(y = 1 \mid x)$ 就是一个标准的 sigmoid 函数**——事实上 $p(y = 0 \mid x)$ 也是一个标准的 sigmoid 函数（作业里会有严格证明）。
 
@@ -316,7 +316,7 @@ $$
 
 从示意图可以看出（之后作业中会做严格证明）：**从 GDA 的假设出发，确实可以推出 $p(y = 1 \mid x)$ 是逻辑函数**。但反过来，从 logistic 函数这一条件**并不能推出 GDA 的假设**——也就是说，这是一种**充分不必要**的关系。GDA 的假设条件更强（stronger set of assumptions）。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_GDA_logistic_comparison.webp" alt="GDA-logistic comparison" width="450" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_GDA_logistic_comparison.webp" alt="GDA-logistic comparison" width="450" loading="lazy" decoding="async" /></div>
 
 > **题外话**：对任何广义线性模型中的指数族分布而言，如果加上类似的"条件概率属于某个指数族"的假设，都会推出 $p(y = 1 \mid x)$ 是逻辑函数的结论。例如：
 >
@@ -390,7 +390,7 @@ $$
 
 从图模型的角度看，这是一个有向概率图模型，其中 $y$ 是父节点，所有 $x_i$ 是它的子节点（**星形结构**）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/Lec5_naive_Bayes_prob_graph.webp" alt="Naive Bayes prob graph" width="200" loading="lazy" decoding="async" /></div>
+<div style="text-align: center;"><img src="/My-Blog/blog-images/cs229/Lec5_naive_Bayes_prob_graph.webp" alt="Naive Bayes prob graph" width="200" loading="lazy" decoding="async" /></div>
 
 引入条件独立假设之后，我们只需要存储 $p(x_i \mid y)$ 这 $n$ 个独立的概率——参数个数从指数级降到线性级。
 
