@@ -23,7 +23,7 @@ Lec 3 把"如何学习权重"（优化 + 正则化）讲完了，Lec 4 把"更�
 
 
 
-## 1. Neural Networks
+## 1. 神经网络（Neural Networks）
 
 **Linear score function** : $f = W x$
 
@@ -38,11 +38,17 @@ $$
 **Why do we want non-linearity ?**
 **如果数据不是线性可分（linearly separable）的**，我们就需要做 *feature transform*，把数据点映射到一个线性可分的空间中。（这个映射应当是一个非线性操作）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_why_non-linearity.webp" alt="non-linear mapping" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_why_non-linearity.webp" alt="non-linear mapping" width="100%" loading="lazy" decoding="async" />
+  <figcaption>non-linear mapping</figcaption>
+</figure>
 
-**2-layer 神经网络层级化计算 :**
+2-layer 神经网络层级化计算 :
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_2-layer_neural_network.webp" alt="2-layer neural network" width="80%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_2-layer_neural_network.webp" alt="2-layer neural network" width="80%" loading="lazy" decoding="async" />
+  <figcaption>2-layer neural network</figcaption>
+</figure>
 
 
 **激活函数 :**
@@ -53,11 +59,17 @@ ReLU, Sigmoid, Leaky ReLU, Tanh, ELU, GELU, SiLU...
 
 
 
-**另外 ： 设置层数，层大小，正则化强度 ：**
+另外 ： 设置层数，层大小，正则化强度 ：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_neural_layer_size.webp" alt="layer size" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_neural_layer_size.webp" alt="layer size" width="100%" loading="lazy" decoding="async" />
+  <figcaption>layer size</figcaption>
+</figure>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_lambda_value.webp" alt="regularization strength" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_lambda_value.webp" alt="regularization strength" width="100%" loading="lazy" decoding="async" />
+  <figcaption>regularization strength</figcaption>
+</figure>
 
 ---
 
@@ -69,14 +81,20 @@ ReLU, Sigmoid, Leaky ReLU, Tanh, ELU, GELU, SiLU...
 
 ## 2. 计算图与反向传播（Computational graphs and Backpropagation）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_backpropagation_figure.webp" alt="backpropagation" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_backpropagation_figure.webp" alt="backpropagation" width="100%" loading="lazy" decoding="async" />
+  <figcaption>backpropagation</figcaption>
+</figure>
 
 
 **gradient backpropagation :**
 
 > $$\texttt{"downstream"} = \texttt{"local"} \times \texttt{"upstream"}$$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_gradient_backpropagation.webp" alt="gradient backpropagation" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_gradient_backpropagation.webp" alt="gradient backpropagation" width="100%" loading="lazy" decoding="async" />
+  <figcaption>gradient backpropagation</figcaption>
+</figure>
 
 
 
@@ -85,32 +103,44 @@ ReLU, Sigmoid, Leaky ReLU, Tanh, ELU, GELU, SiLU...
 
 **① 加法门（add gate）：梯度分发器（gradient distributor）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_add_gate.webp" alt="add gate" width="50%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_add_gate.webp" alt="add gate" width="50%" loading="lazy" decoding="async" />
+  <figcaption>add gate</figcaption>
+</figure>
 
-**从上游传过来的 upstream gradient 会原封不动分发给下游每一个输入**
+从上游传过来的 upstream gradient 会原封不动分发给下游每一个输入
 
 
 **② 乘法门（mul gate）："互换乘法器"（"swap multiplier"）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_mul_gate.webp" alt="mul gate" width="50%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_mul_gate.webp" alt="mul gate" width="50%" loading="lazy" decoding="async" />
+  <figcaption>mul gate</figcaption>
+</figure>
 
-**上游梯度会乘以另一个输入的值，然后加到该输入的梯度累积中**
+上游梯度会乘以另一个输入的值，然后加到该输入的梯度累积中
 
 
 
 **③ 复制门（copy gate）：梯度累加器（gradient adder）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_copy_gate.webp" alt="copy gate" width="50%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_copy_gate.webp" alt="copy gate" width="50%" loading="lazy" decoding="async" />
+  <figcaption>copy gate</figcaption>
+</figure>
 
-**复制门在反向传播时执行梯度累加**，多个分支的梯度又"累加"回同一个变量。
+复制门在反向传播时执行梯度累加，多个分支的梯度又"累加"回同一个变量。
 
 
 
 **④ 最大门（max gate）：梯度路由器（gradient router）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_max_gate.webp" alt="max gate" width="50%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_max_gate.webp" alt="max gate" width="50%" loading="lazy" decoding="async" />
+  <figcaption>max gate</figcaption>
+</figure>
 
-**把上游梯度只路由到那个最大的输入**，其他输入得到零梯度。
+把上游梯度只路由到那个最大的输入，其他输入得到零梯度。
 
 
 
@@ -164,9 +194,12 @@ $$
 
 
 
-**同理可以推广到关于矩阵参数的反向传播，也就是 Tensor 类型的数据。下面先用一个简单图示说明怎样确定各梯度的形状 ：**
+同理可以推广到关于矩阵参数的反向传播，也就是 Tensor 类型的数据。下面先用一个简单图示说明怎样确定各梯度的形状 ：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec4_backprop_with_matrices_illustration.webp" alt="backprop with matrices — illustration e.g." width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec4_backprop_with_matrices_illustration.webp" alt="backprop with matrices — illustration e.g." width="100%" loading="lazy" decoding="async" />
+  <figcaption>backprop with matrices — illustration e.g.</figcaption>
+</figure>
 
 
 已知 ： 输入 $x \in \mathbb{R}^{D_x \times M_x}$，$y \in \mathbb{R}^{D_y \times M_y}$，输出为 $z \in \mathbb{R}^{D_z \times M_z}$
@@ -196,7 +229,7 @@ $$
 \frac{\partial z}{\partial y} \in \mathbb{R}^{(D_y M_y) \times (D_z M_z)}
 $$
 
-**③ 最后得到 downstream gradients 的形状 ：**
+③ 最后得到 downstream gradients 的形状 ：
 
 $$
 \begin{aligned}
@@ -255,7 +288,7 @@ $$
 \frac{\partial L}{\partial y} \in \mathbb{R}^{N \times M} = \begin{pmatrix} 2 & 3 & -3 & 9 \\ -8 & 1 & 4 & 6 \end{pmatrix}
 $$
 
-**如果我们直接计算 local gradient 的 Jacobian 的话 ：**
+如果我们直接计算 local gradient 的 Jacobian 的话 ：
 
 $$
 \frac{\partial y}{\partial x} \in \mathbb{R}^{(N D) \times (N M)} \\
@@ -263,24 +296,24 @@ $$
 $$
 
 
-**对神经网络来说，假设 $N=64, D=M=4096$，那么每张 Jacobian 就要占约 256 GB 显存！所以我们必须隐式地完成这一过程，而不能显式存储 Jacobian。**
+对神经网络来说，假设 $N=64, D=M=4096$，那么每张 Jacobian 就要占约 256 GB 显存！所以我们必须隐式地完成这一过程，而不能显式存储 Jacobian。
 
 
 我们考虑下能否不借助 Jacobian 直接推出偏导数求解式 ？
 
 
 **① Q1 : $x$ 的一个元素影响 $y$ 的哪些部分？**
-**A1 : 由于 $y = x w$ 为矩阵乘法，故 $y$ 的 $i, j$ 元素由 $x$ 的第 $i$ 行向量与 $w$ 的第 $j$ 列向量内积得到，则 $x$ 第 $i$ 行的任意一个元素都会影响 $y$ 第 $i$ 行的所有元素值！**
+A1 : 由于 $y = x w$ 为矩阵乘法，故 $y$ 的 $i, j$ 元素由 $x$ 的第 $i$ 行向量与 $w$ 的第 $j$ 列向量内积得到，则 $x$ 第 $i$ 行的任意一个元素都会影响 $y$ 第 $i$ 行的所有元素值！
 
 **② Q2 : $x_{nd}$ 对 $y_{nm}$ 的影响有多大？**
 
-**A2 : 由于 $y_{nm} = \sum_{k=1}^{D} x_{nk} w_{km}$，里面有关 $x_{nd}$ 的项就只有 $x_{nd} w_{md}$，所以 ：**
+A2 : 由于 $y_{nm} = \sum_{k=1}^{D} x_{nk} w_{km}$，里面有关 $x_{nd}$ 的项就只有 $x_{nd} w_{md}$，所以 ：
 
 $$
 \frac{\partial y_{nm}}{\partial x_{nd}} = w_{md}
 $$
 
-**综上 ① ②**，我们可以在不显式存储 Jacobian 的情况下直接推导出损失 $L$ 关于输入每一项 $x_{nd}$ 的偏导数：
+**综上 ① ②，我们可以在不显式存储 Jacobian 的情况下直接推导出损失 $L$ 关于输入每一项 $x_{nd}$ 的偏导数：**
 
 $$
 \begin{aligned}
@@ -289,13 +322,13 @@ $$
 \end{aligned}
 $$
 
-**进一步还可以写成矩阵乘法形式：**
+进一步还可以写成矩阵乘法形式：
 
 $$
 \frac{\partial L}{\partial x} = \frac{\partial L}{\partial y} w^{\top}
 $$
 
-**形状验证：**
+形状验证：
 
 $$
 \mathbb{R}^{N \times D} \equiv \mathbb{R}^{N \times M} \cdot \mathbb{R}^{M \times D}
@@ -303,7 +336,7 @@ $$
 
 成立！
 
-**同理还可得：**
+同理还可得：
 
 $$
 \frac{\partial L}{\partial w} = x^{\top} \frac{\partial L}{\partial y}

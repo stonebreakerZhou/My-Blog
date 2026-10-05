@@ -24,7 +24,10 @@ CS231n 围绕"计算机视觉"这条主线展开，按四大方向组织内容�
 - **Human-Centered Applications and Implications** —— 以人为本的应用与影响（医疗、可解释性、社会议题）
 
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec1_cs231n_covering.webp" alt="CS231n covering" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec1_cs231n_covering.webp" alt="CS231n covering" width="100%" loading="lazy" decoding="async" />
+  <figcaption>CS231n covering</figcaption>
+</figure>
 
 ---
 
@@ -32,7 +35,10 @@ CS231n 围绕"计算机视觉"这条主线展开，按四大方向组织内容�
 
 
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec1_AI_timeline.webp" alt="AI timeline" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec1_AI_timeline.webp" alt="AI timeline" width="100%" loading="lazy" decoding="async" />
+  <figcaption>AI timeline</figcaption>
+</figure>
 
 > 时间线里几个关键节点：
 > - **2012**：AlexNet（ImageNet 竞赛大幅超越传统方法）
@@ -45,7 +51,10 @@ CS231n 围绕"计算机视觉"这条主线展开，按四大方向组织内容�
 
 ## 3. Syllabus
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec1_syllabus.webp" alt="CS231n syllabus" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec1_syllabus.webp" alt="CS231n syllabus" width="100%" loading="lazy" decoding="async" />
+  <figcaption>CS231n syllabus</figcaption>
+</figure>
 
 
 

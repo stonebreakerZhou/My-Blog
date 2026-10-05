@@ -89,9 +89,15 @@ $$
 
 即像素差值的**平方和**的平方根。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_L1_Manhattan_distance.webp" alt="L1 Manhattan distance" width="45%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_L1_Manhattan_distance.webp" alt="L1 Manhattan distance" width="45%" loading="lazy" decoding="async" />
+  <figcaption>L1 Manhattan distance</figcaption>
+</figure>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_L2_Euclidean_distance.webp" alt="L2 Euclidean distance" width="45%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_L2_Euclidean_distance.webp" alt="L2 Euclidean distance" width="45%" loading="lazy" decoding="async" />
+  <figcaption>L2 Euclidean distance</figcaption>
+</figure>
 
 **两种度量的差异**：
 
@@ -101,7 +107,10 @@ $$
 | 对轴的依赖 | **依赖于坐标轴**（旋转会改变距离） | 不依赖（任意旋转距离不变） |
 | 适用场景  | 特征维度"有特定意义"时        | 特征任意时         |
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_k_nearest_neighbors_with_L1-metric_comparison.webp" alt="kNN L1 vs L2 决策边界对比" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_k_nearest_neighbors_with_L1-metric_comparison.webp" alt="kNN L1 vs L2 决策边界对比" width="100%" loading="lazy" decoding="async" />
+  <figcaption>kNN L1 vs L2 决策边界对比</figcaption>
+</figure>
 
 > **直觉**：$L_2$ 的等距线是圆，$k$-NN 拼接出的决策边界更光滑；$L_1$ 的等距线是方格，决策边界呈"齿轮状"。
 
@@ -113,12 +122,18 @@ $$
 - 预测时遍历 $N$ 个训练样本 → **$O(N)$** 时间
 - 对噪声/异常点非常敏感（中间黄色孤立点会把整片区域划错类）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_1_nearest_neighbor.webp" alt="1-nearest neighbor" width="60%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_1_nearest_neighbor.webp" alt="1-nearest neighbor" width="60%" loading="lazy" decoding="async" />
+  <figcaption>1-nearest neighbor</figcaption>
+</figure>
 
 
 **$k$-NN 改进**：取**最近的 $k$ 个**邻居，**多数投票**决定标签。这让决策边界更平滑、对异常点更鲁棒。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_k_nearest_neighbors.webp" alt="k-nearest neighbor" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_k_nearest_neighbors.webp" alt="k-nearest neighbor" width="100%" loading="lazy" decoding="async" />
+  <figcaption>k-nearest neighbor</figcaption>
+</figure>
 
 > 图中**白色区域**是"无法判断"的区域——多个类别票数相等。
 
@@ -171,19 +186,28 @@ $$
 
 **① 代数视角（algebraic viewpoint）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_linear_classifier_illustration.webp" alt="线性分类器代数视角" width="80%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_linear_classifier_illustration.webp" alt="线性分类器代数视角" width="80%" loading="lazy" decoding="async" />
+  <figcaption>线性分类器代数视角</figcaption>
+</figure>
 
 矩阵乘法 $Wx$——每一行对应一个类别的权重。
 
 **② 视觉视角（visual viewpoint）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_Linear_classifier_visual_viewpoint.webp" alt="线性分类器视觉视角" width="60%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_Linear_classifier_visual_viewpoint.webp" alt="线性分类器视觉视角" width="60%" loading="lazy" decoding="async" />
+  <figcaption>线性分类器视觉视角</figcaption>
+</figure>
 
 把 $W$ 的每一行**重塑**为图像——可以直观看到"模型在找什么模式"。
 
 **③ 几何视角（geometric viewpoint）**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec2_Linear_classifier_geometric_viewpoint.webp" alt="线性分类器几何视角" width="80%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec2_Linear_classifier_geometric_viewpoint.webp" alt="线性分类器几何视角" width="80%" loading="lazy" decoding="async" />
+  <figcaption>线性分类器几何视角</figcaption>
+</figure>
 
 输入空间里的**超平面**把不同类别的样本分开。
 
@@ -313,7 +337,10 @@ $$
 
 这就是 SVM（Support Vector Machine）所使用的 合页损失（hinge loss）。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_SVM_vs_Softmax.webp" alt="Softmax vs SVM" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_SVM_vs_Softmax.webp" alt="Softmax vs SVM" width="100%" loading="lazy" decoding="async" />
+  <figcaption>Softmax vs SVM</figcaption>
+</figure>
 
 **Hinge Loss**
 

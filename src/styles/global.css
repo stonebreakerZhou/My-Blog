@@ -435,6 +435,28 @@
 		max-width: 90vw;
 	}
 
+	/* HTML <figure> wrapping <img> + <figcaption>. The extra bottom
+	   margin keeps the caption visually attached to its image and
+	   prevents it from being read as the lead-in of the next paragraph.
+	   The figcaption itself is dimmed + italic so it visually separates
+	   from body prose. */
+	.prose figure {
+		margin: 2em 0 2.4em;
+	}
+
+	.prose figure > img {
+		margin: 0 auto;
+	}
+
+	.prose figcaption {
+		margin-top: 0.7em;
+		text-align: center;
+		font-size: 0.875rem;
+		font-style: italic;
+		color: var(--color-text-muted);
+		line-height: 1.5;
+	}
+
 	.prose pre {
 		margin: 1.6em 0;
 		padding: var(--space-5) var(--space-6);

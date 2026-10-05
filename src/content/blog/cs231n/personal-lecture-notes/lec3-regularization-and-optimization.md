@@ -86,13 +86,19 @@ dropout、batch normalization（批归一化）、stochastic depth（随机深�
 
 损失函数 $L(w_1, w_2)$ 的等高线画出来，是一个狭长的椭圆（如下图）：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem1_loss_contour_figure.webp" alt="loss contour" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem1_loss_contour_figure.webp" alt="loss contour" width="100%" loading="lazy" decoding="async" />
+  <figcaption>loss contour</figcaption>
+</figure>
 
 沿着 $w_2$ 方向：等高线很密，这个方向曲率大；沿着 $w_1$ 方向：等高线很稀疏，这个方向*曲率小*。
 
 当我们使用梯度下降，在"陡峭方向上"（即 $w_2$ 方向上）会来回震荡！
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem1_contour_route.webp" alt="SGD route" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem1_contour_route.webp" alt="SGD route" width="100%" loading="lazy" decoding="async" />
+  <figcaption>SGD route</figcaption>
+</figure>
 
 并且，一个全局学习率无法同时适应所有方向：如果将学习率 $\alpha$ 调大，让平坦方向走得快一点，那么陡峭方向就会震荡得更厉害，甚至发散；如果将学习率 $\alpha$ 调小，让陡峭方向不震荡，那么平坦方向会进展非常缓慢。
 
@@ -122,7 +128,10 @@ dropout、batch normalization（批归一化）、stochastic depth（随机深�
 
 场景：梯度下降遇到损失函数局部最小值（local minima）或鞍点（saddle point）时，梯度为零，参数不再更新，优化停滞。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem2_figure.webp" alt="SGD problem2 figure" width="60%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_SGD_problem2_figure.webp" alt="SGD problem2 figure" width="60%" loading="lazy" decoding="async" />
+  <figcaption>SGD problem2 figure</figcaption>
+</figure>
 
 Saddle points are much more common in higher dimension（在高维空间中鞍点比局部极小值更常见）。
 
@@ -151,17 +160,29 @@ $$
 ① 把"速度（velocity）"作为梯度的运行均值累积起来
 ② $\rho$ 给系统加"摩擦力”（friction）；通常取 $\rho = 0.9$ 或 0.99
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_classic_momentum_update_figure.webp" alt="classic momentum update" width="60%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_classic_momentum_update_figure.webp" alt="classic momentum update" width="60%" loading="lazy" decoding="async" />
+  <figcaption>classic momentum update</figcaption>
+</figure>
 
 把当前点算出的梯度与速度结合，得到更新权重所用的步（是在当前点算梯度，再用速度累积）。
 
 应用 Momentum 后的优化图示：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem1.webp" alt="SGD+momentum → poor conditioning" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem1.webp" alt="SGD+momentum → poor conditioning" width="100%" loading="lazy" decoding="async" />
+  <figcaption>SGD+momentum → poor conditioning</figcaption>
+</figure>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem2.webp" alt="SGD+momentum → local minima+saddle points" width="85%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem2.webp" alt="SGD+momentum → local minima+saddle points" width="85%" loading="lazy" decoding="async" />
+  <figcaption>SGD+momentum → local minima+saddle points</figcaption>
+</figure>
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem3.webp" alt="SGD+momentum → gradient noise" width="60%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_sol1_to_problem3.webp" alt="SGD+momentum → gradient noise" width="60%" loading="lazy" decoding="async" />
+  <figcaption>SGD+momentum → gradient noise</figcaption>
+</figure>
 
 
 
@@ -182,7 +203,10 @@ $$
 ① classic Momentum：梯度在 $x_t$ 算；
 ② Nesterov：梯度在 $x_t + \mu v_t$ 算。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_Nesterov_momentum_update.webp" alt="Nesterov momentum update" width="65%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_Nesterov_momentum_update.webp" alt="Nesterov momentum update" width="65%" loading="lazy" decoding="async" />
+  <figcaption>Nesterov momentum update</figcaption>
+</figure>
 
 直接使用这个公式不直观：梯度不在当前点 $x_t$ 算，而在 $x_t + \mu v_t$ 算；这导致更新公式里同时有 $x_t$ 和 $v_t$。
 
@@ -276,7 +300,10 @@ $$
 
 因此 RMSProp 也被称为 "Leaky AdaGrad"。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_AdaGrad_to_RMSProp.webp" alt="AdaGrad → RMSProp" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_AdaGrad_to_RMSProp.webp" alt="AdaGrad → RMSProp" width="100%" loading="lazy" decoding="async" />
+  <figcaption>AdaGrad → RMSProp</figcaption>
+</figure>
 
 
 
@@ -344,7 +371,10 @@ $$
 
 **1 ) Adam（almost form）：**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_Adam(almost).webp" alt="Adam (almost)" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_Adam(almost).webp" alt="Adam (almost)" width="100%" loading="lazy" decoding="async" />
+  <figcaption>Adam (almost)</figcaption>
+</figure>
 
 **Step 1：**
 
@@ -374,7 +404,10 @@ $$
 
 **2 ) Adam（full form）：**
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_Adam(full_form).webp" alt="Adam (full form)" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_Adam(full_form).webp" alt="Adam (full form)" width="100%" loading="lazy" decoding="async" />
+  <figcaption>Adam (full form)</figcaption>
+</figure>
 
 完整版 Adam 在 Momentum 与 RMSProp 之间新增关键一步：偏差校正
 
@@ -494,7 +527,10 @@ $$
 >
 > （取 $\beta_1 = 0.9, \beta_2 = 0.999$，$\alpha = 1e-3$ 或 $5e-4$ 是很多模型不错的起点。）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_Adam_optimization_route_figure.webp" alt="Adam optimization route" width="100%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_Adam_optimization_route_figure.webp" alt="Adam optimization route" width="100%" loading="lazy" decoding="async" />
+  <figcaption>Adam optimization route</figcaption>
+</figure>
 
 
 
@@ -611,7 +647,10 @@ $$
 这样 weight decay 不进入 $m_t$、$v_t$，不受 $\sqrt{\hat{v}_t}$ 缩放。
 每个参数都按同样的比例衰减，恢复到 SGD 里 weight decay 的行为。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_Adam_AdamW_comparison.webp" alt="Standard Adam with L2 vs. AdamW" width="80%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_Adam_AdamW_comparison.webp" alt="Standard Adam with L2 vs. AdamW" width="80%" loading="lazy" decoding="async" />
+  <figcaption>Standard Adam with L2 vs. AdamW</figcaption>
+</figure>
 
 
 
@@ -621,7 +660,10 @@ $$
 
 ### 超参数：学习率（Hyperparameter : Learning rate）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_loss_figure_with_different_learning_rates.webp" alt="different learning rates" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_loss_figure_with_different_learning_rates.webp" alt="different learning rates" width="70%" loading="lazy" decoding="async" />
+  <figcaption>different learning rates</figcaption>
+</figure>
 
 事实上，这些都可以成为好的学习率，因为在现代深度学习中我们在训练时可以切换改变好几种学习率。
 
@@ -633,7 +675,10 @@ $$
 
 e.g. 对于 ResNets，在第 30、60、90 个 epoch 后把学习率乘以 0.1。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_1.webp" alt="learning rate decay choice 1" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_1.webp" alt="learning rate decay choice 1" width="70%" loading="lazy" decoding="async" />
+  <figcaption>learning rate decay choice 1</figcaption>
+</figure>
 
 **方案 2：余弦函数（Cosine function）：**
 
@@ -641,11 +686,17 @@ $$
 \alpha_t = \frac{1}{2} \alpha_0 \left( 1 + \cos\left(\frac{t \pi}{T}\right) \right)
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_2.webp" alt="learning rate decay choice 2" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_2.webp" alt="learning rate decay choice 2" width="70%" loading="lazy" decoding="async" />
+  <figcaption>learning rate decay choice 2</figcaption>
+</figure>
 
 对应的 loss 曲线会长这样：
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_training_loss_figure_under_learning_rate_decay_2.webp" alt="training loss figure under Cosine learning rate" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_training_loss_figure_under_learning_rate_decay_2.webp" alt="training loss figure under Cosine learning rate" width="70%" loading="lazy" decoding="async" />
+  <figcaption>training loss figure under Cosine learning rate</figcaption>
+</figure>
 
 **方案 3：线性衰减（Linear decay）**
 
@@ -653,7 +704,10 @@ $$
 \alpha_t = \alpha_0 (1 - t/T)
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_3.webp" alt="learning rate decay choice 3" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_3.webp" alt="learning rate decay choice 3" width="70%" loading="lazy" decoding="async" />
+  <figcaption>learning rate decay choice 3</figcaption>
+</figure>
 
 **方案 4：反平方根衰减（Inverse sqrt decay）**
 
@@ -661,11 +715,17 @@ $$
 \alpha_t = \alpha_0 / \sqrt{t}
 $$
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_4.webp" alt="learning rate decay choice 4" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_4.webp" alt="learning rate decay choice 4" width="70%" loading="lazy" decoding="async" />
+  <figcaption>learning rate decay choice 4</figcaption>
+</figure>
 
 #### 线性 warmup（Linear warmup）
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_linear_warmup.webp" alt="linear warmup" width="70%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_learning_rate_decay_linear_warmup.webp" alt="linear warmup" width="70%" loading="lazy" decoding="async" />
+  <figcaption>linear warmup</figcaption>
+</figure>
 
 初始学习率太高可能让 loss 爆炸；通过在前 ~5,000 次迭代里把学习率从 0 线性升上去可以避免这个问题。
 
@@ -698,7 +758,10 @@ $$
 
 每一步只使用一阶导数信息，因此这类方法称为一阶优化（first-order optimization）。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_first-order_optimization.webp" alt="first-order optimization" width="80%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_first-order_optimization.webp" alt="first-order optimization" width="80%" loading="lazy" decoding="async" />
+  <figcaption>first-order optimization</figcaption>
+</figure>
 
 
 #### 用梯度和 Hessian 构造二次近似（Use gradient and Hessian to form quadratic approximation）
@@ -745,7 +808,10 @@ $$
 
 这就是牛顿法更新公式。
 
-<div style="text-align: center;"><img src="/My-Blog/blog-images/cs231n/Lec3_second-order_optimization.webp" alt="second-order optimization" width="85%" loading="lazy" decoding="async" /></div>
+<figure style="text-align: center;">
+  <img src="/My-Blog/blog-images/cs231n/Lec3_second-order_optimization.webp" alt="second-order optimization" width="85%" loading="lazy" decoding="async" />
+  <figcaption>second-order optimization</figcaption>
+</figure>
 
 二阶优化实际上就是按照二阶泰勒展开用一个二次曲面来近似当前点处的原损失函数曲面，然后优化结果就是直接使参数到达二次曲面的最低点。
 这样看来，二阶优化仿佛与一阶优化不同，仿佛没有步长的限制！（一阶优化线性近似没有最低点，所以才有步长的限制）当然我们也可以人为加上一个步长限制，使用"阻尼牛顿法"。
