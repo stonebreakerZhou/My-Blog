@@ -1,7 +1,7 @@
 ---
 title: "CS231n : Lec 6 — CNN 架构与训练"
 description: CS231n Lecture 6 学习笔记，覆盖归一化层（BN/LN/IN/GN）、Dropout、激活函数、VGGNet、ResNet、权重初始化、数据预处理与增强、迁移学习、超参数选择。
-pubDate: 2026-10-06
+pubDate: 2026-10-05
 series: cs231n
 subSeries: personal-lecture-notes
 order: 6
