@@ -678,6 +678,8 @@ $[N \times H D_H] [H D_H \times D] \rightarrow [N \times D]$
 
 把图像切成小块（patches），每个 patch 当成一个 token；每个 patch 展平成一个向量，然后通过一个线性层投影到模型维度 $D$；因为 Transformer 不知道顺序，需要加上位置编码；最后送入 Transformer 即可。
 
+Transformer 输出经过全局平均池化后得到的汇总向量送入线性层最后得到分类。（当然，在经典ViT论文中使用额外的 CLS token ，对于 transformer 输出的最后一个向量进行线性层处理后能得到最后的分类（因为 attention使得最后一个向量输出时具有全局的注意力））
+
 ---
 
 
